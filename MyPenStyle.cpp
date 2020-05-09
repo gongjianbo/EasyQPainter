@@ -8,13 +8,14 @@ int Dash_Offset=0;
 MyPenStyle::MyPenStyle(QWidget *parent)
     : QWidget(parent)
 {
+    //定时移动虚线偏移，制作蚂蚁线效果
     QTimer *timer=new QTimer(this);
     connect(timer,&QTimer::timeout,this,[=](){
         ++Dash_Offset;
         Dash_Offset%=2+3+4+5+6+7; //dash点和线一个区段的整体长度
         update();
     });
-    timer->start(200);
+    timer->start(150);
 }
 
 void MyPenStyle::paintEvent(QPaintEvent *event)
@@ -83,7 +84,7 @@ void MyPenStyle::paintEvent(QPaintEvent *event)
     pen.setStyle(Qt::CustomDashLine);
     //参数奇数为线长度，偶数为线间隔（绘制的时候他好像没把线宽考虑进去）
     pen.setDashPattern(QVector<qreal>{2,3,4,5,6,7});
-    pen.setDashOffset(Dash_Offset);
+    pen.setDashOffset(Dash_Offset); //定时移动偏移，蚂蚁线效果
     painter.setPen(pen);
     painter.translate(rect_width,0);//右移
     painter.drawPath(path);
