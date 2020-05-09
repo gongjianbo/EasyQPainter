@@ -1,11 +1,20 @@
 #include "MyPenStyle.h"
 
 #include <QPainter>
+#include <QTimer>
+
+int Dash_Offset=0;
 
 MyPenStyle::MyPenStyle(QWidget *parent)
     : QWidget(parent)
 {
-
+    QTimer *timer=new QTimer(this);
+    connect(timer,&QTimer::timeout,this,[=](){
+        ++Dash_Offset;
+        Dash_Offset%=2+3+4+5+6+7; //dash点和线一个区段的整体长度
+        update();
+    });
+    timer->start(200);
 }
 
 void MyPenStyle::paintEvent(QPaintEvent *event)
@@ -23,8 +32,8 @@ void MyPenStyle::paintEvent(QPaintEvent *event)
     const int rect_width=this->width()/3;//（3*2个圆）
     const int rect_height=this->height()/2;
     const int item_width=((this->width()/3<this->height()/2)
-            ?this->width()/3
-           :this->height()/2)-10;//取最短边为边长为宽度（3*2个圆）
+                          ?this->width()/3
+                         :this->height()/2)-10;//取最短边为边长为宽度（3*2个圆）
     const int item_left=(rect_width-item_width)/2;//item在rect的位置
     const int item_top=(rect_height-item_width)/2;
     QPainterPath path;//(一个圆加一个方框)
@@ -74,6 +83,7 @@ void MyPenStyle::paintEvent(QPaintEvent *event)
     pen.setStyle(Qt::CustomDashLine);
     //参数奇数为线长度，偶数为线间隔（绘制的时候他好像没把线宽考虑进去）
     pen.setDashPattern(QVector<qreal>{2,3,4,5,6,7});
+    pen.setDashOffset(Dash_Offset);
     painter.setPen(pen);
     painter.translate(rect_width,0);//右移
     painter.drawPath(path);
