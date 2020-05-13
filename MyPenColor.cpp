@@ -49,6 +49,16 @@ void MyPenColor::paintEvent(QPaintEvent *event)
         line_path.lineTo(i,height()/2-height()/3*sin(angle*3.14159265));
     }
 
+    //先绘制渐变底色
+    QPainterPath area_path=line_path;
+    area_path.lineTo(width(),height());
+    area_path.lineTo(0,height());
+    area_path.closeSubpath();
+    QLinearGradient gradient(0,0,0,height());
+    gradient.setColorAt(0.0,QColor(0,255,0,150));
+    gradient.setColorAt(1.0,QColor(0,255,0,0));
+    painter.fillPath(area_path,gradient);
+
     //绘制路径
     painter.save();
     //划分为三个区域依次绘制
@@ -66,15 +76,6 @@ void MyPenColor::paintEvent(QPaintEvent *event)
     painter.setPen(QPen(Qt::yellow,2));
     painter.drawPath(line_path);
     painter.restore();
-
-    //绘制渐变底色
-    line_path.lineTo(width(),height());
-    line_path.lineTo(0,height());
-    line_path.closeSubpath();
-    QLinearGradient gradient(0,0,0,height());
-    gradient.setColorAt(0.0,QColor(0,255,0,150));
-    gradient.setColorAt(1.0,QColor(0,255,0,0));
-    painter.fillPath(line_path,gradient);
 
     //画两条分割线在上面
     painter.setPen(QPen(Qt::white,1,Qt::DashLine));
