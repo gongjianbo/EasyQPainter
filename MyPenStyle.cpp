@@ -3,16 +3,19 @@
 #include <QPainter>
 #include <QTimer>
 
-int Dash_Offset=0;
-
 MyPenStyle::MyPenStyle(QWidget *parent)
     : QWidget(parent)
 {
+    //累计dash总长
+    for(int item:customDash){
+        dashCount+=item;
+    }
+
     //定时移动虚线偏移，制作蚂蚁线效果
     QTimer *timer=new QTimer(this);
     connect(timer,&QTimer::timeout,this,[=](){
-        ++Dash_Offset;
-        Dash_Offset%=2+3+4+5+6+7; //dash点和线一个区段的整体长度
+        ++dashOffset;
+        dashOffset%=dashCount; //dash点和线一个区段的整体长度
         update();
     });
     timer->start(150);
@@ -42,9 +45,10 @@ void MyPenStyle::paintEvent(QPaintEvent *event)
     //path.addEllipse(item_left,item_top,item_width-10,item_width-10);
     path.addEllipse(QPoint(rect_width/2,rect_height/2),item_width/2-5,item_width/2-5);
 
-    //依次试用pen style
+    //依次试用pen style枚举值
     pen.setColor(Qt::darkBlue); //原谅色
-    pen.setWidth(4); //宽度，（如果线宽是奇数，直线会模糊）
+    //（如果线宽是奇数，直线抗锯齿会模糊，这是Qt的bug）
+    pen.setWidth(4); //宽度
     painter.setRenderHint(QPainter::Antialiasing); //不开抗锯齿曲线有锯齿
     painter.save(); //保存位置，等会儿换行用restore恢复
     //Qt::NoPen 啥都没有
@@ -83,8 +87,8 @@ void MyPenStyle::paintEvent(QPaintEvent *event)
     //还需要调用setDashPattern来描述自定义虚线的样子
     pen.setStyle(Qt::CustomDashLine);
     //参数奇数为线长度，偶数为线间隔（绘制的时候他好像没把线宽考虑进去）
-    pen.setDashPattern(QVector<qreal>{2,3,4,5,6,7});
-    pen.setDashOffset(Dash_Offset); //定时移动偏移，蚂蚁线效果
+    pen.setDashPattern(customDash);
+    pen.setDashOffset(dashOffset); //定时移动偏移，蚂蚁线效果
     painter.setPen(pen);
     painter.translate(rect_width,0);//右移
     painter.drawPath(path);
