@@ -18,16 +18,16 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="MyPenStyle" name="tabA">
        <attribute name="title">
         <string>PenStyle</string>
        </attribute>
       </widget>
-      <widget class="QWidget" name="tabB">
+      <widget class="MyPenColor" name="tabB">
        <attribute name="title">
-        <string>B</string>
+        <string>PenColor</string>
        </attribute>
       </widget>
       <widget class="QWidget" name="tabC">
@@ -45,6 +45,12 @@
    <class>MyPenStyle</class>
    <extends>QWidget</extends>
    <header>MyPenStyle.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MyPenColor</class>
+   <extends>QWidget</extends>
+   <header>MyPenColor.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

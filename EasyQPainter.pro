@@ -6,11 +6,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
+    MyPenColor.cpp \
     MyPenStyle.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
+    MyPenColor.h \
     MyPenStyle.h \
     mainwindow.h
 
