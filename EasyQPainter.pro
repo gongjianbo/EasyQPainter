@@ -6,12 +6,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
+    MyCube.cpp \
     MyPenColor.cpp \
     MyPenStyle.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
+    MyCube.h \
     MyPenColor.h \
     MyPenStyle.h \
     mainwindow.h
