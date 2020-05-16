@@ -2,7 +2,6 @@
 
 #include <QPainter>
 #include <QtMath>
-#include <QTimer>
 #include <QDebug>
 
 MyCube::MyCube(QWidget *parent)
@@ -39,14 +38,6 @@ MyCube::MyCube(QWidget *parent)
     {2,6,7,3},
     {3,7,4,0} };
 
-    //定时变化
-    /*QTimer *timer=new QTimer(this);
-    connect(timer,&QTimer::timeout,this,[=](){
-        rotateMat.rotate(5,QVector3D(0.0f,0.0f,1.0f));
-        update();
-    });
-    timer->start(150);*/
-
     setFocusPolicy(Qt::ClickFocus); //Widget默认没有焦点
 }
 
@@ -64,15 +55,26 @@ void MyCube::paintEvent(QPaintEvent *event)
     // 根据z值计算，近大远小
     //（此外，Qt是屏幕坐标系，原点在左上角）
 
-    //计算顶点变换后坐标，包含zmax点就是正交表面可见的
-    QList<QVector3D> vertex_list;
+    //矩形边框参考大小
+    const int cube_width=(width()>height()?height():width())/4;
+
+    //投影矩阵
+    //（奇怪，为什么只是平移了z轴，没用perspective函数就有远小近大的效果，
+    //在我的想象中默认不该是正交投影么）
+    QMatrix4x4 perspective_mat;
+    perspective_mat.translate(0.0f,0.0f,-0.1f);
+
+    //计算顶点变换后坐标，包含z值max点就是正交表面可见的，
+    //再计算下远小近大的透视投影效果齐活了
+    QList<QVector3D> vertex_list; //和矩阵运算后的顶点
     QList<int> vertex_max_list; //top顶点在arr的位置
-    float vertex_max_value; //top值
+    float vertex_max_value;     //top值
     //根据旋转矩阵计算每个顶点
     for(int i=0;i<vertexArr.count();i++)
     {
-        QVector3D vertex=vertexArr.at(i)*rotateMat;
+        QVector3D vertex=vertexArr.at(i)*rotateMat*perspective_mat;
         vertex_list.push_back(vertex);
+        //找出z值max的顶点
         if(i==0){
             vertex_max_list.push_back(0);
             vertex_max_value=vertex.z();
@@ -91,11 +93,10 @@ void MyCube::paintEvent(QPaintEvent *event)
     painter.save();
     painter.translate(width()/2,height()/2);
     //绘制front和back六个面，先计算路径再绘制
-    QList<QPainterPath> element_path_list;
-    QList<float> element_z_values; //每个面中心点的z值
-    QList<QPointF> element_z_points;
-    QList<int> element_front_list;
-    const int cube_width=(width()>height()?height():width())/4;
+    QList<QPainterPath> element_path_list; //每个面路径
+    QList<float> element_z_values;   //每个面中心点的z值
+    QList<QPointF> element_z_points; //每个面中心点在平面对应xy值
+    QList<int> element_front_list;   //elementArr中表面的index
     for(int i=0;i<elementArr.count();i++)
     {
 
@@ -104,6 +105,7 @@ void MyCube::paintEvent(QPaintEvent *event)
         const QVector3D vt2=vertex_list.at(elementArr.at(i).at(2));
         const QVector3D vt3=vertex_list.at(elementArr.at(i).at(3));
 
+        //单个面的路径
         QPainterPath element_path;
         element_path.moveTo(getPoint(vt0,cube_width));
         element_path.lineTo(getPoint(vt1,cube_width));
@@ -149,15 +151,18 @@ void MyCube::paintEvent(QPaintEvent *event)
 
     //根据计算好的路径绘制
     painter.setRenderHint(QPainter::Antialiasing,true);
+    //画表面
     for(auto index:element_front_list){
         painter.fillPath(element_path_list.at(index),Qt::green);
     }
+    //画被遮盖面的边框虚线
     painter.setPen(QPen(Qt::white,1,Qt::DashLine));
     for(int i=0;i<element_path_list.count();i++){
         if(element_front_list.contains(i))
             continue;
         painter.drawPath(element_path_list.at(i));
     }
+    //画表面边框
     painter.setPen(QPen(Qt::black,2));
     for(auto index:element_front_list){
         painter.drawPath(element_path_list.at(index));
@@ -179,9 +184,10 @@ void MyCube::mouseMoveEvent(QMouseEvent *event)
     if(mousePressed){
         const QPoint posOffset=event->pos()-mousePos;
         mousePos=event->pos();
-        //旋转矩阵
-        rotateMat.rotate(posOffset.x(),QVector3D(0.0f,-0.5f,0.0f));
-        rotateMat.rotate(posOffset.y(),QVector3D(0.5f,0.0f,0.0f));
+        //旋转矩阵  x和y分量
+        //rotateMat.rotate(posOffset.x(),QVector3D(0.0f,-0.5f,0.0f));
+        //rotateMat.rotate(posOffset.y(),QVector3D(0.5f,0.0f,0.0f));
+        rotateMat.rotate(1.1f,QVector3D(0.5f*posOffset.y(),-0.5f*posOffset.x(),0.0f));
         update();
     }
     QWidget::mouseMoveEvent(event);
@@ -195,8 +201,8 @@ void MyCube::mouseReleaseEvent(QMouseEvent *event)
 
 QPointF MyCube::getPoint(const QVector3D &vt,int w) const
 {
-    //z用来实现远小近大的计算
-    const float z_offset=vt.z()*0.1;
-    return QPointF{vt.x()*w*(1+z_offset),
-                vt.y()*w*(1+z_offset)};
+    //可以用z来手动计算远小近大，也可以矩阵运算
+    //const float z_offset=vt.z()*0.1;
+    //return QPointF{ vt.x()*w*(1+z_offset), vt.y()*w*(1+z_offset) };
+    return QPointF{ vt.x()*w, vt.y()*w };
 }

@@ -22,11 +22,11 @@ protected:
     QPointF getPoint(const QVector3D &vt,int w) const;
 
 private:
-    QVector<QVector3D> vertexArr; //八个顶点
-    QVector<QVector<int>> elementArr;//六个面
-    QMatrix4x4 rotateMat;//旋转矩阵
-    QPoint mousePos;
-    bool mousePressed=false;
+    QVector<QVector3D> vertexArr;     //八个顶点
+    QVector<QVector<int>> elementArr; //六个面
+    QMatrix4x4 rotateMat;      //旋转矩阵
+    QPoint mousePos;           //鼠标位置
+    bool mousePressed=false;   //鼠标按下标志位
 };
 
 #endif // MYCUBE_H
