@@ -6,20 +6,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
-    MyCube.cpp \
-    MyPenColor.cpp \
-    MyPenStyle.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
-    MyCube.h \
-    MyPenColor.h \
-    MyPenStyle.h \
     mainwindow.h
 
 FORMS += \
     mainwindow.ui
+
+INCLUDEPATH += $$PWD/src
+include($$PWD/src/src.pri)
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
