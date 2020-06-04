@@ -1,6 +1,7 @@
 #include "MyPenStyle.h"
 
 #include <QPainter>
+#include <QPainterPath>
 #include <QTimer>
 
 MyPenStyle::MyPenStyle(QWidget *parent)

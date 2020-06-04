@@ -1,6 +1,7 @@
 #include "MyCube.h"
 
 #include <QPainter>
+#include <QPainterPath>
 #include <QtMath>
 #include <QDebug>
 

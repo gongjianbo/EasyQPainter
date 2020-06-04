@@ -1,6 +1,7 @@
 #include "MyTextPath.h"
 
 #include <QPainter>
+#include <QPainterPath>
 #include <QLinearGradient>
 #include <QDebug>
 

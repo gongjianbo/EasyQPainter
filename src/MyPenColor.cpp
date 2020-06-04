@@ -1,6 +1,7 @@
 #include "MyPenColor.h"
 
 #include <QPainter>
+#include <QPainterPath>
 #include <QtMath>
 #include <QLinearGradient>
 #include <QConicalGradient>
