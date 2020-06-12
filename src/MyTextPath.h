@@ -3,6 +3,7 @@
 
 #include <QWidget>
 
+//展示文字路径
 class MyTextPath : public QWidget
 {
     Q_OBJECT

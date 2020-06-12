@@ -7,6 +7,7 @@
 #include <QVector3D>
 #include <QMatrix4x4>
 
+//绘制3d立方体
 class MyCube : public QWidget
 {
     Q_OBJECT

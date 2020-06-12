@@ -3,6 +3,7 @@
 
 #include <QWidget>
 
+//展示画笔/画刷颜色的使用
 class MyPenColor : public QWidget
 {
     Q_OBJECT

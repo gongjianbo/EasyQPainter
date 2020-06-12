@@ -3,6 +3,7 @@
 
 #include <QWidget>
 
+//展示画笔样式的使用
 class MyPenStyle : public QWidget
 {
     Q_OBJECT
