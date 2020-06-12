@@ -18,26 +18,31 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>3</number>
+       <number>4</number>
       </property>
-      <widget class="MyPenStyle" name="tabA">
+      <widget class="MyPenStyle" name="tabPenStyle">
        <attribute name="title">
         <string>PenStyle</string>
        </attribute>
       </widget>
-      <widget class="MyPenColor" name="tabB">
+      <widget class="MyPenColor" name="tabPenColor">
        <attribute name="title">
         <string>PenColor</string>
        </attribute>
       </widget>
-      <widget class="MyCube" name="tabC">
+      <widget class="MyCube" name="tabCube">
        <attribute name="title">
         <string>Cube</string>
        </attribute>
       </widget>
-      <widget class="MyTextPath" name="tabD">
+      <widget class="MyTextPath" name="tabTextPath">
        <attribute name="title">
         <string>TextPath</string>
+       </attribute>
+      </widget>
+      <widget class="MyPlanetSystem" name="tabPlanetSystem">
+       <attribute name="title">
+        <string>PlanetSystem</string>
        </attribute>
       </widget>
      </widget>
@@ -68,6 +73,12 @@
    <class>MyTextPath</class>
    <extends>QWidget</extends>
    <header>MyTextPath.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MyPlanetSystem</class>
+   <extends>QWidget</extends>
+   <header>MyPlanetSystem.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
