@@ -1,5 +1,6 @@
 HEADERS += \
     $$PWD/MyCube.h \
+    $$PWD/MyDrawImage.h \
     $$PWD/MyPenColor.h \
     $$PWD/MyPenStyle.h \
     $$PWD/MyPlanetSystem.h \
@@ -7,6 +8,7 @@ HEADERS += \
 
 SOURCES += \
     $$PWD/MyCube.cpp \
+    $$PWD/MyDrawImage.cpp \
     $$PWD/MyPenColor.cpp \
     $$PWD/MyPenStyle.cpp \
     $$PWD/MyPlanetSystem.cpp \

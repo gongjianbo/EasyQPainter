@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>4</number>
+       <number>5</number>
       </property>
       <widget class="MyPenStyle" name="tabPenStyle">
        <attribute name="title">
@@ -43,6 +43,11 @@
       <widget class="MyPlanetSystem" name="tabPlanetSystem">
        <attribute name="title">
         <string>PlanetSystem</string>
+       </attribute>
+      </widget>
+      <widget class="MyDrawImage" name="tabDrawImage">
+       <attribute name="title">
+        <string>DrawImage</string>
        </attribute>
       </widget>
      </widget>
@@ -79,6 +84,12 @@
    <class>MyPlanetSystem</class>
    <extends>QWidget</extends>
    <header>MyPlanetSystem.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MyDrawImage</class>
+   <extends>QWidget</extends>
+   <header>MyDrawImage.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
