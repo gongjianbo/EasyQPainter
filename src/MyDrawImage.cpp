@@ -3,6 +3,7 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <QTimer>
+#include <QListView>
 #include <QDebug>
 
 MyDrawImage::MyDrawImage(QWidget *parent)
@@ -12,28 +13,16 @@ MyDrawImage::MyDrawImage(QWidget *parent)
     //定时器用来做动态效果
     QTimer *timer=new QTimer(this);
     connect(timer,&QTimer::timeout,[=]{
-        static bool asc=true;//递增
-        if(asc){
-            colorOffset+=10;
-            if(colorOffset>=255){
-                asc=!asc;
-                colorOffset=255;
-            }
-        }else{
-            colorOffset-=10;
-            if(colorOffset<=0){
-                asc=!asc;
-                colorOffset=0;
-            }
-        }
+        timeOffset++;
         update();
     });
     timer->start(100);
 
-
     imgA=QImage(":/img/xingkong.jpg");
     imgB=QImage(":/img/xiangrikui.jpg");
 
+    //下拉框
+    comboBox->setView(new QListView(this));
     comboBox->addItems({
                            "Normal",
                            "gray"
@@ -94,7 +83,7 @@ void MyDrawImage::drawNormal(QPainter *painter)
     img_a=imgA.transformed(mat_a,Qt::SmoothTransformation);
     painter->drawImage(-300,0,img_a);
     painter->drawRect(QRect(QPoint(-300,0),img_a.rect().size()));
-    mat_a.rotate(30); //旋转
+    mat_a.rotate(timeOffset*5%360); //旋转
     img_a=imgA.transformed(mat_a,Qt::SmoothTransformation);
     painter->drawImage(-300,0,img_a);
     painter->drawRect(QRect(QPoint(-300,0),img_a.rect().size()));
@@ -103,29 +92,17 @@ void MyDrawImage::drawNormal(QPainter *painter)
     //一般我用painter的rotate
 
     //转换矩阵
-    QTransform mat_b; //3*3矩阵
-    mat_b.scale(0.2,0.2); //缩放
-    img_a=imgA.transformed(mat_b,Qt::SmoothTransformation);
-    painter->drawImage(-100,0,img_a);
-    painter->drawRect(QRect(QPoint(-100,0),img_a.rect().size()));
-    mat_b.rotate(60); //旋转
-    img_a=imgA.transformed(mat_b,Qt::SmoothTransformation);
-    painter->drawImage(-100,0,img_a);
-    painter->drawRect(QRect(QPoint(-100,0),img_a.rect().size()));
-    painter->drawText(-100,0-10,"transformed");
-
-    //转换矩阵
     QTransform mat_c; //矩阵
     mat_c.scale(0.2,0.2); //缩放
     img_a=imgA.transformed(mat_c,Qt::SmoothTransformation);
-    painter->drawImage(100,0,img_a);
-    painter->drawRect(QRect(QPoint(100,0),img_a.rect().size()));
+    painter->drawImage(0,0,img_a);
+    painter->drawRect(QRect(QPoint(0,0),img_a.rect().size()));
     //mat_c.translate(0.5,0.5); //me没效果
     mat_c.shear(0.2,0.5); //剪切变形，菱形的效果
     img_a=imgA.transformed(mat_c,Qt::SmoothTransformation);
-    painter->drawImage(100,0,img_a);
-    painter->drawRect(QRect(QPoint(100,0),img_a.rect().size()));
-    painter->drawText(100,0-10,"transformed");
+    painter->drawImage(0,0,img_a);
+    painter->drawRect(QRect(QPoint(0,0),img_a.rect().size()));
+    painter->drawText(0,0-10,"transformed");
 }
 
 void MyDrawImage::drawGray(QPainter *painter)
@@ -145,8 +122,8 @@ void MyDrawImage::drawGray(QPainter *painter)
             // Gray = (R * 11 + G * 16 + B * 5)/32;（qGray）
             //calc_gray=qGray(line_data[col]);
             calc_gray=qGray(line_data[col]);
-            //淡入淡出效果，0是黑色，255白色，可以改变大于小于
-            if(colorOffset>calc_gray){
+            //渐变效果，0是黑色，255白色，可以改变大于小于
+            if((timeOffset*5%255)>calc_gray){
                 line_data[col]=qRgb(calc_gray,calc_gray,calc_gray);
             }
         }

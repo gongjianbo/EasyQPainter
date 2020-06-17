@@ -28,7 +28,7 @@ private:
     //切换绘制效果
     QComboBox *comboBox;
     //定时器动画
-    int colorOffset=0;
+    int timeOffset=0;
 };
 
 #endif // MYDRAWIMAGE_H
