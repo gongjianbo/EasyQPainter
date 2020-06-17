@@ -16,9 +16,19 @@ protected:
     void paintEvent(QPaintEvent *event) override;
 
 private:
+    //普通绘制image
+    void drawNormal(QPainter *painter);
+    //灰度图
+    void drawGray(QPainter *painter);
+
+private:
     //有两张图
     QImage imgA;
     QImage imgB;
+    //切换绘制效果
+    QComboBox *comboBox;
+    //定时器动画
+    int colorOffset=0;
 };
 
 #endif // MYDRAWIMAGE_H
