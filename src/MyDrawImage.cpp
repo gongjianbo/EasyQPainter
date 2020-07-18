@@ -24,8 +24,8 @@ MyDrawImage::MyDrawImage(QWidget *parent)
     //下拉框
     comboBox->setView(new QListView(this));
     comboBox->addItems({
-                           "Normal",
-                           "gray"
+                           "Normal", //一些常用方法
+                           "Gray" //灰度图
                        });
     //切换combobox时刷新显示
     connect(comboBox,QOverload<int>::of(&QComboBox::currentIndexChanged),
