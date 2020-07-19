@@ -286,31 +286,33 @@ void MyCalculatePos::draw_5(QPainter *painter,int rotate)
         const double radians=qDegreesToRadians((double)(i+rotate));
         //以左侧为起点顺时针的话 (x:-radius,y:0)带入公式
         //本来算出来是逆时针，不过因为屏幕坐标系y轴反的，就成了顺时针
-        const double x1=-cos(radians)*radius;
-        const double y1=-sin(radians)*radius;
+        //x或y取反都可以让表盘的数字顺序反一下，负负得正，但是左右上下颠倒了
+        //本来xy不取反，初始是3点方向顺时针往9点方向，现在为9点顺时到3点
+        const double x1=cos(radians)*radius;
+        const double y1=sin(radians)*radius;
         if(i%30==0){
-            const double x2=-cos(radians)*(radius+15);
-            const double y2=-sin(radians)*(radius+15);
+            const double x2=cos(radians)*(radius+15);
+            const double y2=sin(radians)*(radius+15);
             //默认屏幕坐标系上负下正
-            painter->drawLine(x1,y1,x2,y2);
+            painter->drawLine(-x1,-y1,-x2,-y2);
 
             //文本的中心点也要计算
-            const double x3=-cos(radians)*(radius+30);
-            const double y3=-sin(radians)*(radius+30);
+            const double x3=cos(radians)*(radius+30);
+            const double y3=sin(radians)*(radius+30);
             const QString text=QString::number(i);
             const int text_width=painter->fontMetrics().width(text);
             //文字的起点在左下角
             //上减下加，左减右加，这样相当于往x2y3左下角移动的，使文本中心点在计算的位置
             painter->drawText(
-                        x3-text_width/2,
-                        y3+text_height/2,
+                        -x3-text_width/2,
+                        -y3+text_height/2,
                         text
                         );
         }else{
-            const double x2=-cos(radians)*(radius+5);
-            const double y2=-sin(radians)*(radius+5);
+            const double x2=cos(radians)*(radius+5);
+            const double y2=sin(radians)*(radius+5);
             //默认屏幕坐标系上负下正
-            painter->drawLine(x1,y1,x2,y2);
+            painter->drawLine(-x1,-y1,-x2,-y2);
         }
     }
 }
