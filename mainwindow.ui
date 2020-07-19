@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>675</width>
-    <height>507</height>
+    <width>472</width>
+    <height>322</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>6</number>
+       <number>7</number>
       </property>
       <widget class="MyPenStyle" name="tabPenStyle">
        <attribute name="title">
@@ -53,6 +53,11 @@
       <widget class="MyCalculatePos" name="tabCalculatePos">
        <attribute name="title">
         <string>CalculatePos</string>
+       </attribute>
+      </widget>
+      <widget class="MyCalculateDegree" name="tabCalculateDegree">
+       <attribute name="title">
+        <string>CalculateDegree</string>
        </attribute>
       </widget>
      </widget>
@@ -101,6 +106,12 @@
    <class>MyCalculatePos</class>
    <extends>QWidget</extends>
    <header>MyCalculatePos.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MyCalculateDegree</class>
+   <extends>QWidget</extends>
+   <header>MyCalculateDegree.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

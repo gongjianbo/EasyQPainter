@@ -9,6 +9,9 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    //默认显示最后一个，便于调试
+    ui->tabWidget->setCurrentIndex(ui->tabWidget->count()-1);
+
     setWindowTitle("Easy QPainter (By: GongJianBo 1992)");
     qDebug()<<"Easy QPainter \n"
               "展示 QPainter 的使用 \n"

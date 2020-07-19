@@ -1,4 +1,5 @@
 HEADERS += \
+    $$PWD/MyCalculateDegree.h \
     $$PWD/MyCalculatePos.h \
     $$PWD/MyCube.h \
     $$PWD/MyDrawImage.h \
@@ -8,6 +9,7 @@ HEADERS += \
     $$PWD/MyTextPath.h
 
 SOURCES += \
+    $$PWD/MyCalculateDegree.cpp \
     $$PWD/MyCalculatePos.cpp \
     $$PWD/MyCube.cpp \
     $$PWD/MyDrawImage.cpp \
