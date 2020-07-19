@@ -52,37 +52,43 @@ void MyPenStyle::paintEvent(QPaintEvent *event)
     pen.setWidth(4); //宽度
     painter.setRenderHint(QPainter::Antialiasing); //不开抗锯齿曲线有锯齿
     painter.save(); //保存位置，等会儿换行用restore恢复
+
     //Qt::NoPen 啥都没有
     //Qt::SolidLine 实线，默认值
     pen.setStyle(Qt::SolidLine);
     painter.setPen(pen);
     painter.drawPath(path);
-    painter.drawText(10,20,"SolidLine");
+    painter.drawText(item_left+10,item_top+20,"SolidLine");
+
     //Qt::DashLine 虚线
     pen.setStyle(Qt::DashLine);
     painter.setPen(pen);
     painter.translate(rect_width,0);//右移
     painter.drawPath(path);
-    painter.drawText(10,20,"DashLine");
+    painter.drawText(item_left+10,item_top+20,"DashLine");
+
     //Qt::DotLine 点线
     pen.setStyle(Qt::DotLine);
     painter.setPen(pen);
     painter.translate(rect_width,0);//右移
     painter.drawPath(path);
-    painter.drawText(10,20,"DotLine");
+    painter.drawText(item_left+10,item_top+20,"DotLine");
+
     //Qt::DashDotLine 混合
     painter.restore(); //恢复位置
     pen.setStyle(Qt::DashDotLine);
     painter.setPen(pen);
     painter.translate(0,rect_height);//下移
     painter.drawPath(path);
-    painter.drawText(10,20,"DashDotLine");
+    painter.drawText(item_left+10,item_top+20,"DashDotLine");
+
     //Qt::DashDotDotLine 混合
     pen.setStyle(Qt::DashDotDotLine);
     painter.setPen(pen);
     painter.translate(rect_width,0);//右移
     painter.drawPath(path);
-    painter.drawText(10,20,"DashDotDotLine");
+    painter.drawText(item_left+10,item_top+20,"DashDotDotLine");
+
     //Qt::CustomDashLine
     //除了要设置pen style为Qt::CustomDashLine外，
     //还需要调用setDashPattern来描述自定义虚线的样子
@@ -93,5 +99,5 @@ void MyPenStyle::paintEvent(QPaintEvent *event)
     painter.setPen(pen);
     painter.translate(rect_width,0);//右移
     painter.drawPath(path);
-    painter.drawText(10,20,"CustomDashLine");
+    painter.drawText(item_left+10,item_top+20,"CustomDashLine");
 }
