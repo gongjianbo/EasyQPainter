@@ -1,4 +1,5 @@
 HEADERS += \
+    $$PWD/MyCalculatePos.h \
     $$PWD/MyCube.h \
     $$PWD/MyDrawImage.h \
     $$PWD/MyPenColor.h \
@@ -7,6 +8,7 @@ HEADERS += \
     $$PWD/MyTextPath.h
 
 SOURCES += \
+    $$PWD/MyCalculatePos.cpp \
     $$PWD/MyCube.cpp \
     $$PWD/MyDrawImage.cpp \
     $$PWD/MyPenColor.cpp \

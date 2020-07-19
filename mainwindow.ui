@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>5</number>
+       <number>6</number>
       </property>
       <widget class="MyPenStyle" name="tabPenStyle">
        <attribute name="title">
@@ -48,6 +48,11 @@
       <widget class="MyDrawImage" name="tabDrawImage">
        <attribute name="title">
         <string>DrawImage</string>
+       </attribute>
+      </widget>
+      <widget class="MyCalculatePos" name="tabCalculatePos">
+       <attribute name="title">
+        <string>CalculatePos</string>
        </attribute>
       </widget>
      </widget>
@@ -90,6 +95,12 @@
    <class>MyDrawImage</class>
    <extends>QWidget</extends>
    <header>MyDrawImage.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MyCalculatePos</class>
+   <extends>QWidget</extends>
+   <header>MyCalculatePos.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
