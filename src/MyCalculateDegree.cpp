@@ -127,12 +127,21 @@ void MyCalculateDegree::drawItemPath(QPainter *painter)
     //画物体小球
     painter->setPen(QPen(QColor(220,0,60),2));
     painter->setBrush(QColor(220,0,60,100));
-    //是按照角度旋转来的，如果需要根据轨迹匀速运动，需要计算，这里不需要
+    //这里先计算了标准椭圆下位置，再用旋转矩阵进行计算偏移后的
+    //是按照角度旋转来的，如果需要根据轨迹匀速运动，需要计算，这里暂不需要
+    //椭圆上点公式，A横长半轴，B竖短半轴
+    //x'=x0+A*B*cos(a)/sqrt(pow(A*sin(a),2)+pow(B*cos(a),2))
+    //y'=y0+A*B*sin(a)/sqrt(pow(A*sin(a),2)+pow(B*cos(a),2))
+    //前面我们学过圆上一点坐标
+    //x'=x0+R*cos(a)
+    //y'=y0+R*sin(a)
+    //椭圆也可以化为相应的表达，不过半径需要计算
+    //R=A*B/sqrt(pow(A*sin(a),2)+pow(B*cos(a),2))
     const double radians1=qDegreesToRadians((double)(theRotate));
-    const double temp1=sqrt(pow(a*sin(radians1),2)+pow(b*cos(radians1),2));
-    const double x1=a*b*cos(radians1)/temp1;
-    const double y1=a*b*sin(radians1)/temp1;
-    //旋转后坐标计算公式
+    const double r1=a*b/sqrt(pow(a*sin(radians1),2)+pow(b*cos(radians1),2));
+    const double x1=r1*cos(radians1);
+    const double y1=r1*sin(radians1);
+    //旋转矩阵公式，旋转后坐标计算
     //x'=x*cos(a)-y*sin(a)
     //y'=x*sin(a)+y*cos(a)
     const double radians2=qDegreesToRadians(-(double)45.0); //注意角度和y取反了

@@ -11,13 +11,15 @@ MyCalculatePos::MyCalculatePos(QWidget *parent)
     : QWidget(parent)
 {
     //定时旋转
+    //减小刷新间隔和步进角度可以让旋转更自然，但是更耗费cpu
+    //可以注释掉Timer来练习绘制静止状态下的圆和线
     QTimer *timer=new QTimer(this);
     connect(timer,&QTimer::timeout,this,[=](){
-        theRotate+=1;
+        theRotate+=2;
         theRotate%=360;
         update();
     });
-    timer->start(50);
+    timer->start(100);
 
     initImg_1();
     initImg_2();
@@ -285,6 +287,9 @@ void MyCalculatePos::draw_5(QPainter *painter,int rotate)
         //角度转为弧度计算
         const double radians=qDegreesToRadians((double)(i+rotate));
         //以左侧为起点顺时针的话 (x:-radius,y:0)带入公式
+        //即圆上一点坐标
+        //x'=x0+R*cos(a)
+        //y'=y0+R*sin(a)
         //本来算出来是逆时针，不过因为屏幕坐标系y轴反的，就成了顺时针
         //x或y取反都可以让表盘的数字顺序反一下，负负得正，但是左右上下颠倒了
         //本来xy不取反，初始是3点方向顺时针往9点方向，现在为9点顺时到3点
@@ -301,7 +306,7 @@ void MyCalculatePos::draw_5(QPainter *painter,int rotate)
             const double y3=sin(radians)*(radius+30);
             const QString text=QString::number(i);
             const int text_width=painter->fontMetrics().width(text);
-            //文字的起点在左下角
+            //Qt文字绘制的起点在左下角，所以得到文本中心后，往左下偏移宽高的一半
             //上减下加，左减右加，这样相当于往x2y3左下角移动的，使文本中心点在计算的位置
             painter->drawText(
                         -x3-text_width/2,
