@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>7</number>
+       <number>8</number>
       </property>
       <widget class="MyPenStyle" name="tabPenStyle">
        <attribute name="title">
@@ -58,6 +58,11 @@
       <widget class="MyCalculateDegree" name="tabCalculateDegree">
        <attribute name="title">
         <string>CalculateDegree</string>
+       </attribute>
+      </widget>
+      <widget class="MyCurve" name="tabCurve">
+       <attribute name="title">
+        <string>Curve</string>
        </attribute>
       </widget>
      </widget>
@@ -112,6 +117,12 @@
    <class>MyCalculateDegree</class>
    <extends>QWidget</extends>
    <header>MyCalculateDegree.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MyCurve</class>
+   <extends>QWidget</extends>
+   <header>MyCurve.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

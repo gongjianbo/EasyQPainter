@@ -2,6 +2,7 @@ HEADERS += \
     $$PWD/MyCalculateDegree.h \
     $$PWD/MyCalculatePos.h \
     $$PWD/MyCube.h \
+    $$PWD/MyCurve.h \
     $$PWD/MyDrawImage.h \
     $$PWD/MyPenColor.h \
     $$PWD/MyPenStyle.h \
@@ -12,6 +13,7 @@ SOURCES += \
     $$PWD/MyCalculateDegree.cpp \
     $$PWD/MyCalculatePos.cpp \
     $$PWD/MyCube.cpp \
+    $$PWD/MyCurve.cpp \
     $$PWD/MyDrawImage.cpp \
     $$PWD/MyPenColor.cpp \
     $$PWD/MyPenStyle.cpp \
