@@ -81,7 +81,6 @@ void MyTextPath::paintEvent(QPaintEvent *event)
     painter.fillPath(str_path,str_gradient);
 
     //底部滚动的文字1
-    painter.setPen(QPen(Qt::red,2));
     QFont scroll_font("Microsoft YaHei",20);
     painter.setFont(scroll_font);
     const QString scroll_text0="你一会儿看我，一会儿看云。";
@@ -97,6 +96,14 @@ void MyTextPath::paintEvent(QPaintEvent *event)
         textOffset_1 = 0;
     }
     else {
+        //彩色文本
+        QLinearGradient gradient(textOffset_1-textWidth_1,0,
+                                 textOffset_1,0);
+        gradient.setColorAt(0,QColor(Qt::red));
+        gradient.setColorAt(0.33,QColor(Qt::yellow));
+        gradient.setColorAt(0.66,QColor(Qt::green));
+        gradient.setColorAt(1,QColor(Qt::blue));
+        painter.setPen(QPen(QBrush(gradient),2));
         painter.drawText(textOffset_1-textWidth_1, scroll_y1, scroll_text1);
     }
 
@@ -111,7 +118,15 @@ void MyTextPath::paintEvent(QPaintEvent *event)
         textOffset_2 = 0;
     }
     else {
-        painter.drawText(labelWidth_2 - textOffset_2, scroll_y2, scroll_text2);
+        //彩色文本
+        QLinearGradient gradient(labelWidth_2-textOffset_2,0,
+                                 labelWidth_2-textOffset_2+textWidth_2,0);
+        gradient.setColorAt(0,QColor(Qt::red));
+        gradient.setColorAt(0.33,QColor(Qt::yellow));
+        gradient.setColorAt(0.66,QColor(Qt::green));
+        gradient.setColorAt(1,QColor(Qt::blue));
+        painter.setPen(QPen(QBrush(gradient),2));
+        painter.drawText(labelWidth_2-textOffset_2, scroll_y2, scroll_text2);
     }
 }
 
