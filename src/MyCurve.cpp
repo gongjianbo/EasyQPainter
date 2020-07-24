@@ -3,7 +3,8 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <QPaintEvent>
-#include <QtMath>
+#include <QtMath>、
+#include <QDateTime>
 #include <QDebug>
 
 MyCurve::MyCurve(QWidget *parent)
@@ -27,14 +28,22 @@ void MyCurve::paintEvent(QPaintEvent *event)
     painter.setPen(QPen(Qt::black,1));
 
     const int line_count=5;
-    const int item_height=height()/line_count;
-    const int item_width=width()/10;
+    const double item_height=height()/line_count;
+    const double item_width=width()/10.0;
     QList<QPointF> point_list;
-    for(int i=0;i<10;i++)
-    {
-        point_list.push_back(QPointF(item_width*(i+0.5),
-                                     item_height/2+(i%2?1:-1)*item_height/2*(i/15.0+0.3)));
-    }
+    //之所以手动填充点，是为了展示一些典型的曲线
+    point_list.push_back(QPointF(item_width*0.5,item_height*0.95));
+    point_list.push_back(QPointF(item_width*0.75,item_height*0.05));
+    point_list.push_back(QPointF(item_width*1.0,item_height*0.5));
+    point_list.push_back(QPointF(item_width*2.5,item_height*0.6));
+    point_list.push_back(QPointF(item_width*3.5,item_height*0.95));
+    point_list.push_back(QPointF(item_width*4.5,item_height*0.05));
+    point_list.push_back(QPointF(item_width*5.5,item_height*0.95));
+    point_list.push_back(QPointF(item_width*6.5,item_height*0.15));
+    point_list.push_back(QPointF(item_width*7.5,item_height*0.5));
+    point_list.push_back(QPointF(item_width*8.5,item_height*0.3));
+    point_list.push_back(QPointF(item_width*9.1,item_height*0.8));
+    point_list.push_back(QPointF(item_width*9.5,item_height*0.15));
 
     //1-直线连接
     QPainterPath path_1;
@@ -84,10 +93,18 @@ void MyCurve::paintEvent(QPaintEvent *event)
         painter.drawEllipse(pt,5,5); //画圆是为了便于观察是否过采样点
     }
 
-    //4-三次贝塞尔
+    //4-自定义曲线
     painter.translate(0,item_height);
+    const QVector<QPointF> point_temp=point_list.toVector();
+    const QVector<QPointF> points4 = point_temp;
+    //使用时需要判断controlPoints4 size>=2
+    const QVector<QPointF> controlPoints4 = calculateControlPoints(point_temp);
     QPainterPath path_4;
-    //待添加
+    path_4.moveTo(points4.at(0));
+    for (int i = 0; i < points4.size() - 1; i++) {
+        const QPointF &point = points4.at(i + 1);
+        path_4.cubicTo(controlPoints4[2 * i], controlPoints4[2 * i + 1], point);
+    }
     painter.drawPath(path_4);
     for(const QPointF &pt:point_list){
         painter.drawEllipse(pt,5,5); //画圆是为了便于观察是否过采样点
@@ -100,6 +117,101 @@ void MyCurve::paintEvent(QPaintEvent *event)
     for(const QPointF &pt:point_list){
         painter.drawEllipse(pt,5,5); //画圆是为了便于观察是否过采样点
     }
+}
+
+QVector<QPointF> MyCurve::calculateControlPoints(const QVector<QPointF> &points)
+{
+    //Calculates control points which are needed by QPainterPath.cubicTo function to draw the cubic Bezier cureve between two points.
+    QVector<QPointF> controlPoints;
+    controlPoints.resize(points.count() * 2 - 2);
+
+    int n = points.count() - 1;
+
+    if (n == 1) {
+        //for n==1
+        controlPoints[0].setX((2 * points[0].x() + points[1].x()) / 3);
+        controlPoints[0].setY((2 * points[0].y() + points[1].y()) / 3);
+        controlPoints[1].setX(2 * controlPoints[0].x() - points[0].x());
+        controlPoints[1].setY(2 * controlPoints[0].y() - points[0].y());
+        return controlPoints;
+    }
+
+    // Calculate first Bezier control points
+    // Set of equations for P0 to Pn points.
+    //
+    //  |   2   1   0   0   ... 0   0   0   ... 0   0   0   |   |   P1_1    |   |   P0 + 2 * P1             |
+    //  |   1   4   1   0   ... 0   0   0   ... 0   0   0   |   |   P1_2    |   |   4 * P1 + 2 * P2         |
+    //  |   0   1   4   1   ... 0   0   0   ... 0   0   0   |   |   P1_3    |   |   4 * P2 + 2 * P3         |
+    //  |   .   .   .   .   .   .   .   .   .   .   .   .   |   |   ...     |   |   ...                     |
+    //  |   0   0   0   0   ... 1   4   1   ... 0   0   0   | * |   P1_i    | = |   4 * P(i-1) + 2 * Pi     |
+    //  |   .   .   .   .   .   .   .   .   .   .   .   .   |   |   ...     |   |   ...                     |
+    //  |   0   0   0   0   0   0   0   0   ... 1   4   1   |   |   P1_(n-1)|   |   4 * P(n-2) + 2 * P(n-1) |
+    //  |   0   0   0   0   0   0   0   0   ... 0   2   7   |   |   P1_n    |   |   8 * P(n-1) + Pn         |
+    //
+    QVector<qreal> vector;
+    vector.resize(n);
+
+    vector[0] = points[0].x() + 2 * points[1].x();
+
+
+    for (int i = 1; i < n - 1; ++i)
+        vector[i] = 4 * points[i].x() + 2 * points[i + 1].x();
+
+    vector[n - 1] = (8 * points[n - 1].x() + points[n].x()) / 2.0;
+
+    QVector<qreal> xControl = firstControlPoints(vector);
+
+    vector[0] = points[0].y() + 2 * points[1].y();
+
+    for (int i = 1; i < n - 1; ++i)
+        vector[i] = 4 * points[i].y() + 2 * points[i + 1].y();
+
+    vector[n - 1] = (8 * points[n - 1].y() + points[n].y()) / 2.0;
+
+    QVector<qreal> yControl = firstControlPoints(vector);
+
+    for (int i = 0, j = 0; i < n; ++i, ++j) {
+
+        controlPoints[j].setX(xControl[i]);
+        controlPoints[j].setY(yControl[i]);
+
+        j++;
+
+        if (i < n - 1) {
+            controlPoints[j].setX(2 * points[i + 1].x() - xControl[i + 1]);
+            controlPoints[j].setY(2 * points[i + 1].y() - yControl[i + 1]);
+        } else {
+            controlPoints[j].setX((points[n].x() + xControl[n - 1]) / 2);
+            controlPoints[j].setY((points[n].y() + yControl[n - 1]) / 2);
+        }
+    }
+    return controlPoints;
+}
+
+QVector<qreal> MyCurve::firstControlPoints(const QVector<qreal> &vector)
+{
+    QVector<qreal> result;
+
+    int count = vector.count();
+    result.resize(count);
+    result[0] = vector[0] / 2.0;
+
+    QVector<qreal> temp;
+    temp.resize(count);
+    temp[0] = 0;
+
+    qreal b = 2.0;
+
+    for (int i = 1; i < count; i++) {
+        temp[i] = 1 / b;
+        b = (i < count - 1 ? 4.0 : 3.5) - temp[i];
+        result[i] = (vector[i] - result[i - 1]) / b;
+    }
+
+    for (int i = 1; i < count; i++)
+        result[count - i - 1] -= temp[count - i] * result[count - i];
+
+    return result;
 }
 
 QPainterPath MyCurve::generateSmoothCurve(QList<QPointF> points, bool closed, double tension, int numberOfSegments)
