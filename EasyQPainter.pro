@@ -1,9 +1,8 @@
-QT       += core gui widgets
+QT += core gui widgets concurrent
 
 CONFIG += c++11 utf8_source
 
 DEFINES += QT_DEPRECATED_WARNINGS
-
 
 SOURCES += \
     main.cpp \

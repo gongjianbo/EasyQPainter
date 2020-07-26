@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>8</number>
+       <number>9</number>
       </property>
       <widget class="MyPenStyle" name="tabPenStyle">
        <attribute name="title">
@@ -63,6 +63,11 @@
       <widget class="MyCurve" name="tabCurve">
        <attribute name="title">
         <string>Curve</string>
+       </attribute>
+      </widget>
+      <widget class="MySimple3D" name="tabSimple3D">
+       <attribute name="title">
+        <string>Simpe3D</string>
        </attribute>
       </widget>
      </widget>
@@ -123,6 +128,12 @@
    <class>MyCurve</class>
    <extends>QWidget</extends>
    <header>MyCurve.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MySimple3D</class>
+   <extends>QWidget</extends>
+   <header>MySimple3D.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

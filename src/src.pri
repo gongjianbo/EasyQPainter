@@ -7,6 +7,7 @@ HEADERS += \
     $$PWD/MyPenColor.h \
     $$PWD/MyPenStyle.h \
     $$PWD/MyPlanetSystem.h \
+    $$PWD/MySimple3D.h \
     $$PWD/MyTextPath.h
 
 SOURCES += \
@@ -18,4 +19,5 @@ SOURCES += \
     $$PWD/MyPenColor.cpp \
     $$PWD/MyPenStyle.cpp \
     $$PWD/MyPlanetSystem.cpp \
+    $$PWD/MySimple3D.cpp \
     $$PWD/MyTextPath.cpp
