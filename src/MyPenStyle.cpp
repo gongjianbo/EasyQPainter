@@ -17,6 +17,9 @@ MyPenStyle::MyPenStyle(QWidget *parent)
     connect(timer,&QTimer::timeout,this,[=](){
         ++dashOffset;
         dashOffset%=dashCount; //dash点和线一个区段的整体长度
+
+        if(isHidden())
+            return;
         update();
     });
     timer->start(150);

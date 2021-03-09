@@ -14,12 +14,15 @@ MyPenColor::MyPenColor(QWidget *parent)
     QTimer *timer=new QTimer(this);
     connect(timer,&QTimer::timeout,this,[=](){
         //使offset一直在[-1,1)区间内
-        angleOffset+=angleStep*5; //*5加速移动
+        angleOffset+=angleStep;
         if(angleOffset>1.0-angleStep/2)
             angleOffset=-1.0;
+
+        if(isHidden())
+            return;
         update();
     });
-    timer->start(150);
+    timer->start(50);
 }
 
 void MyPenColor::paintEvent(QPaintEvent *event)

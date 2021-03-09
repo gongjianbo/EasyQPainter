@@ -28,6 +28,9 @@ MySimple3D::MySimple3D(QWidget *parent)
     QTimer *timer=new QTimer(this);
     connect(timer,&QTimer::timeout,[=]{
         animationStep+=2.0;
+
+        if(isHidden())
+            return;
         drawImage(width(),height());
     });
     timer->start(50);

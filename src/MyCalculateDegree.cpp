@@ -18,6 +18,9 @@ MyCalculateDegree::MyCalculateDegree(QWidget *parent)
     connect(timer,&QTimer::timeout,this,[=](){
         theRotate+=2;
         theRotate%=360;
+
+        if(isHidden())
+            return;
         update();
     });
     timer->start(100);

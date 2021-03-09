@@ -14,7 +14,7 @@ protected:
     //绘图
     void paintEvent(QPaintEvent *event) override;
     //定时器
-    void timerEvent(QTimerEvent * event) override;
+    //void timerEvent(QTimerEvent * event) override;
     //窗口改变大小，可能需要重新计算
     void resizeEvent(QResizeEvent * event) override;
 

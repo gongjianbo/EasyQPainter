@@ -15,8 +15,11 @@ MyCalculatePos::MyCalculatePos(QWidget *parent)
     //可以注释掉Timer来练习绘制静止状态下的圆和线
     QTimer *timer=new QTimer(this);
     connect(timer,&QTimer::timeout,this,[=](){
-        theRotate+=2;
+        theRotate+=1;
         theRotate%=360;
+
+        if(isHidden())
+            return;
         update();
     });
     timer->start(100);

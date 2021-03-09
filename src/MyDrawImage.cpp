@@ -14,6 +14,9 @@ MyDrawImage::MyDrawImage(QWidget *parent)
     QTimer *timer=new QTimer(this);
     connect(timer,&QTimer::timeout,[=]{
         timeOffset++;
+
+        if(isHidden())
+            return;
         update();
     });
     timer->start(100);

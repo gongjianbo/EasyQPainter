@@ -12,6 +12,9 @@ MyPlanetSystem::MyPlanetSystem(QWidget *parent)
     QTimer *timer=new QTimer(this);
     connect(timer,&QTimer::timeout,this,[=]{
         updatePlanet(rootPlanet);
+
+        if(isHidden())
+            return;
         update();
     });
     timer->start(100);

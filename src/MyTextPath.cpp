@@ -1,19 +1,37 @@
 #include "MyTextPath.h"
 
-#include <QTimerEvent>
+//#include <QTimerEvent>
 #include <QPaintEvent>
 #include <QResizeEvent>
 
 #include <QPainter>
 #include <QPainterPath>
 #include <QLinearGradient>
+#include <QTimer>
 #include <QDebug>
 
 MyTextPath::MyTextPath(QWidget *parent)
     : QWidget(parent)
 {
     //定时移动
-    startTimer(50);
+    QTimer *timer=new QTimer(this);
+    connect(timer,&QTimer::timeout,this,[=](){
+        //文本从左往右循环滚动
+        textOffset_1+=3;
+        if (textOffset_1 > textWidth_1 + labelWidth_1) {
+            textOffset_1 = 0;
+        }
+        //文本从右往左循环滚动
+        textOffset_2+=3;
+        if (textOffset_2 > textWidth_2 + labelWidth_2) {
+            textOffset_2 = 0;
+        }
+
+        if(isHidden())
+            return;
+        update();
+    });
+    timer->start(50);
 }
 
 void MyTextPath::paintEvent(QPaintEvent *event)
@@ -128,24 +146,6 @@ void MyTextPath::paintEvent(QPaintEvent *event)
         painter.setPen(QPen(QBrush(gradient),2));
         painter.drawText(labelWidth_2-textOffset_2, scroll_y2, scroll_text2);
     }
-}
-
-void MyTextPath::timerEvent(QTimerEvent *event)
-{
-    event->accept();
-    //减小定时间隔和步进可以更平滑，但更费cpu
-
-    //文本从左往右循环滚动
-    textOffset_1+=3;
-    if (textOffset_1 > textWidth_1 + labelWidth_1) {
-        textOffset_1 = 0;
-    }
-    //文本从右往左循环滚动
-    textOffset_2+=3;
-    if (textOffset_2 > textWidth_2 + labelWidth_2) {
-        textOffset_2 = 0;
-    }
-    update();
 }
 
 void MyTextPath::resizeEvent(QResizeEvent *event)
