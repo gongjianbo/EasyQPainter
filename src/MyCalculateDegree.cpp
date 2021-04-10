@@ -178,8 +178,8 @@ void MyCalculateDegree::drawPosDegree(QPainter *painter)
 
     //从直角坐标转极坐标
     //r=根号(y^2+x^2)
-    //角度=aten2(y,x) --atan2式已将象限纳入考量的反正切函数
-    //或分段函数求较短
+    //角度=atan2(y,x) --atan2式已将象限纳入考量的反正切函数
+    //或atan分段函数求角度
     //角度是以右侧为0点，顺时针半圆为正，逆时针半圆为负
     //const double arc_tan=qAtan2(pos.y()-center_pos.y(),pos.x()-center_pos.x());
     const double arc_tan=qAtan2(mousePos.y(),mousePos.x());
@@ -187,8 +187,8 @@ void MyCalculateDegree::drawPosDegree(QPainter *painter)
     const double y1=sin(arc_tan)*220;
     painter->drawLine(0,0,x1,y1);
 
-    //aten2结果是以右侧为0点，顺时针半圆为正，逆时针半圆为负，单位是弧度？
-    //需要转换为值正北为0点，顺时针增长，单位转为角度
+    //atan2结果是以右侧为0点，顺时针半圆为正，逆时针半圆为负，结果单位是弧度
+    //此处需要转换为值正北为0点，顺时针增长，单位转为角度
     //注意这个顺时针是因为y在屏幕坐标系反得
     double arc_degree=arc_tan*180/M_PI;
     if(arc_degree<0){
