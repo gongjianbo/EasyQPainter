@@ -55,6 +55,7 @@ void MyCurve::paintEvent(QPaintEvent *event)
     for(const QPointF &pt:point_list){
         painter.drawEllipse(pt,5,5); //画圆是为了便于观察是否过采样点
     }
+    painter.drawText(10,item_height/2,"折线 lineTo");
 
     //2-二次贝塞尔
     painter.translate(0,item_height);
@@ -73,6 +74,7 @@ void MyCurve::paintEvent(QPaintEvent *event)
     for(const QPointF &pt:point_list){
         painter.drawEllipse(pt,5,5); //画圆是为了便于观察是否过采样点
     }
+    painter.drawText(10,item_height/2,"二次贝塞尔 quadTo");
 
     //3-三次贝塞尔
     painter.translate(0,item_height);
@@ -86,12 +88,16 @@ void MyCurve::paintEvent(QPaintEvent *event)
 
         painter.drawEllipse(QPointF(ctrl_x,ctrl_y1),3,3); //画出控制点
         painter.drawEllipse(QPointF(ctrl_x,ctrl_y2),3,3); //画出控制点
+        //下面这个效果差不多，分别取1x2y
+        //painter.drawEllipse(QPointF(point_list.at(i).x(),ctrl_y1),3,3); //画出控制点
+        //painter.drawEllipse(QPointF(point_list.at(i-1).x(),ctrl_y2),3,3); //画出控制点
         path_3.cubicTo(QPointF(ctrl_x,ctrl_y1),QPointF(ctrl_x,ctrl_y2),point_list.at(i));
     }
     painter.drawPath(path_3);
     for(const QPointF &pt:point_list){
         painter.drawEllipse(pt,5,5); //画圆是为了便于观察是否过采样点
     }
+    painter.drawText(10,item_height/2,"三次贝塞尔 cubicTo");
 
     //4-自定义曲线
     painter.translate(0,item_height);
@@ -109,6 +115,7 @@ void MyCurve::paintEvent(QPaintEvent *event)
     for(const QPointF &pt:point_list){
         painter.drawEllipse(pt,5,5); //画圆是为了便于观察是否过采样点
     }
+    painter.drawText(10,item_height/2,"QtCharts SplineChartItem");
 
     //5-自定义曲线
     painter.translate(0,item_height);
@@ -117,6 +124,7 @@ void MyCurve::paintEvent(QPaintEvent *event)
     for(const QPointF &pt:point_list){
         painter.drawEllipse(pt,5,5); //画圆是为了便于观察是否过采样点
     }
+    painter.drawText(10,item_height/2,"公孙二狗");
 }
 
 QVector<QPointF> MyCurve::calculateControlPoints(const QVector<QPointF> &points)
