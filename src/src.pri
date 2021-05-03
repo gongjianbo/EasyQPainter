@@ -8,7 +8,8 @@ HEADERS += \
     $$PWD/MyPenStyle.h \
     $$PWD/MyPlanetSystem.h \
     $$PWD/MySimple3D.h \
-    $$PWD/MyTextPath.h
+    $$PWD/MyTextPath.h \
+    $$PWD/MyWave.h
 
 SOURCES += \
     $$PWD/MyCalculateDegree.cpp \
@@ -20,4 +21,5 @@ SOURCES += \
     $$PWD/MyPenStyle.cpp \
     $$PWD/MyPlanetSystem.cpp \
     $$PWD/MySimple3D.cpp \
-    $$PWD/MyTextPath.cpp
+    $$PWD/MyTextPath.cpp \
+    $$PWD/MyWave.cpp
