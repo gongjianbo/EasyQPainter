@@ -1,9 +1,8 @@
 #include "MyTextPath.h"
 
-//#include <QTimerEvent>
 #include <QPaintEvent>
 #include <QResizeEvent>
-
+#include <QtMath>
 #include <QPainter>
 #include <QPainterPath>
 #include <QLinearGradient>
@@ -16,12 +15,26 @@ MyTextPath::MyTextPath(QWidget *parent)
     //定时移动
     QTimer *timer=new QTimer(this);
     connect(timer,&QTimer::timeout,this,[=](){
-        //文本从左往右循环滚动
+        //左侧文字区域宽高变化
+        if(areaAdd){
+            areaWidth+=2;
+            if(areaWidth>400){
+                areaAdd=false;
+                areaWidth=400;
+            }
+        }else{
+            areaWidth-=2;
+            if(areaWidth<100){
+                areaAdd=true;
+                areaWidth=100;
+            }
+        }
+        //底部文本从左往右循环滚动
         textOffset_1+=3;
         if (textOffset_1 > textWidth_1 + labelWidth_1) {
             textOffset_1 = 0;
         }
-        //文本从右往左循环滚动
+        //底部文本从右往左循环滚动
         textOffset_2+=3;
         if (textOffset_2 > textWidth_2 + labelWidth_2) {
             textOffset_2 = 0;
@@ -46,7 +59,7 @@ void MyTextPath::paintEvent(QPaintEvent *event)
     //窗口最短边
     const int border_width=width()>height()?height():width();
 
-    //中心绘制一个Qt文字
+    //1.中心绘制一个Qt文字
     QColor qt_color(200,250,200); //淡淡的原谅色
     QFont qt_font("Microsoft YaHei",border_width/3);
     QPen qt_pen(qt_color,border_width/20+1);
@@ -76,7 +89,7 @@ void MyTextPath::paintEvent(QPaintEvent *event)
     painter.drawPath(qt_str_path);
     painter.drawRect(qt_rect);
 
-    //左上角绘制文字
+    //2.左上角绘制文字
     const QString str_1="一切都是没有结局的开始";
     const QString str_2="一切都是稍纵即逝的追寻";
     const QFont str_font("Microsoft YaHei",28);
@@ -98,7 +111,44 @@ void MyTextPath::paintEvent(QPaintEvent *event)
     painter.drawPath(str_path);
     painter.fillPath(str_path,str_gradient);
 
-    //底部滚动的文字1
+    //3.左侧文字
+    QRect left_area(0,0,areaWidth,420-areaWidth);
+    left_area.moveTo(20,((height()-left_area.height())/2));
+    painter.setPen(QPen(QColor(255,0,0),2));
+    painter.drawRect(left_area);
+    QFont ft;
+    ft.setFamily("SimSun");
+    ft.setPixelSize(left_area.height());
+    ft.setStretch(100);
+    QFontMetrics fm(ft);
+    const QString text="Hello!龚建波1992";
+    double scale=left_area.width()/double(fm.width(text)+0.1)*100;
+    //最小拉伸因子为 1，最大拉伸因子为 4000
+    ft.setStretch(scale);
+    QFontMetrics fm2(ft);
+    if(prevWidth>0){
+        //拉伸之后Qt计算可能有点问题
+        //有些字号更大了，但是拉伸后反而变窄了
+        //所以保持上次的字体大小和宽度，异常则使用上次的字体
+        //使之增加时不能小于上次，减小时不能大于上次
+        if((areaAdd && fm2.width(text)<prevWidth)||
+                (!areaAdd && fm2.width(text)>prevWidth))
+        {
+            ft.setPixelSize(prevSize);
+            ft.setStretch(prevStretch);
+        }
+    }
+    //qDebug()<<scale<<fm2.width(text)<<ft.stretch()<<fm.width(text);
+    painter.setFont(ft);
+    //drawText y是基线位置，ascent 是基线到文字top的位置
+    painter.drawText(left_area.left()+qCeil((left_area.width()-painter.fontMetrics().width(text))/2),
+                     left_area.top()+painter.fontMetrics().ascent(),
+                     text);
+    prevWidth=painter.fontMetrics().width(text);
+    prevSize=ft.pixelSize();
+    prevStretch=ft.stretch();
+
+    //4.底部滚动的文字1
     QFont scroll_font("Microsoft YaHei",20);
     painter.setFont(scroll_font);
     const QString scroll_text0="你一会儿看我，一会儿看云。";
@@ -125,7 +175,7 @@ void MyTextPath::paintEvent(QPaintEvent *event)
         painter.drawText(textOffset_1-textWidth_1, scroll_y1, scroll_text1);
     }
 
-    //底部滚动的文字2
+    //5.底部滚动的文字2
     const QString scroll_text2="我觉得你看我时很远，你看云时很近。";
     const int scroll_width2 = painter.fontMetrics().width(scroll_text2);
     //const int scroll_height2 = painter.fontMetrics().capHeight();
