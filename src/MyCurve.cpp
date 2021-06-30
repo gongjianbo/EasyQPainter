@@ -41,8 +41,9 @@ void MyCurve::paintEvent(QPaintEvent *event)
     point_list.push_back(QPointF(item_width*5.5,item_height*0.95));
     point_list.push_back(QPointF(item_width*6.5,item_height*0.15));
     point_list.push_back(QPointF(item_width*7.5,item_height*0.5));
-    point_list.push_back(QPointF(item_width*8.5,item_height*0.3));
-    point_list.push_back(QPointF(item_width*9.1,item_height*0.8));
+    //这里制造一个方形，目测三次贝塞尔地效果更好
+    point_list.push_back(QPointF(item_width*7.51,item_height*0.8));
+    point_list.push_back(QPointF(item_width*9.49,item_height*0.8));
     point_list.push_back(QPointF(item_width*9.5,item_height*0.15));
 
     //1-直线连接
