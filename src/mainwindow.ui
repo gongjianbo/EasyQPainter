@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Easy QPainter (By: GongJianBo 1992)</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="TabBasic" name="tab_basic">
+       <attribute name="title">
+        <string>Basic</string>
+       </attribute>
+      </widget>
+      <widget class="TabDraw" name="tab_draw">
+       <attribute name="title">
+        <string>Draw</string>
+       </attribute>
+      </widget>
+      <widget class="Tab3D" name="tab_3d">
+       <attribute name="title">
+        <string>3D</string>
+       </attribute>
+      </widget>
+      <widget class="TabChart" name="tab_chart">
+       <attribute name="title">
+        <string>Chart</string>
+       </attribute>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>23</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>TabBasic</class>
+   <extends>QWidget</extends>
+   <header>TabBasic.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>TabDraw</class>
+   <extends>QWidget</extends>
+   <header>TabDraw.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Tab3D</class>
+   <extends>QWidget</extends>
+   <header>Tab3D.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>TabChart</class>
+   <extends>QWidget</extends>
+   <header>TabChart.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
