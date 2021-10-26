@@ -16,20 +16,56 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QTabWidget" name="tabWidget">
-     <widget class="QWidget" name="tab">
+     <widget class="PlanetSystem" name="tab_planet">
       <attribute name="title">
-       <string>Tab 1</string>
+       <string>PlanetSystem</string>
       </attribute>
      </widget>
-     <widget class="QWidget" name="tab_2">
+     <widget class="SineWave" name="tab_sinewave">
       <attribute name="title">
-       <string>Tab 2</string>
+       <string>SineWave</string>
+      </attribute>
+     </widget>
+     <widget class="CalcPos" name="tab_calcpos">
+      <attribute name="title">
+       <string>CalcPos</string>
+      </attribute>
+     </widget>
+     <widget class="CalcDegree" name="tab_calcdegree">
+      <attribute name="title">
+       <string>CalcDegree</string>
       </attribute>
      </widget>
     </widget>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PlanetSystem</class>
+   <extends>QWidget</extends>
+   <header>PlanetSystem.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>SineWave</class>
+   <extends>QWidget</extends>
+   <header>SineWave.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>CalcPos</class>
+   <extends>QWidget</extends>
+   <header>CalcPos.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>CalcDegree</class>
+   <extends>QWidget</extends>
+   <header>CalcDegree.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

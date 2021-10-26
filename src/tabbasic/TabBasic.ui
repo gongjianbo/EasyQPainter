@@ -20,7 +20,7 @@
       <enum>Qt::NoFocus</enum>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>3</number>
      </property>
      <widget class="PenStyle" name="tab_penstyle">
       <attribute name="title">
@@ -35,6 +35,11 @@
      <widget class="TextPath" name="tab_textpath">
       <attribute name="title">
        <string>TextPath</string>
+      </attribute>
+     </widget>
+     <widget class="DrawCurve" name="tab_drawcurve">
+      <attribute name="title">
+       <string>DrawCurve</string>
       </attribute>
      </widget>
     </widget>
@@ -58,6 +63,12 @@
    <class>TextPath</class>
    <extends>QWidget</extends>
    <header>TextPath.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>DrawCurve</class>
+   <extends>QWidget</extends>
+   <header>DrawCurve.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
