@@ -22,7 +22,7 @@ private:
 
 private:
     //定时动画
-    QTimer *timer{nullptr};
+    QTimer timer;
     //旋转的角度 [0-360]
     int theRotate{0};
     //第一个图，为了旋转时文字不抖动，先绘制到画布

@@ -17,8 +17,7 @@ CalcPos::CalcPos(QWidget *parent)
     //定时旋转
     //减小刷新间隔和步进角度可以让旋转更自然，但是更耗费cpu
     //可以注释掉Timer来练习绘制静止状态下的圆和线
-    timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, [this]()
+    connect(&timer, &QTimer::timeout, this, [this]()
             {
                 theRotate += 1;
                 theRotate %= 360;
@@ -27,7 +26,7 @@ CalcPos::CalcPos(QWidget *parent)
                     return;
                 update();
             });
-    timer->start(100);
+    timer.start(100);
 }
 
 void CalcPos::paintEvent(QPaintEvent *event)

@@ -14,8 +14,7 @@ CalcDegree::CalcDegree(QWidget *parent)
     setMouseTracking(true);
 
     //定时旋转
-    timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, [=]()
+    connect(&timer, &QTimer::timeout, this, [this]()
             {
                 theRotate += 2;
                 theRotate %= 360;
@@ -24,7 +23,7 @@ CalcDegree::CalcDegree(QWidget *parent)
                     return;
                 update();
             });
-    timer->start(100);
+    timer.start(100);
 }
 
 void CalcDegree::paintEvent(QPaintEvent *event)

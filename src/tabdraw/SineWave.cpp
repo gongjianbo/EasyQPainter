@@ -8,8 +8,7 @@
 SineWave::SineWave(QWidget *parent)
     : QWidget(parent)
 {
-    timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, [this]()
+    connect(&timer, &QTimer::timeout, this, [this]()
             {
                 timeVal += 1;
                 //不在本页就不刷新
@@ -17,7 +16,7 @@ SineWave::SineWave(QWidget *parent)
                     return;
                 update();
             });
-    timer->start(100);
+    timer.start(100);
 }
 
 void SineWave::paintEvent(QPaintEvent *event)

@@ -24,7 +24,7 @@ private:
 
 private:
     //定时动画
-    QTimer *timer{nullptr};
+    QTimer timer;
     //旋转的角度 [0-360]
     int theRotate{0};
     //鼠标位置

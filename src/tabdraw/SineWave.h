@@ -13,7 +13,7 @@ public:
 
 private:
     //定时器动画
-    QTimer *timer{nullptr};
+    QTimer timer;
     //根据时间步进
     int timeVal{0}; 
 };

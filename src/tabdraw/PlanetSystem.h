@@ -1,6 +1,7 @@
 #pragma once
 #include <QWidget>
 #include <QPainter>
+#include <QTimer>
 
 //单个星体
 class PlanetNode
@@ -68,5 +69,5 @@ private:
     //星体根节点
     PlanetNode *rootPlanet{nullptr};
     //旋转定时器
-    QTimer *timer{nullptr};
+    QTimer timer;
 };
