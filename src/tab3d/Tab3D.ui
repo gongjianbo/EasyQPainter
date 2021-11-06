@@ -16,9 +16,9 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QTabWidget" name="tabWidget">
-     <widget class="QWidget" name="tab">
+     <widget class="Cube3D" name="tab_cube">
       <attribute name="title">
-       <string>Tab 1</string>
+       <string>Cube</string>
       </attribute>
      </widget>
      <widget class="QWidget" name="tab_2">
@@ -30,6 +30,14 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Cube3D</class>
+   <extends>QWidget</extends>
+   <header>Cube3D.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
