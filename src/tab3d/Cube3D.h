@@ -1,6 +1,7 @@
 #pragma once
 #include <QWidget>
 #include <QMouseEvent>
+#include <QWheelEvent>
 #include <QVector3D>
 #include <QMatrix4x4>
 #include <QQuaternion>
@@ -17,6 +18,7 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
+    void wheelEvent(QWheelEvent *event) override;
 
     QPointF getPoint(const QVector3D &vt, int w) const;
 
@@ -25,8 +27,11 @@ private:
     QVector<QVector3D> vertexArr;
     //立方体六个面
     QVector<QVector<int>> elementArr;
-    //旋转矩阵
-    QMatrix4x4 rotateMat;
+    //观察矩阵旋转
+    QVector3D rotationAxis;
+    QQuaternion rotationQuat;
+    //透视投影的fovy参数，视野范围
+    float projectionFovy{30.0f};
 
     //鼠标位置
     QPoint mousePos;

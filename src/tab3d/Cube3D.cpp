@@ -60,10 +60,13 @@ void Cube3D::paintEvent(QPaintEvent *event)
     const int cube_width = (width() > height() ? height() : width()) / 4;
 
     //投影矩阵
-    //（奇怪，为什么只是平移了z轴，没用perspective函数就有远小近大的效果，
-    //在我的想象中默认不该是正交投影么）
+    //(之前计算错误，向量放在了矩阵左侧，误打误撞也实现了效果)
     QMatrix4x4 perspective_mat;
-    perspective_mat.translate(0.0f, 0.0f, -0.1f);
+    perspective_mat.perspective(projectionFovy, 1.0f, 0.1f, 100.0f);
+    //观察矩阵
+    QMatrix4x4 view_mat;
+    view_mat.translate(0.0f, 0.0f, -5.0f);
+    view_mat.rotate(rotationQuat);
 
     //计算顶点变换后坐标，包含z值max点就是正交表面可见的，
     //再计算下远小近大的透视投影效果齐活了
@@ -74,7 +77,9 @@ void Cube3D::paintEvent(QPaintEvent *event)
     for (int i = 0; i < vertexArr.count(); i++)
     {
         //以物体中心为原点旋转
-        QVector3D vertex = vertexArr.at(i) * rotateMat * perspective_mat;
+        QVector3D vertex = perspective_mat * view_mat * vertexArr.at(i);
+        vertex.setZ(-vertex.z());
+        vertex.setY(-vertex.y());
         vertex_list.push_back(vertex);
         //找出z值max的顶点
         if (i == 0)
@@ -203,12 +208,13 @@ void Cube3D::mouseMoveEvent(QMouseEvent *event)
 {
     if (mousePressed)
     {
-        const QPoint posOffset = event->pos() - mousePos;
+        QVector2D diff = QVector2D(event->pos()) - QVector2D(mousePos);
         mousePos = event->pos();
-        //旋转矩阵  x和y分量
-        //rotateMat.rotate(posOffset.x(),QVector3D(0.0f,-0.5f,0.0f));
-        //rotateMat.rotate(posOffset.y(),QVector3D(0.5f,0.0f,0.0f));
-        rotateMat.rotate(1.1f, QVector3D(0.5f * posOffset.y(), -0.5f * posOffset.x(), 0.0f));
+        QVector3D n = QVector3D(diff.y(), diff.x(), 0.0).normalized();
+        rotationAxis = (rotationAxis + n).normalized();
+        //不能对换乘的顺序
+        rotationQuat = QQuaternion::fromAxisAndAngle(rotationAxis, 2.0f) * rotationQuat;
+
         update();
     }
     QWidget::mouseMoveEvent(event);
@@ -218,6 +224,27 @@ void Cube3D::mouseReleaseEvent(QMouseEvent *event)
 {
     mousePressed = false;
     QWidget::mouseReleaseEvent(event);
+}
+
+void Cube3D::wheelEvent(QWheelEvent *event)
+{
+    event->accept();
+    //fovy越小，模型看起来越大
+    if (event->delta() < 0)
+    {
+        //鼠标向下滑动为-，这里作为zoom out
+        projectionFovy += 0.5f;
+        if (projectionFovy > 90)
+            projectionFovy = 90;
+    }
+    else
+    {
+        //鼠标向上滑动为+，这里作为zoom in
+        projectionFovy -= 0.5f;
+        if (projectionFovy < 1)
+            projectionFovy = 1;
+    }
+    update();
 }
 
 QPointF Cube3D::getPoint(const QVector3D &vt, int w) const
