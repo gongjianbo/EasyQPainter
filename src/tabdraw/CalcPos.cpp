@@ -21,12 +21,20 @@ CalcPos::CalcPos(QWidget *parent)
             {
                 theRotate += 1;
                 theRotate %= 360;
-
-                if (isHidden())
-                    return;
                 update();
             });
+}
+
+void CalcPos::showEvent(QShowEvent *event)
+{
     timer.start(100);
+    QWidget::showEvent(event);
+}
+
+void CalcPos::hideEvent(QHideEvent *event)
+{
+    timer.stop();
+    QWidget::hideEvent(event);
 }
 
 void CalcPos::paintEvent(QPaintEvent *event)

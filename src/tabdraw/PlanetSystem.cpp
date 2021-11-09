@@ -12,17 +12,25 @@ PlanetSystem::PlanetSystem(QWidget *parent)
     connect(&timer, &QTimer::timeout, this, [this]
             {
                 updatePlanet(rootPlanet);
-                //不在本页就不刷新
-                if (isHidden())
-                    return;
                 update();
             });
-    timer.start(50);
 }
 
 PlanetSystem::~PlanetSystem()
 {
     freeSystem();
+}
+
+void PlanetSystem::showEvent(QShowEvent *event)
+{
+    timer.start(50);
+    QWidget::showEvent(event);
+}
+
+void PlanetSystem::hideEvent(QHideEvent *event)
+{
+    timer.stop();
+    QWidget::hideEvent(event);
 }
 
 void PlanetSystem::paintEvent(QPaintEvent *event)

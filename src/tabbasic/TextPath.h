@@ -10,7 +10,10 @@ public:
     explicit TextPath(QWidget *parent = nullptr);
 
 protected:
-    //绘图
+    //显示时才启动定时动画
+    void showEvent(QShowEvent *event) override;
+    void hideEvent(QHideEvent *event) override;
+    //绘制
     void paintEvent(QPaintEvent *event) override;
     //窗口改变大小，可能需要重新计算
     void resizeEvent(QResizeEvent *event) override;

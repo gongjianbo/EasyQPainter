@@ -13,12 +13,20 @@ DrawImage::DrawImage(QWidget *parent)
     connect(&timer, &QTimer::timeout, [this]
             {
                 timeOffset++;
-
-                if (isHidden())
-                    return;
                 update();
             });
+}
+
+void DrawImage::showEvent(QShowEvent *event)
+{
     timer.start(100);
+    QWidget::showEvent(event);
+}
+
+void DrawImage::hideEvent(QHideEvent *event)
+{
+    timer.stop();
+    QWidget::hideEvent(event);
 }
 
 void DrawImage::paintEvent(QPaintEvent *event)

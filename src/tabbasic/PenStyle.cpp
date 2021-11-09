@@ -13,18 +13,26 @@ PenStyle::PenStyle(QWidget *parent)
     }
 
     //定时移动虚线偏移，制作蚂蚁线效果
-    connect(&dashTimer, &QTimer::timeout, this, [this]()
+    connect(&timer, &QTimer::timeout, this, [this]()
             {
                 //虚线移动
                 ++dashOffset;
                 //模以dash总长度，防止越界等
                 dashOffset %= dashCount;
-                //不在本页就不刷新
-                if (isHidden())
-                    return;
                 update();
             });
-    dashTimer.start(150);
+}
+
+void PenStyle::showEvent(QShowEvent *event)
+{
+    timer.start(150);
+    QWidget::showEvent(event);
+}
+
+void PenStyle::hideEvent(QHideEvent *event)
+{
+    timer.stop();
+    QWidget::hideEvent(event);
 }
 
 void PenStyle::paintEvent(QPaintEvent *event)

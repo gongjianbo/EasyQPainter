@@ -11,6 +11,10 @@ public:
     explicit PenStyle(QWidget *parent = nullptr);
 
 protected:
+    //显示时才启动定时动画
+    void showEvent(QShowEvent *event) override;
+    void hideEvent(QHideEvent *event) override;
+    //绘制
     void paintEvent(QPaintEvent *event) override;
 
 private:
@@ -20,7 +24,7 @@ private:
     int dashCount{0};
 
     //虚线定时移动实现蚂蚁线
-    QTimer dashTimer;
+    QTimer timer;
     //蚂蚁线偏移
     int dashOffset{0};
 };

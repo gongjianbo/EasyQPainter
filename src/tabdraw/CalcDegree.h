@@ -11,6 +11,10 @@ public:
     explicit CalcDegree(QWidget *parent = nullptr);
 
 protected:
+    //显示时才启动定时动画
+    void showEvent(QShowEvent *event) override;
+    void hideEvent(QHideEvent *event) override;
+    //绘制
     void paintEvent(QPaintEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
 

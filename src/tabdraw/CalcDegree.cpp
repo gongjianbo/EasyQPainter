@@ -18,12 +18,20 @@ CalcDegree::CalcDegree(QWidget *parent)
             {
                 theRotate += 2;
                 theRotate %= 360;
-
-                if (isHidden())
-                    return;
                 update();
             });
+}
+
+void CalcDegree::showEvent(QShowEvent *event)
+{
     timer.start(100);
+    QWidget::showEvent(event);
+}
+
+void CalcDegree::hideEvent(QHideEvent *event)
+{
+    timer.stop();
+    QWidget::hideEvent(event);
 }
 
 void CalcDegree::paintEvent(QPaintEvent *event)

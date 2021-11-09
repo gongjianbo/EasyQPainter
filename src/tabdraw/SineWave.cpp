@@ -11,12 +11,20 @@ SineWave::SineWave(QWidget *parent)
     connect(&timer, &QTimer::timeout, this, [this]()
             {
                 timeVal += 1;
-                //不在本页就不刷新
-                if (isHidden())
-                    return;
                 update();
             });
+}
+
+void SineWave::showEvent(QShowEvent *event)
+{
     timer.start(100);
+    QWidget::showEvent(event);
+}
+
+void SineWave::hideEvent(QHideEvent *event)
+{
+    timer.stop();
+    QWidget::hideEvent(event);
 }
 
 void SineWave::paintEvent(QPaintEvent *event)

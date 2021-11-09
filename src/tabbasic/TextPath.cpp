@@ -45,12 +45,20 @@ TextPath::TextPath(QWidget *parent)
                 {
                     textOffset_2 = 0;
                 }
-                //不在本页就不刷新
-                if (isHidden())
-                    return;
                 update();
             });
+}
+
+void TextPath::showEvent(QShowEvent *event)
+{
     timer.start(50);
+    QWidget::showEvent(event);
+}
+
+void TextPath::hideEvent(QHideEvent *event)
+{
+    timer.stop();
+    QWidget::hideEvent(event);
 }
 
 void TextPath::paintEvent(QPaintEvent *event)

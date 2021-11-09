@@ -16,12 +16,20 @@ PenColor::PenColor(QWidget *parent)
                 angleOffset += angleStep;
                 if (angleOffset > 1.0 - angleStep / 2)
                     angleOffset = -1.0;
-                //不在本页就不刷新
-                if (isHidden())
-                    return;
                 update();
             });
+}
+
+void PenColor::showEvent(QShowEvent *event)
+{
     timer.start(50);
+    QWidget::showEvent(event);
+}
+
+void PenColor::hideEvent(QHideEvent *event)
+{
+    timer.stop();
+    QWidget::hideEvent(event);
 }
 
 void PenColor::paintEvent(QPaintEvent *event)
