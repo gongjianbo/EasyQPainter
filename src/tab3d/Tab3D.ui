@@ -16,14 +16,17 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>1</number>
+     </property>
      <widget class="Cube3D" name="tab_cube">
       <attribute name="title">
        <string>Cube</string>
       </attribute>
      </widget>
-     <widget class="QWidget" name="tab_2">
+     <widget class="Windmill3D" name="tab_windmill">
       <attribute name="title">
-       <string>Tab 2</string>
+       <string>Windmill</string>
       </attribute>
      </widget>
     </widget>
@@ -35,6 +38,12 @@
    <class>Cube3D</class>
    <extends>QWidget</extends>
    <header>Cube3D.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Windmill3D</class>
+   <extends>QWidget</extends>
+   <header>Windmill3D.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
