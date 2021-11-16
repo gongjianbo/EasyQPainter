@@ -55,7 +55,7 @@ struct WindItem
     //rotation目前只计算了x和y的旋转，作用于item的顶点上，目前只能旋转item
     //step为定时器动画的步进，每个item根据自身的动画因子成员来计算
     QList<QSharedPointer<WindMeta>> calcSurfaceMetas(
-            const QVector3D &position, const QVector3D &rotation, double step);
+            const QVector3D &position, const QQuaternion &rotation, float step, float fovy);
 };
 
 //绘制一个3D风车
@@ -77,6 +77,7 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
+    void wheelEvent(QWheelEvent *event) override;
     //改变窗口大小
     void resizeEvent(QResizeEvent *event) override;
 
@@ -98,15 +99,17 @@ private:
     //鼠标位置
     QPoint mousePos;
     //鼠标按下标志位
-    bool mousePressed = false;
+    bool mousePressed{false};
 
     //定时动画
     QTimer timer;
     //定时器旋转步进值
-    double animationStep{0.0};
-    //旋转角度
-    double xRotate{0.0};
-    double yRotate{0.0};
+    float animationStep{0.0f};
+    //观察矩阵旋转
+    QVector3D rotationAxis;
+    QQuaternion rotationQuat;
+    //透视投影的fovy参数，视野范围
+    float projectionFovy{30.0f};
 
     //多线程异步watcher
     QFutureWatcher<QImage> watcher;
