@@ -99,7 +99,7 @@ Windmill3D::Windmill3D(QWidget *parent)
     //定时旋转风车
     connect(&timer, &QTimer::timeout, this, [this]()
     {
-        animationStep += 1.5f;
+        animationStep += 2.0f;
         drawImage(width(), height());
     });
 }
@@ -112,7 +112,7 @@ Windmill3D::~Windmill3D()
 
 void Windmill3D::showEvent(QShowEvent *event)
 {
-    timer.start(30);
+    timer.start(50);
     QWidget::showEvent(event);
 }
 
@@ -212,19 +212,19 @@ void Windmill3D::resizeEvent(QResizeEvent *event)
 
 void Windmill3D::initWindmill()
 {
-    //模板的嵌套时自动格式化太难看了
+    //参照荷兰风车，逆时针旋转，帆布往塔身一侧倾斜
     //四个扇叶
     WindMeta *sub_fan1 = new WindMeta{{QVector3D(0, 0, 0), QVector3D(-250, -250, 0),
-            QVector3D(-300, -200, 10), QVector3D(-100, 0, 10)},
+            QVector3D(-300, -200, -10), QVector3D(-100, 0, -10)},
             QColor(110, 250, 250, 200)};
     WindMeta *sub_fan2 = new WindMeta{{QVector3D(0, 0, 0), QVector3D(-250, 250, 0),
-            QVector3D(-200, 300, 10), QVector3D(0, 100, 10)},
+            QVector3D(-200, 300, -10), QVector3D(0, 100, -10)},
             QColor(130, 250, 250, 200)};
     WindMeta *sub_fan3 = new WindMeta{{QVector3D(0, 0, 0), QVector3D(250, 250, 0),
-            QVector3D(300, 200, 10), QVector3D(100, 0, 10)},
+            QVector3D(300, 200, -10), QVector3D(100, 0, -10)},
             QColor(110, 250, 250, 200)};
     WindMeta *sub_fan4 = new WindMeta{{QVector3D(0, 0, 0), QVector3D(250, -250, 0),
-            QVector3D(200, -300, 10), QVector3D(0, -100, 10)},
+            QVector3D(200, -300, -10), QVector3D(0, -100, -10)},
             QColor(130, 250, 250, 200)};
     auto sub_fanmetas = QList<QSharedPointer<WindMeta>>{QSharedPointer<WindMeta>(sub_fan1),
                                                        QSharedPointer<WindMeta>(sub_fan2),
@@ -236,7 +236,7 @@ void Windmill3D::initWindmill()
             QVector3D(0, 0, 0), //相对方向
             sub_fanmetas,
             sub_fansubs,
-            QVector3D(0, 0, -1)}; //给z加了动画因子，即扇叶在xy平面转
+            QVector3D(0, 0, 1)}; //给z加了动画因子，即扇叶在xy平面转
 
     //风车主干，共9个面，顶部尖塔4+主干4+底面
     //顶部4
