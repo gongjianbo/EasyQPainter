@@ -8,6 +8,7 @@
 //有趣的链接：
 //https://www.cnblogs.com/aslistener/articles/4478303.html
 //https://www.cnblogs.com/swarmbees/p/5722882.html
+//https://blog.csdn.net/u013015629/article/details/54669608
 class DrawImage : public QWidget
 {
     Q_OBJECT

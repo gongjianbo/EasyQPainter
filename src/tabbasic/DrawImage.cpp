@@ -114,4 +114,88 @@ void DrawImage::paintEvent(QPaintEvent *event)
     painter.drawImage(200, 310, img_a);
     painter.drawRect(QRect(QPoint(200, 310), img_a.rect().size()));
     painter.drawText(200, 300, "transform shear");
+
+    //亮度调节
+    //(暖色调加减红绿，冷色调加减蓝)
+    img_a = imgCache.copy();
+    int brightness_offset = 100;
+    int red, green, blue;
+    for (int row = 0; row < img_a.height(); row++)
+    {
+        //整行数据,typedef unsigned int QRgb;
+        QRgb *line_data = (QRgb *)img_a.scanLine(row);
+        for (int col = 0; col < img_a.width(); col++)
+        {
+            red = qRed(line_data[col]) + brightness_offset;
+            red = (red < 0x00) ? 0x00 : (red > 0xff) ? 0xff
+                                                     : red;
+            green = qGreen(line_data[col]) + brightness_offset;
+            green = (green < 0x00) ? 0x00 : (green > 0xff) ? 0xff
+                                                           : green;
+            blue = qBlue(line_data[col]) + brightness_offset;
+            blue = (blue < 0x00) ? 0x00 : (blue > 0xff) ? 0xff
+                                                        : blue;
+            line_data[col] = qRgba(red, green, blue, qAlpha(line_data[col]));
+        }
+    }
+    painter.drawImage(10 + 210 * 2, 310, img_a);
+    painter.drawText(10 + 210 * 2, 300, "brightness");
+
+    //对比度
+    img_a = imgCache.copy();
+    int contrast_offset = 50;
+    for (int row = 0; row < img_a.height(); row++)
+    {
+        //整行数据,typedef unsigned int QRgb;
+        QRgb *line_data = (QRgb *)img_a.scanLine(row);
+        for (int col = 0; col < img_a.width(); col++)
+        {
+            float param = 0;
+            if (contrast_offset > 0 && contrast_offset < 100)
+            {
+                param = 1 / (1 - contrast_offset / 100.0) - 1;
+            }
+            else
+            {
+                param = contrast_offset / 100.0;
+            }
+            red = qRed(line_data[col]);
+            red = red + (red - 127) * param;
+            red = (red < 0x00) ? 0x00 : (red > 0xff) ? 0xff
+                                                     : red;
+            green = qGreen(line_data[col]);
+            green = green + (green - 127) * param;
+            green = (green < 0x00) ? 0x00 : (green > 0xff) ? 0xff
+                                                           : green;
+            blue = qBlue(line_data[col]);
+            blue = blue + (blue - 127) * param;
+            blue = (blue < 0x00) ? 0x00 : (blue > 0xff) ? 0xff
+                                                        : blue;
+            line_data[col] = qRgba(red, green, blue, qAlpha(line_data[col]));
+        }
+    }
+    painter.drawImage(10 + 210 * 3, 310, img_a);
+    painter.drawText(10 + 210 * 3, 300, "contrast");
+
+    //饱和度
+    //HSL格式表示色彩 - hue（色相）, saturation（饱和度）, lightness（明度）
+    img_a = imgCache.copy();
+    int hue, saturation, lightness;
+    for (int row = 0; row < img_a.height(); row++)
+    {
+        //整行数据,typedef unsigned int QRgb;
+        QRgb *line_data = (QRgb *)img_a.scanLine(row);
+        for (int col = 0; col < img_a.width(); col++)
+        {
+            QColor color = QColor(line_data[col]).toHsl();
+            hue = color.hue();
+            saturation = color.saturation() + 200;
+            lightness = color.lightness();
+            saturation = qBound(0, saturation, 255);
+            color.setHsl(hue, saturation, lightness);
+            line_data[col] = color.rgba();
+        }
+    }
+    painter.drawImage(10 + 210 * 4, 310, img_a);
+    painter.drawText(10 + 210 * 4, 300, "saturation");
 }
