@@ -8,6 +8,8 @@ DrawImage::DrawImage(QWidget *parent)
 {
     imgCache = QImage(":/hehua.png");
     imgCache.convertTo(QImage::Format_ARGB32);
+    maskCache = QImage(":/heart.png");
+    maskCache.convertTo(QImage::Format_ARGB32);
 
     //定时器用来做动态效果
     connect(&timer, &QTimer::timeout, [this]
@@ -40,6 +42,8 @@ void DrawImage::paintEvent(QPaintEvent *event)
 
     //红色笔
     painter.setPen(Qt::red);
+    //中间变量
+    QImage img_a;
 
     //drawImage是以左上角为起点，drawText是以左下角为起点
     //缩放
@@ -50,14 +54,31 @@ void DrawImage::paintEvent(QPaintEvent *event)
     //镜像，可以横项和纵向反转
     painter.drawImage(10 + 210 * 1, 30, imgCache.mirrored(true, true));
     painter.drawText(10 + 210 * 1, 20, "mirrored");
+
     //红蓝分量交换
     painter.drawImage(10 + 210 * 2, 30, imgCache.rgbSwapped());
     painter.drawText(10 + 210 * 2, 20, "rgbSwapped");
-    //mask
-    //createMaskFromColor，需要执行的颜色来制作蒙版，懒得找图
-    //createAlphaMask需要透明度，也懒得找图
 
-    QImage img_a;
+    //mask
+    img_a = maskCache.scaled(200, 200);
+    {
+        QPainter p(&img_a);
+        //因为图片是放大过的，所以没法
+        //p.setRenderHint(QPainter::SmoothPixmapTransform);
+        //源像素混合在目标的顶部，源像素的 alpha 减去目标像素的 alpha。
+        p.setCompositionMode(QPainter::CompositionMode_SourceAtop);
+        p.drawImage(0, 0, imgCache);
+    }
+    painter.drawImage(10 + 210 * 3, 30, img_a);
+    painter.drawText(10 + 210 * 3, 20, "mask");
+    //其他
+    //根据给定的颜色值创建并返回此图像的蒙版
+    //QImage QImage::createMaskFromColor(QRgb color, Qt::MaskMode mode = Qt::MaskInColor) const
+    //函数创建并返回此图像的 1-bpp 启发式掩码
+    //QImage QImage::createHeuristicMask(bool clipTight = true) const
+    //从此图像中的 alpha 缓冲区构建并返回一个 1-bpp 掩码
+    //QImage QImage::createMaskFromColor(QRgb color, Qt::MaskMode mode = Qt::MaskInColor) const
+
     //灰度图
     //灰度值,argb32格式：(0xAARRGGBB).
     img_a = imgCache.scaled(100, 100);
@@ -86,6 +107,22 @@ void DrawImage::paintEvent(QPaintEvent *event)
     img_a = imgCache.scaled(100, 100).convertToFormat(QImage::Format_Grayscale8);
     painter.drawImage(10 + 210 * 4 + 100, 30 + 100, img_a);
     painter.drawText(10 + 210 * 4, 20, "gray");
+    //填充为某个颜色
+    img_a = maskCache.copy();
+    {
+        QPainter p(&img_a);
+        p.setCompositionMode(QPainter::CompositionMode_SourceIn);
+        p.fillRect(img_a.rect(), Qt::green); //原谅绿
+    }
+    painter.drawImage(10 + 210 * 5, 30, img_a);
+    img_a = maskCache.copy();
+    {
+        QPainter p(&img_a);
+        p.setCompositionMode(QPainter::CompositionMode_SourceIn);
+        p.fillRect(img_a.rect(), Qt::red); //原谅绿
+    }
+    painter.drawImage(10 + 210 * 5 + 100, 30 + 100, img_a);
+    painter.drawText(10 + 210 * 5, 20, "colorImage");
 
     //转换矩阵
     QTransform mat_a;      //3*3矩阵，貌似用QMatrix也可以

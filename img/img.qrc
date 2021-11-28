@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>hehua.png</file>
         <file>icon.ico</file>
+        <file>heart.png</file>
     </qresource>
 </RCC>

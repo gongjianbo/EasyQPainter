@@ -26,6 +26,8 @@ private:
     //定时器动画
     QTimer timer;
     int timeOffset{0};
-    //待绘制的图
+    //待绘制的图-荷花200*200
     QImage imgCache;
+    //遮罩样式-心形100*100
+    QImage maskCache;
 };
