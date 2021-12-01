@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>595</width>
+    <height>398</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,6 +16,9 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>4</number>
+     </property>
      <widget class="PlanetSystem" name="tab_planet">
       <attribute name="title">
        <string>PlanetSystem</string>
@@ -34,6 +37,11 @@
      <widget class="CalcDegree" name="tab_calcdegree">
       <attribute name="title">
        <string>CalcDegree</string>
+      </attribute>
+     </widget>
+     <widget class="SimpleSelection" name="tab_simplesel">
+      <attribute name="title">
+       <string>SimpleSel</string>
       </attribute>
      </widget>
     </widget>
@@ -63,6 +71,12 @@
    <class>CalcDegree</class>
    <extends>QWidget</extends>
    <header>CalcDegree.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>SimpleSelection</class>
+   <extends>QWidget</extends>
+   <header>SimpleSelection.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

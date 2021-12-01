@@ -6,6 +6,7 @@ TabDraw::TabDraw(QWidget *parent) :
     ui(new Ui::TabDraw)
 {
     ui->setupUi(this);
+    ui->tabWidget->setCurrentIndex(0);
 }
 
 TabDraw::~TabDraw()
