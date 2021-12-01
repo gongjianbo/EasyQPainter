@@ -27,21 +27,21 @@ void SimpleSelection::paintEvent(QPaintEvent *event)
 
     painter.save();
     if (pressFlag && curPosition != AreaPosition::Outside)
-    { //点击
-        painter.setPen(QColor(255, 0, 0));
-        painter.setBrush(QColor(255, 170, 0));
+    { //点击样式，选用纯正的原谅绿主题
+        painter.setPen(QColor(0, 255, 255));
+        painter.setBrush(QColor(0, 180, 0));
     }
     else if (curPosition != AreaPosition::Outside)
-    { //悬停
-        painter.setPen(QColor(255, 0, 0));
-        painter.setBrush(QColor(255, 200, 0));
+    { //悬停样式
+        painter.setPen(QColor(0, 255, 255));
+        painter.setBrush(QColor(0, 160, 0));
     }
     else
-    { //未选中
-        painter.setPen(QColor(0, 170, 255));
-        painter.setBrush(QColor(255, 200, 0));
+    { //未选中样式
+        painter.setPen(QColor(0, 150, 255));
+        painter.setBrush(QColor(0, 140, 0));
     }
-
+    //-1是为了边界在rect范围内
     painter.drawRect(selection.adjusted(0, 0, -1, -1));
     painter.restore();
 }
@@ -52,11 +52,13 @@ void SimpleSelection::mousePressEvent(QMouseEvent *event)
     mousePos = event->pos();
     if (event->button() == Qt::LeftButton)
     {
+        //鼠标左键进行编辑操作
         pressFlag = true;
         pressPos = event->pos();
         if (curPosition == AreaPosition::Inside)
         {
             curEditType = PressInside;
+            //鼠标相对选区左上角的位置
             tempPos = mousePos - selection.topLeft();
         }
         else if (curPosition != AreaPosition::Outside)
@@ -70,7 +72,7 @@ void SimpleSelection::mousePressEvent(QMouseEvent *event)
     }
     else
     {
-        //非单独按左键
+        //非单独按左键时的操作
     }
     update();
 }
@@ -83,6 +85,7 @@ void SimpleSelection::mouseMoveEvent(QMouseEvent *event)
     {
         if (curEditType == PressInside)
         {
+            //在选区内点击且移动，则移动选区
             if (QPoint(pressPos - mousePos).manhattanLength() > 3)
             {
                 curEditType = MoveSelection;
@@ -90,8 +93,10 @@ void SimpleSelection::mouseMoveEvent(QMouseEvent *event)
         }
         else if (curEditType == PressOutside)
         {
+            //在选区外点击且移动，则绘制选区
             if (QPoint(pressPos - mousePos).manhattanLength() > 3)
             {
+                hasSelection = true;
                 curEditType = DrawSelection;
             }
         }
@@ -117,11 +122,12 @@ void SimpleSelection::mouseMoveEvent(QMouseEvent *event)
 
         if (curEditType == DrawSelection)
         {
-            hasSelection = true;
+            //根据按下时位置和当前位置确定一个选区
             selection = QRect(pressPos, mouse_p);
         }
         else if (curEditType == MoveSelection)
         {
+            //移动选区
             selection.moveTopLeft(mousePos - tempPos);
             //限制范围在可视区域
             if (selection.left() < 0)
@@ -143,6 +149,7 @@ void SimpleSelection::mouseMoveEvent(QMouseEvent *event)
         }
         else if (curEditType == EditSelection)
         {
+            //拉伸选区边界
             int position = curPosition;
             if (position & AtLeft)
             {
@@ -204,6 +211,7 @@ void SimpleSelection::mouseReleaseEvent(QMouseEvent *event)
     pressFlag = false;
     if (curEditType != EditNone)
     {
+        //编辑结束后判断是否小于最小宽度，是则取消选区
         if (curEditType == DrawSelection)
         {
             selection = selection.normalized();
@@ -230,14 +238,17 @@ void SimpleSelection::mouseReleaseEvent(QMouseEvent *event)
 
 SimpleSelection::AreaPosition SimpleSelection::calcPosition(const QPoint &pos)
 {
+    //一条线太窄，不好触发，增加判断范围又会出现边界太近时交叠在一起
+    //目前的策略是从右下开始判断，左上的优先级更低一点
     static const int check_radius = 3;
     int position = AreaPosition::Outside;
-    if (!hasSelection)
+    QRect check_rect = selection.adjusted(-check_radius, -check_radius, check_radius-1, check_radius-1);
+    //无选区，或者不在选区判定范围则返回outside
+    if (!hasSelection || !check_rect.contains(pos))
     {
         return (SimpleSelection::AreaPosition)position;
     }
-    //一条线太窄，不好触发，增加判断范围又会出现边界太近时交叠在一起
-    //目前的策略是从右下开始判断，左上的优先级更低一点
+    //判断是否在某个边界上
     if (std::abs(pos.x() - selection.right()) < check_radius)
     {
         position |= AreaPosition::AtRight;

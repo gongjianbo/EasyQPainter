@@ -45,7 +45,7 @@ private:
     AreaPosition calcPosition(const QPoint &pos);
     //当前鼠标对应选区的位置
     void setCurPosition(AreaPosition position);
-    //更新鼠标样式
+    //根据鼠标当前位置更新鼠标样式
     void updateCursor();
 
 private:
@@ -60,7 +60,7 @@ private:
     //drawRect在画笔宽度奇数时，右下角会多1px，绘制时整体宽度先减去1px
     QRect selection;
     //是否有选区
-    bool hasSelection{true};
+    bool hasSelection{false};
     //鼠标当前操作位置
     AreaPosition curPosition{AreaPosition::Outside};
     //当前操作类型
@@ -69,7 +69,7 @@ private:
     bool pressFlag{false};
     //鼠标按下位置
     QPoint pressPos;
-    //拖动时相对位置
+    //目前用于记录press时鼠标与选区左上角的坐标差值
     QPoint tempPos;
     //鼠标当前位置
     QPoint mousePos;
