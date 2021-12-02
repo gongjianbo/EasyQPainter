@@ -83,7 +83,7 @@ void XYAxis::setRefPixelSpace(int pixel)
     calcAxis();
 }
 
-QVector<double> XYAxis::getTickPos() const
+QVector<int> XYAxis::getTickPos() const
 {
     return tickPos;
 }
@@ -166,7 +166,7 @@ double XYAxis::valueToPx(double value) const
 
 void XYAxis::draw(QPainter *painter)
 {
-    painter->fillRect(theRect,Qt::green);
+    painter->fillRect(theRect,QColor(0,180,200));
     switch (this->getAxisPosition()) {
     case AtRight:
         //drawRight(painter);
@@ -191,9 +191,8 @@ void XYAxis::drawLeft(QPainter *painter)
     painter->drawLine(theRect.topRight(),theRect.bottomRight());
 
     const int right_pos=theRect.right();
-    --todo应该从下往上计算
     for(int i=0;i<tickPos.count();i++){
-        const int y_pos=std::floor(tickPos.at(i));
+        const int y_pos=tickPos.at(i);
         painter->drawLine(QPoint(right_pos,y_pos),
                           QPoint(right_pos-5,y_pos));
         painter->drawText(right_pos-5-painter->fontMetrics().width(tickLabel.at(i)),
@@ -211,7 +210,7 @@ void XYAxis::drawBottom(QPainter *painter)
 
     const int top_pos=theRect.top();
     for(int i=0;i<tickPos.count();i++){
-        const int x_pos=std::floor(tickPos.at(i));
+        const int x_pos=tickPos.at(i);
         painter->drawLine(QPoint(x_pos,top_pos),
                           QPoint(x_pos,top_pos+5));
         painter->drawText(x_pos-painter->fontMetrics().width(tickLabel.at(i))/2,
@@ -246,11 +245,11 @@ void XYAxis::calcAxis()
         const int precision=getTickPrecision();
         //i是用刻度px算坐标位置；j是用刻度px算i对应的value
         //条件i>pos-N是为了显示最大值那个刻度
-        for(double i=theRect.left()+pxBegin,j=pxBegin;i<right_pos+2;i+=pxSpace,j+=pxSpace){
-            tickPos.push_back(i);
+        for(double i=theRect.left()+pxStart,j=pxStart;i<right_pos+2;i+=pxSpace,j+=pxSpace){
+            tickPos.push_back(std::round(i));
             const double label_value=(minValue+(j)*unit1PxToValue);
             if(qFuzzyIsNull(label_value)){
-                tickLabel.push_front("0");
+                tickLabel.push_back("0");
             }else{
                 const QString label_text=QString::number(label_value,'f',precision);
                 tickLabel.push_back(label_text);
@@ -263,20 +262,20 @@ void XYAxis::calcAxis()
         //竖向y轴
         calcSpace(theRect.height());
         //计算刻度线
-        const double bottom_pos=theRect.bottom();
+        const double top_pos=theRect.top();
         tickPos.clear();
         tickLabel.clear();
         const int precision=getTickPrecision();
         //i是用刻度px算坐标位置；j是用刻度px算i对应的value
         //条件i>pos-N是为了显示最大值那个刻度
-        for(double i=theRect.top()+pxBegin,j=pxBegin;i<bottom_pos+2;i+=pxSpace,j+=pxSpace){
-            tickPos.push_front(i);
-            const double label_value=(maxValue-(j)*unit1PxToValue);
+        for(double i=theRect.bottom()-pxStart,j=pxStart;i>top_pos-2;i-=pxSpace,j+=pxSpace){
+            tickPos.push_back(std::round(i));
+            const double label_value=(minValue+(j)*unit1PxToValue);
             if(qFuzzyIsNull(label_value)){
-                tickLabel.push_front("0");
+                tickLabel.push_back("0");
             }else{
                 const QString label_text=QString::number(label_value,'f',precision);
-                tickLabel.push_front(label_text);
+                tickLabel.push_back(label_text);
             }
         }
     }
@@ -300,12 +299,12 @@ void XYAxis::calcSpace(double axisLength)
         //该模式ValueSpace固定不变;
         valueSpace=fixedValueSpace;
         pxSpace=calcPxSpace(unit1PxToValue,valueSpace);
-        pxBegin=calcPxBegin(unit1PxToValue,valueSpace,minValue,maxValue);
+        pxStart=calcPxStart(unit1PxToValue,valueSpace,minValue,maxValue);
         break;
     case RefPixel:
         valueSpace=calcValueSpace(unit1PxToValue,refPixelSpace);
         pxSpace=calcPxSpace(unit1PxToValue,valueSpace);
-        pxBegin=calcPxBegin(unit1PxToValue,valueSpace,minValue,maxValue);
+        pxStart=calcPxStart(unit1PxToValue,valueSpace,minValue,maxValue);
         break;
     default:
         break;
@@ -322,8 +321,9 @@ double XYAxis::calcPxSpace(double unitP2V, double valueSpace) const
     return valueSpace/unitP2V;
 }
 
-double XYAxis::calcPxBegin(double unitP2V, double valueSpace, double valueMin, double valueMax) const
+double XYAxis::calcPxStart(double unitP2V, double valueSpace, double valueMin, double valueMax) const
 {
+    Q_UNUSED(valueMax)
     if(unitP2V<=0.0||valueSpace<=0.0){
         qWarning()<<__FUNCTION__<<"unitP2V or valueSpace is too min"<<unitP2V<<valueSpace;
         return 0.0;
@@ -338,22 +338,24 @@ double XYAxis::calcPxBegin(double unitP2V, double valueSpace, double valueMin, d
     const double begin_precision=std::pow(10,decimalPrecision);
     const double begin_cut=(decimalPrecision<=0)
             ?0
-           :qRound(qAbs(valueMin)*begin_precision)%qRound(valueSpace*begin_precision)/begin_precision;
+           :qRound(std::abs(valueMin)*begin_precision)%qRound(valueSpace*begin_precision)/begin_precision;
     //因为cut是value_space模出来的，且该分支min和value_space都为正，
     //所以起始值(value_space-cut)不会为负。
     //起点px就为起始值*单位值表示的像素；或者为起始值/单位像素表示的值
     //(注意：起始值是距离起点的间隔值)
     const double begin_val=qFuzzyIsNull(begin_cut)?0.0:(valueMin>=0.0)?(valueSpace-begin_cut):begin_cut;
+    return begin_val/unitP2V;
 
-    //注意横项和纵向不一样，Qt是屏幕坐标系，原点在左上角
-    if(getAxisPosition()==AtTop||getAxisPosition()==AtBottom){
-        //横向刻度值的是从左至右，和坐标x值增长方向一样
-        return begin_val/unitP2V;
-    }else{
-        //竖向刻度值和坐标y值增长方向相反
-        const double end_val=(valueMax-valueMin-begin_val)-valueSpace*(int)((valueMax-valueMin-begin_val)/valueSpace);
-        return end_val/unitP2V;
-    }
+    //之前以左上角为起始计算的逻辑，会导致左下角xy的零点相交误差大，现在改为左下角开始算
+    //if(getAxisPosition()==AtTop||getAxisPosition()==AtBottom){
+    //    //横向刻度值的是从左至右，和坐标x值增长方向一样
+    //    return begin_val/unitP2V;
+    //}else if(getAxisPosition()==AtLeft||getAxisPosition()==AtRight){
+    //    //竖向如果从上往下开始计算，则刻度值和坐标y值增长方向相反
+    //    const double end_val=(valueMax-valueMin-begin_val)-valueSpace*(int)((valueMax-valueMin-begin_val)/valueSpace);
+    //    return end_val/unitP2V;
+    //}
+    //return 0;
 }
 
 double XYAxis::calcValueSpace(double unitP2V, int pxRefSpace) const

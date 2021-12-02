@@ -51,7 +51,7 @@ public:
     void setRefPixelSpace(int pixel);
 
     //刻度位置
-    QVector<double> getTickPos() const;
+    QVector<int> getTickPos() const;
     //刻度值文本
     QVector<QString> getTickLabel() const;
 
@@ -115,7 +115,7 @@ private:
      // 计算刻度像素间隔
      double calcPxSpace(double unitP2V,double valueSpace) const;
      // 计算刻度像素起点
-     double calcPxBegin(double unitP2V,double valueSpace,double valueMin,double valueMax) const;
+     double calcPxStart(double unitP2V,double valueSpace,double valueMin,double valueMax) const;
      // 计算值间隔
      double calcValueSpace(double unitP2V,int pxRefSpace) const;
      // 辅助计算值间隔
@@ -144,7 +144,7 @@ private:
     //通过参考像素间隔计算得到值间隔，再取整后转换为像素间隔
     double refPixelSpace{35.0};
     //刻度位置
-    QVector<double> tickPos;
+    QVector<int> tickPos;
     //刻度值文本
     QVector<QString> tickLabel;
 
@@ -162,7 +162,8 @@ private:
     //1单位值表示的像素
     double unit1ValueToPx{1.0};
     //刻度绘制像素起点
-    double pxBegin{0.0};
+    //横向以左侧开始，竖向以底部开始
+    double pxStart{0.0};
     //刻度像素间隔
     double pxSpace{30.0};
     //刻度值间隔

@@ -12,12 +12,22 @@ public:
 protected:
     void paintEvent(QPaintEvent *event) override;
 void resizeEvent(QResizeEvent *event) override;
+void mousePressEvent(QMouseEvent *event) override;
+void mouseMoveEvent(QMouseEvent *event) override;
+void mouseReleaseEvent(QMouseEvent *event) override;
 
 public slots:
 void refresh();
 
 private:
+//坐标轴
     XYAxis *xAxis;
     XYAxis *yAxis;
+    //绘图区域，坐标轴在其边上
+    QRect contentArea;
+    //去掉坐标轴的图表区域
+    QRect plotArea;
+    //鼠标位置
+    QPoint mousePos;
 };
 
