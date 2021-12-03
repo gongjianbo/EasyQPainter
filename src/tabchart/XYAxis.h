@@ -33,6 +33,7 @@ public:
     //刻度线所在方位，上下左右
     AxisPosition getAxisPosition() const;
     void setAxisPosition(AxisPosition position);
+
     //刻度线的间隔计算方式
     TickMode getTickMode() const;
     void setTickMode(TickMode mode);
@@ -60,23 +61,14 @@ public:
 
     //最小值限制
     double getMinLimit() const;
-    void setMinLimit(double limit);
-
     //最大值限制
     double getMaxLimit() const;
-    void setMaxLimit(double limit);
-
     //最小范围限制
     double getMinRange() const;
-    void setMinRange(double limit);
-
     //当前显示的最小刻度
     double getMinValue() const;
-    void setMinValue(double value);
-
     //当前显示的最大刻度
     double getMaxValue() const;
-    void setMaxValue(double value);
 
     //像素与值的换算
     double getUnit1PxToValue() const;
@@ -116,13 +108,13 @@ private:
     //计算间隔和起点
     void calcSpace(double axisLength);
     //计算刻度像素间隔
-    double calcPxSpace(double unitP2V,double valueSpace) const;
+    double calcPxSpace(double unitP2V, double valueSpace) const;
     //计算刻度像素起点
-    double calcPxStart(double unitP2V,double valueSpace,double valueMin,double valueMax) const;
+    double calcPxStart(double unitP2V, double valueSpace, double valueMin, double valueMax) const;
     //计算值间隔
-    double calcValueSpace(double unitP2V,int pxRefSpace) const;
+    double calcValueSpace(double unitP2V, int pxRefSpace) const;
     //辅助计算值间隔
-    double calcValueSpaceHelper(double valueRefRange,int dividend) const;
+    double calcValueSpaceHelper(double valueRefRange, int dividend) const;
     //刻度值的小数位数
     int getTickPrecision() const;
     int getTickPrecisionHelper(double valueSpace, double compare, int precision) const;
@@ -151,9 +143,9 @@ public slots:
     //全览，value设置为limit
     void overallView();
     //设置刻度limit范围
-    void setLimitRange(double min,double max,double range);
+    void setLimitRange(double min, double max, double range);
     //设置刻度当前value显示范围
-    void setValueRange(double min,double max);
+    void setValueRange(double min, double max);
 
 private:
     //刻度线所在方位，上下左右
@@ -164,9 +156,9 @@ private:
     QRect theRect;
     //显示的小数位数
     int decimalPrecision{3};
-    //刻度根据固定值间隔时的参考
+    //刻度根据固定值间隔时的参考，一般用于等分
     double fixedValueSpace{100.0};
-    //刻度根据像素间隔的参考
+    //刻度根据像素间隔的参考，一般用于自适应
     //通过参考像素间隔计算得到值间隔，再取整后转换为像素间隔
     double refPixelSpace{35.0};
     //刻度位置
@@ -194,6 +186,4 @@ private:
     double pxSpace{30.0};
     //刻度值间隔
     double valueSpace{1.0};
-
-    friend class XYView;
 };
