@@ -3,10 +3,20 @@
 #include <QtMath>
 #include <QDebug>
 
-XYAxis::XYAxis(AxisPosition position, QObject *parent)
-    : QObject(parent), thePosition(position)
+XYAxis::XYAxis(QObject *parent)
+    : QObject(parent)
 {
+}
 
+void XYAxis::init(AxisPosition position, double minLimit, double maxLimit,
+                  double minRange, double minValue, double maxValue)
+{
+    this->thePosition =position;
+    this->minLimit=minLimit;
+    this->maxLimit=maxLimit;
+    this->minRange=minRange;
+    this->minValue=minValue;
+    this->maxValue=maxValue;
 }
 
 XYAxis::AxisPosition XYAxis::getAxisPosition() const
@@ -237,7 +247,7 @@ void XYAxis::calcAxis()
     case AtBottom:
     {
         //横向x轴
-        calcSpace(theRect.width());
+        calcSpace(theRect.width()-1);
         //计算刻度线
         const double right_pos=theRect.right();
         tickPos.clear();
@@ -248,19 +258,18 @@ void XYAxis::calcAxis()
         for(double i=theRect.left()+pxStart,j=pxStart;i<right_pos+2;i+=pxSpace,j+=pxSpace){
             tickPos.push_back(std::round(i));
             const double label_value=(minValue+(j)*unit1PxToValue);
-            if(qFuzzyIsNull(label_value)){
-                tickLabel.push_back("0");
-            }else{
-                const QString label_text=QString::number(label_value,'f',precision);
-                tickLabel.push_back(label_text);
+            QString label_text=QString::number(label_value,'f',precision);
+            if(label_text=="-0"){ //会有-0
+                label_text="0";
             }
+            tickLabel.push_back(label_text);
         }
     }
         break;
     case AtLeft:
     {
         //竖向y轴
-        calcSpace(theRect.height());
+        calcSpace(theRect.height()-1);
         //计算刻度线
         const double top_pos=theRect.top();
         tickPos.clear();
@@ -271,12 +280,11 @@ void XYAxis::calcAxis()
         for(double i=theRect.bottom()-pxStart,j=pxStart;i>top_pos-2;i-=pxSpace,j+=pxSpace){
             tickPos.push_back(std::round(i));
             const double label_value=(minValue+(j)*unit1PxToValue);
-            if(qFuzzyIsNull(label_value)){
-                tickLabel.push_back("0");
-            }else{
-                const QString label_text=QString::number(label_value,'f',precision);
-                tickLabel.push_back(label_text);
+            QString label_text=QString::number(label_value,'f',precision);
+            if(label_text=="-0"){ //会有-0
+                label_text="0";
             }
+            tickLabel.push_back(label_text);
         }
     }
         break;
@@ -422,4 +430,252 @@ int XYAxis::getTickPrecisionHelper(double valueSpace, double compare, int precis
         return precision;
     }
     return getTickPrecisionHelper(valueSpace,compare/10,precision+1);
+}
+
+double XYAxis::valueCalcStep() const
+{
+    // add sub的步进，根据需求自定义
+    switch (theMode) {
+    case RefPixel:
+        return valueSpace;
+        break;
+    case FixedValue:
+        return (maxValue-minValue)/5;
+        break;
+    default:
+        break;
+    }
+    return valueSpace;
+}
+
+double XYAxis::valueZoomInStep() const
+{
+    //zoomin 步进，根据需求自定义
+    return (maxValue-minValue)/4;
+}
+
+double XYAxis::valueZoomOutStep() const
+{
+    //zoomout 步进，根据需求自动逸
+    return (maxValue-minValue)/2;
+}
+
+double XYAxis::calcZoomProportionWithPos(const QPoint &pos) const
+{
+    double zoom_proportion=0.5;
+    switch (this->getAxisPosition()) {
+    case AtTop:
+    case AtBottom:
+    {
+        const int pos_x=pos.x();
+        const int rect_left=theRect.left();
+        const int rect_right=theRect.right();
+        zoom_proportion=(pos_x-rect_left)/(double)(rect_right-rect_left);
+    }
+        break;
+    case AtRight:
+    case AtLeft:
+    {
+        const int pos_y=pos.y();
+        const int rect_top=theRect.top();
+        const int rect_bottom=theRect.bottom();
+        zoom_proportion=(rect_bottom-pos_y)/(double)(rect_bottom-rect_top);
+    }
+        break;
+    default:
+        break;
+    }
+    if(zoom_proportion<=0.0)
+        return 0.0;
+    if(zoom_proportion>=1.0)
+        return 1.0;
+    return zoom_proportion;
+}
+
+void XYAxis::addMinValue()
+{
+    //不能小于最小范围
+    if(maxValue-minValue<=minRange)
+        return;
+    minValue+=valueCalcStep();
+    if(maxValue-minValue<minRange){
+        minValue=maxValue-minRange;
+    }
+    calcAxis();
+}
+
+void XYAxis::subMinValue()
+{
+    //不能小于最小值的limit
+    if(minValue<=minLimit)
+        return;
+    minValue-=valueCalcStep();
+    if(minValue<minLimit){
+        minValue=minLimit;
+    }
+    calcAxis();
+}
+
+void XYAxis::addMaxValue()
+{
+    //不能大于最大值的limit
+    if(maxValue>maxLimit)
+        return;
+    maxValue+=valueCalcStep();
+    if(maxValue>maxLimit){
+        maxValue=maxLimit;
+    }
+    calcAxis();
+}
+
+void XYAxis::subMaxValue()
+{
+    //不能小于最小范围
+    if(maxValue-minValue<=minRange)
+        return;
+    maxValue-=valueCalcStep();
+    if(maxValue-minValue<minRange){
+        maxValue=minValue+minRange;
+    }
+    calcAxis();
+}
+
+bool XYAxis::moveValueWidthPx(int px)
+{
+    double move_step=qAbs(px)*unit1PxToValue;
+    if(move_step<=0)
+        return false;
+    // <0 就是往min端移动，>0 就是往max端移动
+    if(px<0){
+        if(minValue<=minLimit)
+            return false;
+        if(minValue-move_step<minLimit){
+            move_step=minValue-minLimit;
+        }
+        minValue-=move_step;
+        maxValue-=move_step;
+    }else{
+        if(maxValue>maxLimit)
+            return false;
+        if(maxValue+move_step>maxLimit){
+            move_step=maxLimit-maxValue;
+        }
+        minValue+=move_step;
+        maxValue+=move_step;
+    }
+    calcAxis();
+    return true;
+}
+
+void XYAxis::zoomValueIn()
+{
+    const double val_range=maxValue-minValue;
+    if(val_range<=minRange)
+        return;
+    const double zoom_step=valueZoomInStep();
+    if(zoom_step<=0)
+        return;
+    if(val_range-zoom_step<minRange){
+        const double zoom_real_step=val_range-minRange;
+        minValue+=zoom_real_step/2;
+        maxValue=minValue+minRange;
+    }else{
+        minValue+=zoom_step/2;
+        maxValue-=zoom_step/2;
+    }
+
+    calcAxis();
+}
+
+void XYAxis::zoomValueOut()
+{
+    if(minValue<=minLimit&&
+            maxValue>=maxLimit)
+        return;
+    const double zoom_half=valueZoomOutStep()/2;
+    const double min_zoom=(minValue-zoom_half<minLimit)
+            ?(minValue-minLimit)
+           :(zoom_half);
+    const double max_zoom=(maxValue+zoom_half>maxLimit)
+            ?(maxLimit-maxValue)
+           :(zoom_half);
+    //先不考虑补上不足的部分
+    minValue-=min_zoom;
+    maxValue+=max_zoom;
+
+    calcAxis();
+}
+
+void XYAxis::zoomValueInPos(const QPoint &pos)
+{
+    const double val_range=maxValue-minValue;
+    if(val_range<=minRange)
+        return;
+    const double zoom_step=valueZoomInStep();
+    if(zoom_step<=0)
+        return;
+    const double zoom_proportion=calcZoomProportionWithPos(pos);
+    if(val_range-zoom_step<minRange){
+        const double zoom_real_step=val_range-minRange;
+        minValue+=zoom_real_step/2;
+        maxValue=minValue+minRange;
+    }else{
+        minValue+=zoom_step*zoom_proportion;
+        maxValue-=zoom_step*(1-zoom_proportion);
+    }
+
+    calcAxis();
+}
+
+void XYAxis::zoomValueOutPos(const QPoint &pos)
+{
+    if(minValue<=minLimit&&
+            maxValue>=maxLimit)
+        return;
+    const double zoom_proportion=calcZoomProportionWithPos(pos);
+    const double zoom_step=valueZoomInStep();
+    const double min_step=zoom_step*zoom_proportion;
+    const double max_step=zoom_step*(1-zoom_proportion);
+    const double min_zoom=(minValue-min_step<minLimit)
+            ?(minValue-minLimit)
+           :(min_step);
+    const double max_zoom=(maxValue+max_step>maxLimit)
+            ?(maxLimit-maxValue)
+           :(max_step);
+    //先不考虑补上不足的部分
+    minValue-=min_zoom;
+    maxValue+=max_zoom;
+
+    calcAxis();
+}
+
+void XYAxis::overallView()
+{
+    if(minValue<=minLimit&&
+            maxValue>=maxLimit)
+        return;
+    minValue=minLimit;
+    maxValue=maxLimit;
+    calcAxis();
+}
+
+void XYAxis::setLimitRange(double min, double max, double range)
+{
+    if(min>=max||max-min<range){
+        return;
+    }
+    minLimit=min;
+    maxLimit=max;
+    minRange=range;
+    emit axisChanged();
+}
+
+void XYAxis::setValueRange(double min, double max)
+{
+    if(min>=max||max-min<=minRange){
+        return;
+    }
+    minValue=min;
+    maxValue=max;
+    calcAxis();
 }

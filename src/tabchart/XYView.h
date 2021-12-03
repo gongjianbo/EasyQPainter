@@ -15,6 +15,12 @@ void resizeEvent(QResizeEvent *event) override;
 void mousePressEvent(QMouseEvent *event) override;
 void mouseMoveEvent(QMouseEvent *event) override;
 void mouseReleaseEvent(QMouseEvent *event) override;
+void leaveEvent(QEvent *event) override;
+void wheelEvent(QWheelEvent *event) override;
+
+private:
+//查找对应值下标
+int searchDataIndex(int start, int end, double distinction) const;
 
 public slots:
 void refresh();
@@ -28,6 +34,16 @@ private:
     //去掉坐标轴的图表区域
     QRect plotArea;
     //鼠标位置
-    QPoint mousePos;
+    QPoint mousePos;//当前位置
+    QPoint prevPos;//上次位置
+    //鼠标按下
+    bool pressFlag{false};
+
+    //曲线xy值
+    struct Node{
+        int x;
+        int y;
+    };
+    QVector<Node> seriesData;
 };
 

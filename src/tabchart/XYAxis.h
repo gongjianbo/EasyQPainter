@@ -25,7 +25,10 @@ public:
     };
 
 public:
-    explicit XYAxis(AxisPosition position, QObject *parent = nullptr);
+    explicit XYAxis(QObject *parent = nullptr);
+    //初始化，构造后在渲染前调用
+    void init(AxisPosition position, double minLimit, double maxLimit,
+              double minRange, double minValue, double maxValue);
 
     //刻度线所在方位，上下左右
     AxisPosition getAxisPosition() const;
@@ -110,24 +113,47 @@ private:
     void drawBottom(QPainter *painter);
     //大小or范围等变动后重新计算刻度信息
     void calcAxis();
-    // 计算间隔和起点
-     void calcSpace(double axisLength);
-     // 计算刻度像素间隔
-     double calcPxSpace(double unitP2V,double valueSpace) const;
-     // 计算刻度像素起点
-     double calcPxStart(double unitP2V,double valueSpace,double valueMin,double valueMax) const;
-     // 计算值间隔
-     double calcValueSpace(double unitP2V,int pxRefSpace) const;
-     // 辅助计算值间隔
-     double calcValueSpaceHelper(double valueRefRange,int dividend) const;
+    //计算间隔和起点
+    void calcSpace(double axisLength);
+    //计算刻度像素间隔
+    double calcPxSpace(double unitP2V,double valueSpace) const;
+    //计算刻度像素起点
+    double calcPxStart(double unitP2V,double valueSpace,double valueMin,double valueMax) const;
+    //计算值间隔
+    double calcValueSpace(double unitP2V,int pxRefSpace) const;
+    //辅助计算值间隔
+    double calcValueSpaceHelper(double valueRefRange,int dividend) const;
     //刻度值的小数位数
     int getTickPrecision() const;
     int getTickPrecisionHelper(double valueSpace, double compare, int precision) const;
+    //步进
+    double valueCalcStep() const;
+    double valueZoomInStep() const;
+    double valueZoomOutStep() const;
+    //根据pos计算zoom的左右/上下百分比
+    double calcZoomProportionWithPos(const QPoint &pos) const;
 
 signals:
     void axisChanged();
 
 public slots:
+    //移动
+    void addMinValue();
+    void subMinValue();
+    void addMaxValue();
+    void subMaxValue();
+    bool moveValueWidthPx(int px);
+    //放大缩小
+    void zoomValueIn();
+    void zoomValueOut();
+    void zoomValueInPos(const QPoint &pos);
+    void zoomValueOutPos(const QPoint &pos);
+    //全览，value设置为limit
+    void overallView();
+    //设置刻度limit范围
+    void setLimitRange(double min,double max,double range);
+    //设置刻度当前value显示范围
+    void setValueRange(double min,double max);
 
 private:
     //刻度线所在方位，上下左右
