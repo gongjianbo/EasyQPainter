@@ -3,7 +3,7 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <QPaintEvent>
-#include <QtMath>、
+#include <QtMath>
 #include <QDateTime>
 #include <QDebug>
 
