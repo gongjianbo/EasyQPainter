@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>4</number>
+      <number>5</number>
      </property>
      <widget class="PlanetSystem" name="tab_planet">
       <attribute name="title">
@@ -39,9 +39,14 @@
        <string>CalcDegree</string>
       </attribute>
      </widget>
-     <widget class="SimpleSelection" name="tab_simplesel">
+     <widget class="SimpleSelection" name="tab_selection">
       <attribute name="title">
-       <string>SimpleSel</string>
+       <string>Selection</string>
+      </attribute>
+     </widget>
+     <widget class="Animation" name="tab_animation">
+      <attribute name="title">
+       <string>Animation</string>
       </attribute>
      </widget>
     </widget>
@@ -77,6 +82,12 @@
    <class>SimpleSelection</class>
    <extends>QWidget</extends>
    <header>SimpleSelection.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Animation</class>
+   <extends>QWidget</extends>
+   <header>Animation.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

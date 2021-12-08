@@ -2,6 +2,7 @@ FORMS += \
     $$PWD/TabDraw.ui
 
 HEADERS += \
+    $$PWD/Animation.h \
     $$PWD/CalcDegree.h \
     $$PWD/CalcPos.h \
     $$PWD/PlanetSystem.h \
@@ -10,6 +11,7 @@ HEADERS += \
     $$PWD/TabDraw.h
 
 SOURCES += \
+    $$PWD/Animation.cpp \
     $$PWD/CalcDegree.cpp \
     $$PWD/CalcPos.cpp \
     $$PWD/PlanetSystem.cpp \
