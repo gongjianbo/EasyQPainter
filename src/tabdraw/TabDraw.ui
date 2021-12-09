@@ -17,8 +17,13 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>5</number>
+      <number>0</number>
      </property>
+     <widget class="TaiJi" name="tab_taiji">
+      <attribute name="title">
+       <string>TaiJi</string>
+      </attribute>
+     </widget>
      <widget class="PlanetSystem" name="tab_planet">
       <attribute name="title">
        <string>PlanetSystem</string>
@@ -88,6 +93,12 @@
    <class>Animation</class>
    <extends>QWidget</extends>
    <header>Animation.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>TaiJi</class>
+   <extends>QWidget</extends>
+   <header>TaiJi.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

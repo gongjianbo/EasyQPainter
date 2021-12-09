@@ -8,7 +8,8 @@ HEADERS += \
     $$PWD/PlanetSystem.h \
     $$PWD/SimpleSelection.h \
     $$PWD/SineWave.h \
-    $$PWD/TabDraw.h
+    $$PWD/TabDraw.h \
+    $$PWD/TaiJi.h
 
 SOURCES += \
     $$PWD/Animation.cpp \
@@ -17,5 +18,6 @@ SOURCES += \
     $$PWD/PlanetSystem.cpp \
     $$PWD/SimpleSelection.cpp \
     $$PWD/SineWave.cpp \
-    $$PWD/TabDraw.cpp
+    $$PWD/TabDraw.cpp \
+    $$PWD/TaiJi.cpp
 
