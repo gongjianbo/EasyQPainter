@@ -17,23 +17,26 @@ Animation::Animation(QWidget *parent)
         update();
     });
     // 2-1.色块
+    //先创建一个并行属性动画组
     blockAnimation = new QParallelAnimationGroup(this);
+    //添加色块颜色动画
     QPropertyAnimation *block_color = new QPropertyAnimation(this);
     block_color->setTargetObject(this);
     block_color->setPropertyName("blockColor");
-    block_color->setStartValue(QColor(255, 0, 0));
+    block_color->setStartValue(blockColor);
     block_color->setEndValue(QColor(255, 255, 0));
     block_color->setDuration(3000);
     blockAnimation->addAnimation(block_color);
+    //添加色块缩放动画
     QPropertyAnimation *block_scare = new QPropertyAnimation(this);
     block_scare->setTargetObject(this);
     block_scare->setPropertyName("blockScare");
-    block_scare->setStartValue(1.0f);
+    block_scare->setStartValue(blockScare);
     block_scare->setEndValue(0.2f);
     block_scare->setEasingCurve(QEasingCurve::InCubic); //缓和曲线设置
     block_scare->setDuration(2000);
     blockAnimation->addAnimation(block_scare);
-    //播放完了就倒着播放
+    //动画组播放完了就倒着继续播放
     connect(blockAnimation, &QParallelAnimationGroup::finished, this, [this]
     {
         if(blockAnimation->direction() == QAbstractAnimation::Forward){
@@ -42,6 +45,23 @@ Animation::Animation(QWidget *parent)
             blockAnimation->setDirection(QAbstractAnimation::Forward);
         }
         blockAnimation->start();
+    });
+    // 3-1.圆角
+    roundTimeline = new QTimeLine(5000, this);
+    roundTimeline->setFrameRange(0, 100);
+    connect(roundTimeline, &QTimeLine::frameChanged, this, [this](int frame)
+    {
+        roundRaiuds = frame;
+        update();
+    });
+    connect(roundTimeline, &QTimeLine::finished, this, [this]
+    {
+        if(roundTimeline->direction() == QTimeLine::Forward){
+            roundTimeline->setDirection(QTimeLine::Backward);
+        }else{
+            roundTimeline->setDirection(QTimeLine::Forward);
+        }
+        roundTimeline->start();
     });
 }
 
@@ -73,6 +93,7 @@ void Animation::showEvent(QShowEvent *event)
 {
     waveTimer.start(50);
     blockAnimation->start();
+    roundTimeline->start();
     QWidget::showEvent(event);
 }
 
@@ -80,6 +101,7 @@ void Animation::hideEvent(QHideEvent *event)
 {
     waveTimer.stop();
     blockAnimation->pause();
+    roundTimeline->setPaused(true);
     QWidget::hideEvent(event);
 }
 
@@ -89,12 +111,12 @@ void Animation::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     //黑底白字
     painter.fillRect(this->rect(), Qt::black);
-    painter.setPen(Qt::white);
-
     // 1-1.波纹
     drawWave(painter, QRect(20, 20, 200, 200));
     // 2-1.色块
     drawColorBlock(painter, QRect(240, 20, 200, 200));
+    // 3-1.圆角
+    drawRadiusBlock(painter, QRect(460, 20, 200, 200));
 }
 
 void Animation::drawWave(QPainter &painter, const QRectF &area)
@@ -141,6 +163,7 @@ void Animation::drawWave(QPainter &painter, const QRectF &area)
     painter.fillRect(area, gradient);
     //边框，画直线不用抗锯齿
     painter.setRenderHint(QPainter::Antialiasing, false);
+    painter.setPen(Qt::white);
     painter.drawRect(area);
     painter.restore();
 }
@@ -148,6 +171,7 @@ void Animation::drawWave(QPainter &painter, const QRectF &area)
 void Animation::drawColorBlock(QPainter &painter, const QRectF &area)
 {
     painter.save();
+    //根据当前属性颜色和缩放比例绘制色块
     QRectF block = area.adjusted(10, 10, -10, -10);
     block.setWidth(block.width() * getBlockScare());
     block.setHeight(block.height() * getBlockScare());
@@ -156,6 +180,24 @@ void Animation::drawColorBlock(QPainter &painter, const QRectF &area)
     painter.fillRect(block, getBlockColor());
     //边框
     painter.setRenderHint(QPainter::Antialiasing, false);
+    painter.setPen(Qt::white);
+    painter.drawRect(area);
+    painter.restore();
+}
+
+void Animation::drawRadiusBlock(QPainter &painter, const QRectF &area)
+{
+    painter.save();
+    //根据当前属性颜色和缩放比例绘制色块
+    QRectF block = area.adjusted(10, 10, -10, -10);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(Qt::cyan);
+    painter.drawRoundRect(block, roundRaiuds, roundRaiuds);
+    //边框
+    painter.setRenderHint(QPainter::Antialiasing, false);
+    painter.setPen(Qt::white);
+    painter.setBrush(Qt::NoBrush);
     painter.drawRect(area);
     painter.restore();
 }

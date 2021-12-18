@@ -5,6 +5,7 @@
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
 #include <QSequentialAnimationGroup>
+#include <QTimeLine>
 
 //动画效果
 class Animation : public QWidget
@@ -33,6 +34,8 @@ private:
     void drawWave(QPainter &painter, const QRectF &area);
     //属性动画色块
     void drawColorBlock(QPainter &painter, const QRectF &area);
+    //时间轴圆角
+    void drawRadiusBlock(QPainter &painter, const QRectF &area);
 
 signals:
     void blockColorChanged();
@@ -50,4 +53,8 @@ private:
     QParallelAnimationGroup *blockAnimation{nullptr};
     QColor blockColor{255, 0, 0};
     float blockScare{1.0};
+    // 3.时间轴
+    // 3-1.圆角
+    QTimeLine *roundTimeline{nullptr};
+    int roundRaiuds{0};
 };
