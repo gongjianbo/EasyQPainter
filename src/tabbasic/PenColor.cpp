@@ -102,7 +102,7 @@ void PenColor::paintEvent(QPaintEvent *event)
     }
 
     //【2】雷达扫描
-    //黑底白框圆盘
+    //黑底圆盘
     const QRect scan_rect(10, 10, 100, 100); //100*100
     const int scan_radius = scan_rect.width() / 2;
     painter.save();
@@ -110,9 +110,7 @@ void PenColor::paintEvent(QPaintEvent *event)
     QPainterPath ellipse_path;
     ellipse_path.addEllipse(QPoint(0, 0), scan_radius, scan_radius);
     painter.fillPath(ellipse_path, Qt::black);
-    painter.setPen(QPen(Qt::white, 2));
     painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.drawEllipse(QPoint(0, 0), scan_radius, scan_radius);
     //旋转扫描
     QConicalGradient conical_gradient(QPoint(0, 0), scan_radius);
     conical_gradient.setAngle(-angleOffset * 180.0);
@@ -129,8 +127,11 @@ void PenColor::paintEvent(QPaintEvent *event)
     painter.drawLine(QPoint(0, 0),
                      QPoint(scan_radius * cos(angleOffset * 3.14159265),
                             scan_radius * sin(angleOffset * 3.14159265)));
+    //白色框压在上面
+    painter.setPen(QPen(Qt::white, 2));
+    painter.drawEllipse(QPoint(0, 0), scan_radius, scan_radius);
+    //十字，1px直线用不抗锯齿
     painter.setRenderHint(QPainter::Antialiasing, false);
-    //十字
     painter.setPen(QPen(Qt::white, 1, Qt::DashLine));
     painter.drawLine(-scan_radius, 0, scan_radius, 0);
     painter.drawLine(0, -scan_radius, 0, scan_radius);
