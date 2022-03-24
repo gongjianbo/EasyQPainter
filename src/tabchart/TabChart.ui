@@ -16,14 +16,17 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>1</number>
+     </property>
      <widget class="XYView" name="tab_xyview">
       <attribute name="title">
        <string>XYView</string>
       </attribute>
      </widget>
-     <widget class="QWidget" name="tab_2">
+     <widget class="PieView" name="tab_pieview">
       <attribute name="title">
-       <string>Tab 2</string>
+       <string>PieView</string>
       </attribute>
      </widget>
     </widget>
@@ -35,6 +38,12 @@
    <class>XYView</class>
    <extends>QWidget</extends>
    <header>XYView.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PieView</class>
+   <extends>QWidget</extends>
+   <header>PieView.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
