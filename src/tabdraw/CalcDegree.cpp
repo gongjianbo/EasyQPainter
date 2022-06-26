@@ -15,11 +15,11 @@ CalcDegree::CalcDegree(QWidget *parent)
 
     //定时旋转
     connect(&timer, &QTimer::timeout, this, [this]()
-            {
-                theRotate += 2;
-                theRotate %= 360;
-                update();
-            });
+    {
+        theRotate += 2;
+        theRotate %= 360;
+        update();
+    });
 }
 
 void CalcDegree::showEvent(QShowEvent *event)
@@ -105,13 +105,12 @@ void CalcDegree::drawCircle(QPainter *painter)
             const double x3 = -sin(radians) * (radius + 30);
             const double y3 = cos(radians) * (radius + 30);
             const QString text = QString::number(i);
-            const int text_width = painter->fontMetrics().width(text);
+            const int text_width = painter->fontMetrics().boundingRect(text).width();
             //文字的起点在左下角
             //上减下加，左减右加，这样相当于往x2y3左下角移动的，使文本中心点在计算的位置
-            painter->drawText(
-                -x3 - text_width / 2,
-                -y3 + text_height / 2,
-                text);
+            painter->drawText(-x3 - text_width / 2,
+                              -y3 + text_height / 2,
+                              text);
         }
         else
         {

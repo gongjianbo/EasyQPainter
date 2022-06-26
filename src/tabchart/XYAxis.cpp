@@ -185,7 +185,7 @@ void XYAxis::drawLeft(QPainter *painter)
         const int y_pos = tickPos.at(i);
         painter->drawLine(QPoint(right_pos, y_pos),
                           QPoint(right_pos - 5, y_pos));
-        painter->drawText(right_pos - 5 - painter->fontMetrics().width(tickLabel.at(i)),
+        painter->drawText(right_pos - 5 - painter->fontMetrics().boundingRect(tickLabel.at(i)).width(),
                           y_pos + painter->fontMetrics().height() / 2,
                           tickLabel.at(i));
     }
@@ -204,7 +204,7 @@ void XYAxis::drawBottom(QPainter *painter)
         const int x_pos = tickPos.at(i);
         painter->drawLine(QPoint(x_pos, top_pos),
                           QPoint(x_pos, top_pos + 5));
-        painter->drawText(x_pos - painter->fontMetrics().width(tickLabel.at(i)) / 2,
+        painter->drawText(x_pos - painter->fontMetrics().boundingRect(tickLabel.at(i)).width() / 2,
                           top_pos + 5 + painter->fontMetrics().height(),
                           tickLabel.at(i));
     }
@@ -252,7 +252,7 @@ void XYAxis::calcAxis()
             tickLabel.push_back(label_text);
         }
     }
-    break;
+        break;
     case AtLeft:
     {
         //竖向y轴
@@ -276,7 +276,7 @@ void XYAxis::calcAxis()
             tickLabel.push_back(label_text);
         }
     }
-    break;
+        break;
     default:
         break;
     }
@@ -337,8 +337,8 @@ double XYAxis::calcPxStart(double unitP2V, double valueSpace, double valueMin, d
     //即起点值应该是value_space的整倍数
     const double begin_precision = std::pow(10, decimalPrecision);
     const double begin_cut = (decimalPrecision <= 0)
-                                 ? 0
-                                 : qRound(std::abs(valueMin) * begin_precision) % qRound(valueSpace * begin_precision) / begin_precision;
+            ? 0
+            : qRound(std::abs(valueMin) * begin_precision) % qRound(valueSpace * begin_precision) / begin_precision;
     //因为cut是value_space模出来的，且该分支min和value_space都为正，
     //所以起始值(value_space-cut)不会为负。
     //起点px就为起始值*单位值表示的像素；或者为起始值/单位像素表示的值
@@ -480,7 +480,7 @@ double XYAxis::calcZoomProportionWithPos(const QPoint &pos) const
         const int rect_right = theRect.right();
         zoom_proportion = (pos_x - rect_left) / (double)(rect_right - rect_left);
     }
-    break;
+        break;
     case AtRight:
     case AtLeft:
     {
@@ -489,7 +489,7 @@ double XYAxis::calcZoomProportionWithPos(const QPoint &pos) const
         const int rect_bottom = theRect.bottom();
         zoom_proportion = (rect_bottom - pos_y) / (double)(rect_bottom - rect_top);
     }
-    break;
+        break;
     default:
         break;
     }
@@ -609,16 +609,15 @@ void XYAxis::zoomValueIn()
 
 void XYAxis::zoomValueOut()
 {
-    if (minValue <= minLimit &&
-        maxValue >= maxLimit)
+    if (minValue <= minLimit && maxValue >= maxLimit)
         return;
     const double zoom_half = valueZoomOutStep() / 2;
     const double min_zoom = (minValue - zoom_half < minLimit)
-                                ? (minValue - minLimit)
-                                : (zoom_half);
+            ? (minValue - minLimit)
+            : (zoom_half);
     const double max_zoom = (maxValue + zoom_half > maxLimit)
-                                ? (maxLimit - maxValue)
-                                : (zoom_half);
+            ? (maxLimit - maxValue)
+            : (zoom_half);
     //先不考虑补上不足的部分
     minValue -= min_zoom;
     maxValue += max_zoom;
@@ -652,19 +651,18 @@ void XYAxis::zoomValueInPos(const QPoint &pos)
 
 void XYAxis::zoomValueOutPos(const QPoint &pos)
 {
-    if (minValue <= minLimit &&
-        maxValue >= maxLimit)
+    if (minValue <= minLimit && maxValue >= maxLimit)
         return;
     const double zoom_proportion = calcZoomProportionWithPos(pos);
     const double zoom_step = valueZoomInStep();
     const double min_step = zoom_step * zoom_proportion;
     const double max_step = zoom_step * (1 - zoom_proportion);
     const double min_zoom = (minValue - min_step < minLimit)
-                                ? (minValue - minLimit)
-                                : (min_step);
+            ? (minValue - minLimit)
+            : (min_step);
     const double max_zoom = (maxValue + max_step > maxLimit)
-                                ? (maxLimit - maxValue)
-                                : (max_step);
+            ? (maxLimit - maxValue)
+            : (max_step);
     //先不考虑补上不足的部分
     minValue -= min_zoom;
     maxValue += max_zoom;
@@ -674,8 +672,7 @@ void XYAxis::zoomValueOutPos(const QPoint &pos)
 
 void XYAxis::overallView()
 {
-    if (minValue <= minLimit &&
-        maxValue >= maxLimit)
+    if (minValue <= minLimit && maxValue >= maxLimit)
         return;
     minValue = minLimit;
     maxValue = maxLimit;
@@ -685,9 +682,7 @@ void XYAxis::overallView()
 void XYAxis::setLimitRange(double min, double max, double range)
 {
     if (min >= max || max - min < range)
-    {
         return;
-    }
     minLimit = min;
     maxLimit = max;
     minRange = range;
@@ -697,9 +692,7 @@ void XYAxis::setLimitRange(double min, double max, double range)
 void XYAxis::setValueRange(double min, double max)
 {
     if (min >= max || max - min <= minRange)
-    {
         return;
-    }
     minValue = min;
     maxValue = max;
     calcAxis();

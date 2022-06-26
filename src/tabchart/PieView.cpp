@@ -47,11 +47,11 @@ void PieView::appendSlice(const PieSlice &slice)
         item.angleSpan = item.percentage * 360; //占的角度值
         start_angle += item.angleSpan;
         //此处用的随机颜色，也可以通过传入一个颜色列表来取对应颜色
-        int new_h_value = qrand() % 360;
+        int new_h_value = std::rand() % 360;
         //本来想算一个不相近的颜色，但是0附近和359附近颜色也接近
         //并且，没有考虑整体的颜色独立性
         while(qAbs(new_h_value - h_value) < 60){
-            new_h_value = qrand() % 360;
+            new_h_value = std::rand() % 360;
         }
         //Hue 色度[0,359], Lightness 亮度[0,255], Saturation 饱和度[0,255]
         item.color = QColor::fromHsl(new_h_value, 220, 80);
@@ -115,8 +115,8 @@ void PieView::paintEvent(QPaintEvent *event)
         const QString text_percent = QString::number(item.percentage * 100, 'f', 2) + "%";
         const double text_angle = item.startAngle + item.angleSpan / 2; //span中心
         const int text_height = painter.fontMetrics().height() + 2; //加行间隔2
-        const int text_namewidth = painter.fontMetrics().width(item.name); //名称str宽度
-        const int text_percentwidth = painter.fontMetrics().width(text_percent); //值str宽度
+        const int text_namewidth = painter.fontMetrics().boundingRect(item.name).width(); //名称str宽度
+        const int text_percentwidth = painter.fontMetrics().boundingRect(text_percent).width(); //值str宽度
         const double text_x = slice_radius * 0.6 * std::cos(text_angle / 180 * M_PI); //文本中心点
         const double text_y = -slice_radius * 0.6 * std::sin(text_angle / 180 * M_PI); //文本中心点
 
@@ -132,12 +132,12 @@ void PieView::paintEvent(QPaintEvent *event)
         const int rect_margin = 5; //矩形边距
         const PieSlice &item = sliceList.at(hoveredIndex);
         const QString str_name = QString("name:%1").arg(item.name);
-        const int name_width = painter.fontMetrics().width(str_name) + rect_margin * 2;
+        const int name_width = painter.fontMetrics().boundingRect(str_name).width() + rect_margin * 2;
         const QString str_value = QString("value:%1(%2%)")
                 .arg(QString::number(item.value, 'f', 0))
                 .arg(QString::number(item.percentage * 100, 'f', 2));
         const int text_height = painter.fontMetrics().height();
-        const int value_width = painter.fontMetrics().width(str_value) + rect_margin * 2;
+        const int value_width = painter.fontMetrics().boundingRect(str_value).width() + rect_margin * 2;
         const int rect_height = text_height * 2 + rect_margin * 2 + 2; //两行+间隔2
         const int rect_width = name_width > value_width ? name_width : value_width;
         //左上角坐标，避免超出范围所以要判断并set

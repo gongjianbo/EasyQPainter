@@ -18,11 +18,11 @@ CalcPos::CalcPos(QWidget *parent)
     //减小刷新间隔和步进角度可以让旋转更自然，但是更耗费cpu
     //可以注释掉Timer来练习绘制静止状态下的圆和线
     connect(&timer, &QTimer::timeout, this, [this]()
-            {
-                theRotate += 1;
-                theRotate %= 360;
-                update();
-            });
+    {
+        theRotate += 1;
+        theRotate %= 360;
+        update();
+    });
 }
 
 void CalcPos::showEvent(QShowEvent *event)
@@ -134,19 +134,17 @@ void CalcPos::initImg_1()
         painter.drawLine(0, 0, 0, -radius / (i % 2 == 0 ? 2.0 : 3.0));
         //画内圈字符
         const QString text2 = str_list2.at(i);
-        painter.drawText(
-            -painter.fontMetrics().width(text2) / 2,
-            (radius - 25 + text_height),
-            text2);
+        painter.drawText(-painter.fontMetrics().boundingRect(text2).width() / 2,
+                         (radius - 25 + text_height),
+                         text2);
 
         painter.setPen(QPen(Qt::white));
         //画外圈文字
         const QString text = str_list.at(i);
         //文字的起点在左下角
-        painter.drawText(
-            -painter.fontMetrics().width(text) / 2,
-            (radius + text_height),
-            text);
+        painter.drawText(-painter.fontMetrics().boundingRect(text).width() / 2,
+                         (radius + text_height),
+                         text);
 
         painter.rotate(step); //每次叠加旋转30度
     }
@@ -184,10 +182,9 @@ void CalcPos::initImg_2()
         //默认屏幕坐标系上负下正，这里从原点下方开始绘制，这样文字的角度就反过来了
         const QString text = str_list.at(i);
         //文字的起点在左下角
-        painter.drawText(
-            -painter.fontMetrics().width(text) / 2,
-            (radius + text_height),
-            text);
+        painter.drawText(-painter.fontMetrics().boundingRect(text).width() / 2,
+                         (radius + text_height),
+                         text);
         painter.rotate(angle);
     }
 }
@@ -224,10 +221,9 @@ void CalcPos::initImg_3()
         //默认屏幕坐标系上负下正，这里从原点下方开始绘制，这样文字的角度就反过来了
         const QString text = str_list.at(i);
         //文字的起点在左下角
-        painter.drawText(
-            -painter.fontMetrics().width(text) / 2,
-            (radius + text_height),
-            text);
+        painter.drawText(-painter.fontMetrics().boundingRect(text).width() / 2,
+                         (radius + text_height),
+                         text);
         painter.rotate(angle);
     }
 }
@@ -254,10 +250,9 @@ void CalcPos::draw_4(QPainter *painter)
             painter->drawLine(0, -radius, 0, -(radius + 15));
             const QString text = QString::number(i);
             //文字的起点在左下角
-            painter->drawText(
-                -painter->fontMetrics().width(text) / 2,
-                -(radius + 20),
-                text);
+            painter->drawText(-painter->fontMetrics().boundingRect(text).width() / 2,
+                              -(radius + 20),
+                              text);
         }
         else
         {
@@ -311,13 +306,12 @@ void CalcPos::draw_5(QPainter *painter, int rotate)
             const double x3 = cos(radians) * (radius + 30);
             const double y3 = sin(radians) * (radius + 30);
             const QString text = QString::number(i);
-            const int text_width = painter->fontMetrics().width(text);
+            const int text_width = painter->fontMetrics().boundingRect(text).width();
             //Qt文字绘制的起点在左下角，所以得到文本中心后，往左下偏移宽高的一半
             //上减下加，左减右加，这样相当于往x2y3左下角移动的，使文本中心点在计算的位置
-            painter->drawText(
-                -x3 - text_width / 2,
-                -y3 + text_height / 2,
-                text);
+            painter->drawText(-x3 - text_width / 2,
+                              -y3 + text_height / 2,
+                              text);
         }
         else
         {

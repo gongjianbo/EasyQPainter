@@ -8,6 +8,7 @@
 #include <QPainterPath>
 #include <QSharedPointer>
 #include <QTime>
+#include <QElapsedTimer>
 #include <QTimer>
 #include <QImage>
 #include <QFutureWatcher>
@@ -94,7 +95,7 @@ private:
     int fpsCounter{0};
     int fpsTemp{0};
     //FPS计时
-    QTime fpsTime;
+    QElapsedTimer fpsTime;
 
     //鼠标位置
     QPoint mousePos;

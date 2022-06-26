@@ -3,6 +3,7 @@
 #include <QtMath>
 #include <QPaintEvent>
 #include <QPainter>
+#include <QPainterPath>
 #include <QGradient>
 #include <QDebug>
 
@@ -193,7 +194,9 @@ void Animation::drawRadiusBlock(QPainter &painter, const QRectF &area)
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setPen(Qt::NoPen);
     painter.setBrush(Qt::cyan);
-    painter.drawRoundRect(block, roundRaiuds, roundRaiuds);
+    QPainterPath round_path;
+    round_path.addRoundedRect(block, roundRaiuds, roundRaiuds);
+    painter.drawPath(round_path);
     //边框
     painter.setRenderHint(QPainter::Antialiasing, false);
     painter.setPen(Qt::white);
