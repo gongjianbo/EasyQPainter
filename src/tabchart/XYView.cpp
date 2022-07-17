@@ -100,7 +100,7 @@ void XYView::paintEvent(QPaintEvent *event)
         painter.drawLine(plotArea.left(), mousePos.y(), plotArea.right(), mousePos.y());
         QString val = QString("(%1,%2)")
                 .arg(QString::number(xAxis->pxToValue(plot_pos.x()), 'f', 2))
-                .arg(QString::number(yAxis->pxToValue(plotArea.bottom() - plot_pos.y()), 'f', 2));
+                .arg(QString::number(yAxis->pxToValue(plotArea.height() - 1 - plot_pos.y()), 'f', 2));
         if (mouse_index >= 0)
         {
             val = QString("(%1,%2)")
