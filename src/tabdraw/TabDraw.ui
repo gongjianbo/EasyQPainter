@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <widget class="TaiJi" name="tab_taiji">
       <attribute name="title">
@@ -32,6 +32,11 @@
      <widget class="SineWave" name="tab_sinewave">
       <attribute name="title">
        <string>SineWave</string>
+      </attribute>
+     </widget>
+     <widget class="LedLattice" name="tab_ledlattice">
+      <attribute name="title">
+       <string>LedLattice</string>
       </attribute>
      </widget>
      <widget class="CalcPos" name="tab_calcpos">
@@ -99,6 +104,12 @@
    <class>TaiJi</class>
    <extends>QWidget</extends>
    <header>TaiJi.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>LedLattice</class>
+   <extends>QWidget</extends>
+   <header>LedLattice.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
