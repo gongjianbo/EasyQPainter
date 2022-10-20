@@ -1,6 +1,6 @@
 # EasyQPainter 
-Various operation practices of Qt QPainer.（Qt QPainter 的各种操作实践）
-I named this demo "What is QPainer".（我给这个 Demo 命名为 "何为 QPainter"）
+Various operation practices of Qt QPainter.（Qt QPainter 的各种操作实践）
+I named this demo "What is QPainter".（我给这个 Demo 命名为 "何为 QPainter"）
 > QQ 交流群：647637553
 
 # Environment （开发环境）
