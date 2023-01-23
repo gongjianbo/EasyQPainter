@@ -86,7 +86,7 @@ void PlanetSystem::drawPlanet(QPainter *painter, PlanetNode *planet)
 
     //遍历子节点
     //注意：子节点的旋转和位移是相对父节点的
-    for (PlanetNode *sub_planet : planet->subPlanet)
+    for (PlanetNode *sub_planet : qAsConst(planet->subPlanet))
     {
         //公转轨迹
         painter->drawEllipse(QPoint(0, 0),
@@ -111,7 +111,7 @@ void PlanetSystem::updatePlanet(PlanetNode *planet)
     planet->curSelfRotate += planet->selfSpeed;
     //planet->curSelfRotate%=360;
     //遍历子节点
-    for (PlanetNode *sub_planet : planet->subPlanet)
+    for (PlanetNode *sub_planet : qAsConst(planet->subPlanet))
     {
         updatePlanet(sub_planet);
     }

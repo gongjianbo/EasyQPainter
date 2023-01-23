@@ -5,7 +5,8 @@
 #include <QtMath>
 #include <QDebug>
 
-Cube3D::Cube3D(QWidget *parent) : QWidget(parent)
+Cube3D::Cube3D(QWidget *parent)
+    : QWidget(parent)
 {
     //          7------------------4
     //        /                 /  |

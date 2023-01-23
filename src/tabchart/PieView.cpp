@@ -27,7 +27,7 @@ PieView::~PieView()
 void PieView::appendSlice(const PieSlice &slice)
 {
     //去重
-    for (const PieSlice &item : sliceList)
+    for (const PieSlice &item : qAsConst(sliceList))
     {
         if(item.name == slice.name)
             return;
@@ -84,7 +84,7 @@ void PieView::paintEvent(QPaintEvent *event)
     painter.translate(rect().center()); //中心点移动到pie的中心点
     painter.setPen(QColor(255, 255, 255));
     int index = 0;
-    for (const PieSlice &item : sliceList)
+    for (const PieSlice &item : qAsConst(sliceList))
     {
         //半径随index递减样式
         int slice_radius = (pieRadius - index * 5);
@@ -194,7 +194,7 @@ void PieView::mouseMoveEvent(QMouseEvent *event)
 
     //计算hover选中的index
     int index = 0;
-    for (const PieSlice &item : sliceList)
+    for (const PieSlice &item : qAsConst(sliceList))
     {
         if (arc_pos >= item.startAngle && arc_pos <= (item.startAngle + item.angleSpan)) {
             if (index != hoveredIndex) {

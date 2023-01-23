@@ -20,12 +20,16 @@ WindItem::WindItem(const QVector3D &pos, const QVector3D &rotate,
                    const QList<QSharedPointer<WindMeta>> &metas,
                    const QList<QSharedPointer<WindItem>> &subs,
                    const QVector3D &factor)
-    : position(pos), rotation(rotate), surfaceMetas(metas), subItems(subs), animationFactor(factor)
+    : position(pos)
+    , rotation(rotate)
+    , surfaceMetas(metas)
+    , subItems(subs)
+    , animationFactor(factor)
 {
 }
 
-QList<QSharedPointer<WindMeta> > WindItem::calcSurfaceMetas(
-        const QVector3D &position, const QQuaternion &rotation, float step, float fovy)
+QList<QSharedPointer<WindMeta>>
+WindItem::calcSurfaceMetas(const QVector3D &position, const QQuaternion &rotation, float step, float fovy)
 {
     QVector3D cur_position = position + this->position;
     //这里没验证，因为目前只为0，可能有误
@@ -41,12 +45,12 @@ QList<QSharedPointer<WindMeta> > WindItem::calcSurfaceMetas(
     model_mat.rotate(cur_rotation);
     model_mat.translate(cur_position);
     model_mat.rotate(QQuaternion::fromEulerAngles(step * this->animationFactor));
-    for (QSharedPointer<WindMeta> meta : surfaceMetas)
+    for (QSharedPointer<WindMeta> meta : qAsConst(surfaceMetas))
     {
         QPainterPath path;
         double z;
         bool is_first = true;
-        for (const QVector3D &vertex : meta->vertex)
+        for (const QVector3D &vertex : qAsConst(meta->vertex))
         {
             QVector3D calc_vertex= perspective_mat * view_mat * model_mat * vertex;
             calc_vertex.setY(-calc_vertex.y());
@@ -74,7 +78,7 @@ QList<QSharedPointer<WindMeta> > WindItem::calcSurfaceMetas(
     }
     cur_rotation *= QQuaternion::fromEulerAngles(step * this->animationFactor);
     QList<QSharedPointer<WindMeta>> surface_metas = surfaceMetas;
-    for (QSharedPointer<WindItem> item : subItems)
+    for (QSharedPointer<WindItem> item : qAsConst(subItems))
     {
         surface_metas += item->calcSurfaceMetas(cur_position, cur_rotation, step, fovy);
     }
@@ -338,7 +342,7 @@ void Windmill3D::drawImage(int width, int height)
                 return left->z < right->z;
             });
             //根据z值从远处开始绘制图元路径
-            for (QSharedPointer<WindMeta> meta : surface_metas)
+            for (QSharedPointer<WindMeta> meta : qAsConst(surface_metas))
             {
                 painter.fillPath(meta->path, meta->color);
             }

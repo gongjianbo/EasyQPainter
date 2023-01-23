@@ -55,8 +55,8 @@ struct WindItem
     //position取出后直接叠加到顶点的坐标上:vertex+position+this->position
     //rotation目前只计算了x和y的旋转，作用于item的顶点上，目前只能旋转item
     //step为定时器动画的步进，每个item根据自身的动画因子成员来计算
-    QList<QSharedPointer<WindMeta>> calcSurfaceMetas(
-            const QVector3D &position, const QQuaternion &rotation, float step, float fovy);
+    QList<QSharedPointer<WindMeta>>
+    calcSurfaceMetas(const QVector3D &position, const QQuaternion &rotation, float step, float fovy);
 };
 
 //绘制一个3D风车

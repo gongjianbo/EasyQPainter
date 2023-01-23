@@ -66,7 +66,7 @@ void XYView::paintEvent(QPaintEvent *event)
         QPainterPath path;
         path.moveTo(plotArea.left() + xAxis->valueToPx(seriesData.first().x),
                     plotArea.bottom() - yAxis->valueToPx(seriesData.first().y));
-        for (const Node &item : seriesData)
+        for (const Node &item : qAsConst(seriesData))
         {
             path.lineTo(plotArea.left() + xAxis->valueToPx(item.x),
                         plotArea.bottom() - yAxis->valueToPx(item.y));

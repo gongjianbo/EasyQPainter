@@ -7,7 +7,7 @@ PenStyle::PenStyle(QWidget *parent)
     : QWidget(parent)
 {
     //累计dash总长
-    for (int item : customDash)
+    for (int item : qAsConst(customDash))
     {
         dashCount += item;
     }
