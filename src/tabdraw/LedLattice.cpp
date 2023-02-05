@@ -34,9 +34,8 @@ LedLattice::LedLattice(QWidget *parent)
         currentCol++;
         if(currentCol > colCount){
             currentCol = 0;
-            //扫描完一轮后移动一次
-            colOffset++;
-            colOffset %= colCount;
+            //扫描完一轮后图形移动一次
+            colOffset = (colOffset + 1) % colCount;
         }
         update();
     });
@@ -112,19 +111,22 @@ void LedLattice::paintEvent(QPaintEvent *event)
     for (int col = 0; col < col_count; col++)
     {
         int distance = 0;
+        int offset = colOffset;
         if (currentCol >= col)
         {
             distance = currentCol - col;
         }
         else
         {
+            //后面的图形列保持之前的位置，不然会跳一格
+            offset = (colOffset + colCount - 1) % colCount;
             distance = currentCol + colCount - col;
         }
         //模拟荧光效果，当前扫描的列亮度为1，逐渐变暗
         painter.setOpacity((colCount - distance) / (double)colCount);
         //
         int col_offset = col * (line_width + line_space) + line_space;
-        unsigned short col_data = led_data[(col + colOffset) % colCount];
+        unsigned short col_data = led_data[(col + offset) % colCount];
         unsigned short row_index = 0x01;
         for (int row = 0; row < row_count; row++)
         {
