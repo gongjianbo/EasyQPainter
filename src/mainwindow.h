@@ -5,7 +5,7 @@ namespace Ui {
 class MainWindow;
 }
 
-//主窗口，包含各分组页面
+// 主窗口，包含各分组页面
 class MainWindow : public QMainWindow
 {
     Q_OBJECT

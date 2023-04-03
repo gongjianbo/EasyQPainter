@@ -6,7 +6,7 @@
 #include <QMatrix4x4>
 #include <QQuaternion>
 
-//绘制一个立方体盒子
+// 绘制一个立方体盒子
 class Cube3D : public QWidget
 {
     Q_OBJECT
@@ -23,18 +23,18 @@ protected:
     QPointF getPoint(const QVector3D &vt, int w) const;
 
 private:
-    //立方体八个顶点
+    // 立方体八个顶点
     QVector<QVector3D> vertexArr;
-    //立方体六个面
+    // 立方体六个面
     QVector<QVector<int>> elementArr;
-    //观察矩阵旋转
+    // 观察矩阵旋转
     QVector3D rotationAxis;
     QQuaternion rotationQuat;
-    //透视投影的fovy参数，视野范围
+    // 透视投影的fovy参数，视野范围
     float projectionFovy{30.0f};
 
-    //鼠标位置
+    // 鼠标位置
     QPoint mousePos;
-    //鼠标按下标志位
+    // 鼠标按下标志位
     bool mousePressed{false};
 };

@@ -5,7 +5,7 @@ namespace Ui {
 class TabDraw;
 }
 
-//绘制自定义效果
+// 绘制自定义效果
 class TabDraw : public QWidget
 {
     Q_OBJECT

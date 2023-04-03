@@ -5,7 +5,7 @@ namespace Ui {
 class TabChart;
 }
 
-//绘制图表
+// 绘制图表
 class TabChart : public QWidget
 {
     Q_OBJECT

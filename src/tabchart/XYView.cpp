@@ -22,7 +22,7 @@ XYView::XYView(QWidget *parent)
     connect(xAxis, &XYAxis::axisChanged, this, &XYView::refresh);
     connect(yAxis, &XYAxis::axisChanged, this, &XYView::refresh);
 
-    //初始化数据点
+    // 初始化数据点
     for (int i = -500; i <= 500; i += 10)
     {
         seriesData.append(Node{i, int(500 * std::sin(qDegreesToRadians((double)i)))});
@@ -34,7 +34,7 @@ void XYView::paintEvent(QPaintEvent *event)
     event->accept();
     QPainter painter(this);
 
-    //绘制网格
+    // 绘制网格
     painter.setPen(QColor(0, 180, 200));
     auto x_tick = xAxis->getTickPos();
     auto y_tick = yAxis->getTickPos();
@@ -53,12 +53,12 @@ void XYView::paintEvent(QPaintEvent *event)
         }
     }
 
-    //绘制坐标轴
+    // 绘制坐标轴
     painter.setPen(QColor(255, 0, 0, 100));
     xAxis->draw(&painter);
     yAxis->draw(&painter);
 
-    //绘制曲线
+    // 绘制曲线
     int mouse_index = -1;
     QPoint plot_pos = mousePos - plotArea.topLeft();
     if (!seriesData.isEmpty())
@@ -76,7 +76,7 @@ void XYView::paintEvent(QPaintEvent *event)
         painter.setClipRect(plotArea);
         painter.setPen(QColor(0, 220, 0));
         painter.drawPath(path);
-        //鼠标x轴对应的数据点
+        // 鼠标 x 轴对应的数据点
         if (plotArea.isValid() && plotArea.contains(mousePos))
         {
             const double mouse_val = xAxis->pxToValue(plot_pos.x());
@@ -89,10 +89,10 @@ void XYView::paintEvent(QPaintEvent *event)
     }
 
     painter.setPen(QColor(255, 0, 0, 100));
-    //painter.drawRect(plotArea.adjusted(0,0,-1,-1));
+    // painter.drawRect(plotArea.adjusted(0,0,-1,-1));
     painter.drawRect(contentArea.adjusted(0, 0, -1, -1));
 
-    //绘制光标十字线
+    // 绘制光标十字线
     if (plotArea.isValid() && plotArea.contains(mousePos))
     {
         painter.setPen(QColor(255, 0, 0));
@@ -115,16 +115,16 @@ void XYView::paintEvent(QPaintEvent *event)
 void XYView::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
-    //边距
+    // 边距
     int margin = 10;
-    //series+axis的区域
-    //y轴宽度+1，x轴高度+1，这样0点就可以重合
+    // series + axis 的区域
+    // y 轴宽度 +1，x 轴高度 +1，这样 0 点就可以重合
     contentArea = rect().adjusted(margin, margin, -margin, -margin);
     xAxis->setRect(QRect(contentArea.left() + 50, contentArea.bottom() - 50,
                          contentArea.width() - 50, 50 + 1));
     yAxis->setRect(QRect(contentArea.left(), contentArea.top(),
                          50 + 1, contentArea.height() - 50));
-    //series的区域
+    // series 的区域
     plotArea = contentArea.adjusted(50, 0, 0, -50);
 }
 
@@ -180,7 +180,7 @@ void XYView::wheelEvent(QWheelEvent *event)
 #endif
     const Qt::KeyboardModifiers key_mod = QGuiApplication::keyboardModifiers();
     const bool delta_up = (delta > 0);
-    //按住ctrl滚动是Y轴缩放，否则是X轴缩放
+    // 按住ctrl滚动是Y轴缩放，否则是X轴缩放
     if (key_mod & Qt::ControlModifier)
     {
         if (delta_up)
@@ -207,7 +207,7 @@ void XYView::wheelEvent(QWheelEvent *event)
 
 int XYView::searchDataIndex(int start, int end, double distinction) const
 {
-    //在[起止)范围内二分查找目标
+    // 在[起止)范围内二分查找目标
     if (distinction >= seriesData.at(end - 1).x)
         return end - 1;
     if (distinction <= seriesData.at(start).x)

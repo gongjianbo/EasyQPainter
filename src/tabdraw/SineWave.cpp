@@ -9,10 +9,10 @@ SineWave::SineWave(QWidget *parent)
     : QWidget(parent)
 {
     connect(&timer, &QTimer::timeout, this, [this]()
-            {
-                timeVal += 1;
-                update();
-            });
+    {
+        timeVal += 1;
+        update();
+    });
 }
 
 void SineWave::showEvent(QShowEvent *event)
@@ -32,39 +32,39 @@ void SineWave::paintEvent(QPaintEvent *event)
     Q_UNUSED(event)
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
-    //波形曲线区域宽度
+    // 波形曲线区域宽度
     const int series_width = 500;
-    //波形与圆间隔
+    // 波形与圆间隔
     const int series_space = 120;
-    //波形幅度高度
+    // 波形幅度高度
     const int series_height = 100;
     QList<int> r_list;
-    //拖拽后move居中
+    // 拉伸后居中
     painter.translate((width() - (series_width + series_space * 2)) / 2,
                       (height() - (series_height * 6)) / 2);
-    //前两个为普通的正弦波，最后一个为前面的幅度叠加
+    // 前两个为普通的正弦波，最后一个为前面的幅度叠加
     {
         painter.save();
-        //圆
+        // 圆
         painter.translate(series_space, series_height);
         painter.setPen(QPen(Qt::black, 2));
         const int the_r = 20;
         r_list.append(the_r);
-        //当前角度
-        //timeVal当作时间因子，每隔一段时间跑一段弧度距离，转换为角度
+        // 当前角度
+        // timeVal 当作时间因子，每隔一段时间跑一段弧度距离，转换为角度
         const float angle = timeVal * 36.0 / (2 * the_r * M_PI);
-        //painter.drawEllipse(QPoint(0,0),5,5);
-        //画圆
+        // painter.drawEllipse(QPoint(0,0),5,5);
+        // 画圆
         painter.drawEllipse(QPointF(0, 0), the_r, the_r);
         painter.drawLine(-the_r, 0, the_r, 0);
         painter.drawLine(0, -the_r, 0, the_r);
-        //当前角度对应坐标点
+        // 当前角度对应坐标点
         const float the_x = 0 + the_r * cos(-angle);
         const float the_y = 0 + the_r * sin(-angle);
         painter.setPen(QPen(Qt::red, 2));
         painter.drawEllipse(QPointF(the_x, the_y), 5, 5);
         painter.drawLine(QPointF(the_x, the_y), QPointF(0, 0));
-        //时域波形
+        // 时域波形
         painter.translate(series_space, 0);
         painter.setPen(QPen(Qt::blue, 2));
         QPainterPath the_series;
@@ -85,14 +85,14 @@ void SineWave::paintEvent(QPaintEvent *event)
 
     {
         painter.save();
-        //圆
+        // 圆
         painter.translate(series_space, series_height * 3);
         painter.setPen(QPen(Qt::black, 2));
         const int the_r = 60;
         r_list.append(the_r);
-        //当前角度
+        // 当前角度
         const float angle = timeVal * 36.0 / (2 * the_r * M_PI);
-        //painter.drawEllipse(QPoint(0,0),5,5);
+        // painter.drawEllipse(QPoint(0,0),5,5);
         painter.drawEllipse(QPointF(0, 0), the_r, the_r);
         painter.drawLine(-the_r, 0, the_r, 0);
         painter.drawLine(0, -the_r, 0, the_r);
@@ -101,7 +101,7 @@ void SineWave::paintEvent(QPaintEvent *event)
         painter.setPen(QPen(Qt::red, 2));
         painter.drawEllipse(QPointF(the_x, the_y), 5, 5);
         painter.drawLine(QPointF(the_x, the_y), QPointF(0, 0));
-        //时域波形
+        // 时域波形
         painter.translate(series_space, 0);
         painter.setPen(QPen(Qt::blue, 2));
         QPainterPath the_series;
@@ -122,7 +122,7 @@ void SineWave::paintEvent(QPaintEvent *event)
 
     {
         painter.save();
-        //圆
+        // 圆
         painter.translate(series_space, series_height * 5);
         painter.save();
         int r_temp = 0;
@@ -132,7 +132,7 @@ void SineWave::paintEvent(QPaintEvent *event)
         {
             const int the_r = r_list.at(i);
             r_temp += the_r;
-            //当前角度
+            // 当前角度
             const float angle = timeVal * 36.0 / (2 * the_r * M_PI);
             painter.setPen(QPen(Qt::black, 2));
             painter.drawEllipse(QPointF(0, 0), the_r, the_r);
@@ -151,7 +151,7 @@ void SineWave::paintEvent(QPaintEvent *event)
         }
         painter.restore();
 
-        //时域波形
+        // 时域波形
         painter.translate(series_space, 0);
         painter.setPen(QPen(Qt::blue, 2));
         QPainterPath the_series;

@@ -3,9 +3,12 @@ QT += core gui widgets concurrent
 CONFIG += c++11 utf8_source
 
 DEFINES += QT_DEPRECATED_WARNINGS
+
 win32{
-RC_ICONS = $$PWD/img/icon.ico
+    DEFINES += NOMINMAX
+    RC_ICONS = $$PWD/img/icon.ico
 }
+
 DESTDIR = $$PWD/bin
 
 INCLUDEPATH += $$PWD/src

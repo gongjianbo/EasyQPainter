@@ -32,15 +32,15 @@ QList<QSharedPointer<WindMeta>>
 WindItem::calcSurfaceMetas(const QVector3D &position, const QQuaternion &rotation, float step, float fovy)
 {
     QVector3D cur_position = position + this->position;
-    //这里没验证，因为目前只为0，可能有误
+    // 这里没验证，因为目前只为 0，可能有误
     QQuaternion cur_rotation = QQuaternion::fromEulerAngles(this->rotation) * rotation;
-    //平移做裁剪，缩放拉近距离
+    // 平移做裁剪，缩放拉近距离
     QMatrix4x4 perspective_mat;
     perspective_mat.scale(100);
     perspective_mat.perspective(fovy, 1.0f, 0.1f, 2000.0f);
     QMatrix4x4 view_mat;
     view_mat.translate(0.0f, 0.0f, -1000.0f);
-    //先跟随父节点转动和位移，再以自身的转动步进进行转动
+    // 先跟随父节点转动和位移，再以自身的转动步进进行转动
     QMatrix4x4 model_mat;
     model_mat.rotate(cur_rotation);
     model_mat.translate(cur_position);
@@ -52,11 +52,12 @@ WindItem::calcSurfaceMetas(const QVector3D &position, const QQuaternion &rotatio
         bool is_first = true;
         for (const QVector3D &vertex : qAsConst(meta->vertex))
         {
+            // 相乘顺序和 glsl 一致
             QVector3D calc_vertex= perspective_mat * view_mat * model_mat * vertex;
             calc_vertex.setY(-calc_vertex.y());
             calc_vertex.setZ(-calc_vertex.z());
-            //qDebug()<<calc_vertex;
-            //第一个点单独处理
+            // qDebug()<<calc_vertex;
+            // 第一个点单独处理
             if (is_first)
             {
                 path.moveTo(calc_vertex.x(), calc_vertex.y());
@@ -72,7 +73,7 @@ WindItem::calcSurfaceMetas(const QVector3D &position, const QQuaternion &rotatio
                 }
             }
         }
-        //qDebug()<<path<<z;
+        // qDebug()<<path<<z;
         meta->path = path;
         meta->z = z;
     }
@@ -90,18 +91,18 @@ Windmill3D::Windmill3D(QWidget *parent)
     : QWidget(parent)
 {
     initWindmill();
-    //异步处理结束，获取结果并刷新窗口
+    // 异步处理结束，获取结果并刷新窗口
     connect(&watcher, &QFutureWatcher<QImage>::finished, [this]()
     {
         image = watcher.result();
         update();
     });
 
-    //之前使用的QTime，现在替换为QElapsedTimer
-    //QTime fpsTime = QTime::currentTime();
+    // 之前使用的 QTime，现在替换为 QElapsedTimer
+    // QTime fpsTime = QTime::currentTime();
     fpsTime.start();
 
-    //定时旋转风车
+    // 定时旋转风车
     connect(&timer, &QTimer::timeout, this, [this]()
     {
         animationStep += 2.0f;
@@ -136,7 +137,7 @@ void Windmill3D::paintEvent(QPaintEvent *event)
     if (image.size().isValid())
         painter.drawImage(0, 0, image);
 
-    //fps统计
+    // fps 统计
     if (fpsTime.elapsed() > 1000)
     {
         fpsTime.restart();
@@ -167,10 +168,10 @@ void Windmill3D::mouseMoveEvent(QMouseEvent *event)
         mousePos = event->pos();
         QVector3D n = QVector3D(diff.y(), diff.x(), 0.0).normalized();
         rotationAxis = (rotationAxis + n).normalized();
-        //不能对换乘的顺序
+        // 不能对换乘的顺序
         rotationQuat = QQuaternion::fromAxisAndAngle(rotationAxis, 2.0f) * rotationQuat;
 
-        //update();
+        // update();
         drawImage(width(), height());
     }
     QWidget::mouseMoveEvent(event);
@@ -186,28 +187,28 @@ void Windmill3D::wheelEvent(QWheelEvent *event)
 {
     event->accept();
 #if (QT_VERSION <= QT_VERSION_CHECK(5, 15, 0))
-    //const QPoint pos = event->pos();
+    // const QPoint pos = event->pos();
     const int delta = event->delta();
 #else
-    //const QPoint pos = event->position().toPoint();
+    // const QPoint pos = event->position().toPoint();
     const int delta = event->angleDelta().y();
 #endif
-    //fovy越小，模型看起来越大
+    // fovy 越小，模型看起来越大
     if (delta < 0)
     {
-        //鼠标向下滑动为-，这里作为zoom out
+        // 鼠标向下滑动为-，这里作为zoom out
         projectionFovy += 0.5f;
         if (projectionFovy > 90)
             projectionFovy = 90;
     }
     else
     {
-        //鼠标向上滑动为+，这里作为zoom in
+        // 鼠标向上滑动为+，这里作为zoom in
         projectionFovy -= 0.5f;
         if (projectionFovy < 1)
             projectionFovy = 1;
     }
-    //update();
+    // update();
     drawImage(width(), height());
 }
 
@@ -224,8 +225,8 @@ void Windmill3D::resizeEvent(QResizeEvent *event)
 
 void Windmill3D::initWindmill()
 {
-    //参照荷兰风车，逆时针旋转，帆布往塔身一侧倾斜
-    //四个扇叶
+    // 参照荷兰风车，逆时针旋转，帆布往塔身一侧倾斜
+    // 四个扇叶
     WindMeta *sub_fan1 = new WindMeta{{QVector3D(0, 0, 0), QVector3D(-250, -250, 0),
             QVector3D(-300, -200, -10), QVector3D(-100, 0, -10)},
             QColor(110, 250, 250, 200)};
@@ -244,14 +245,14 @@ void Windmill3D::initWindmill()
                                                        QSharedPointer<WindMeta>(sub_fan4)};
     auto sub_fansubs = QList<QSharedPointer<WindItem>>{};
     WindItem *sub_fanitem = new WindItem{
-            QVector3D(0, 400, 150), //相对位置，y400放到顶部，z150贴在墙上
-            QVector3D(0, 0, 0), //相对方向
+            QVector3D(0, 400, 150), // 相对位置，y400 放到顶部，z150 贴在墙上
+            QVector3D(0, 0, 0), // 相对方向
             sub_fanmetas,
             sub_fansubs,
-            QVector3D(0, 0, 1)}; //给z加了动画因子，即扇叶在xy平面转
+            QVector3D(0, 0, 1)}; // 给 z 加了动画因子，即扇叶在 xy 平面转
 
-    //风车主干，共9个面，顶部尖塔4+主干4+底面
-    //顶部4
+    // 风车主干，共 9 个面，顶部尖塔4 + 主干4 + 底面
+    // 顶部4
     WindMeta *sub_main1 = new WindMeta{{QVector3D(100, 400, 100), QVector3D(-100, 400, 100), QVector3D(0, 500, 0)},
             QColor(250, 0, 0)};
     WindMeta *sub_main2 = new WindMeta{{QVector3D(-100, 400, 100), QVector3D(-100, 400, -100), QVector3D(0, 500, 0)},
@@ -260,7 +261,7 @@ void Windmill3D::initWindmill()
             QColor(0, 0, 250)};
     WindMeta *sub_main4 = new WindMeta{{QVector3D(100, 400, -100), QVector3D(100, 400, 100), QVector3D(0, 500, 0)},
             QColor(250, 250, 0)};
-    //主体4
+    // 主体4
     WindMeta *sub_main5 = new WindMeta{{QVector3D(100, 400, 100), QVector3D(-100, 400, 100),
             QVector3D(-120, 0, 120), QVector3D(120, 0, 120)},
             QColor(205, 150, 100)};
@@ -273,7 +274,7 @@ void Windmill3D::initWindmill()
     WindMeta *sub_main8 = new WindMeta{{QVector3D(100, 400, -100), QVector3D(100, 400, 100),
             QVector3D(120, 0, 120), QVector3D(120, 0, -120)},
             QColor(250, 150, 100)};
-    //底部1
+    // 底部1
     WindMeta *sub_main9 = new WindMeta{{QVector3D(-120, 0, 120), QVector3D(-120, 0, -120),
             QVector3D(120, 0, -120), QVector3D(120, 0, 120)},
             QColor(200, 150, 0)};
@@ -289,23 +290,23 @@ void Windmill3D::initWindmill()
                                                         QSharedPointer<WindMeta>(sub_main9)};
     auto sub_mainsubs = QList<QSharedPointer<WindItem>>{QSharedPointer<WindItem>(sub_fanitem)};
     WindItem *sub_mainitem = new WindItem{
-            QVector3D(0, 0, 0), //相对位置
-            QVector3D(0, 0, 0), //相对方向
+            QVector3D(0, 0, 0), // 相对位置
+            QVector3D(0, 0, 0), // 相对方向
             sub_mainmetas,
             sub_mainsubs};
 
-    //根节点，一个平面，（平面用半透明是为了穿模时看起来没那么别扭）
+    // 根节点，一个平面，（平面用半透明是为了穿模时看起来没那么别扭）
     WindMeta *root_meta = new WindMeta{{QVector3D(-200, 0, 200), QVector3D(200, 0, 200),
             QVector3D(200, 0, -200), QVector3D(-200, 0, -200)},
             QColor(255, 255, 255, 100)};
     auto root_metas = QList<QSharedPointer<WindMeta>>{QSharedPointer<WindMeta>(root_meta)};
     auto root_subs = QList<QSharedPointer<WindItem>>{QSharedPointer<WindItem>(sub_mainitem)};
     rootItem = WindItem{
-            QVector3D(0, -300, 0), //相对位置，y轴-300相当于放到了底部
-            QVector3D(0, 0, 0), //相对方向
+            QVector3D(0, -300, 0), // 相对位置，y 轴 -300 相当于放到了底部
+            QVector3D(0, 0, 0), // 相对方向
             root_metas,
             root_subs,
-            QVector3D(0, -0.1f, 0)}; //给y加了动画因子，即柱子在xz平面转
+            QVector3D(0, -0.1f, 0)}; // 给 y 加了动画因子，即柱子在 xz 平面转
 }
 
 void Windmill3D::drawImage(int width, int height)
@@ -316,7 +317,7 @@ void Windmill3D::drawImage(int width, int height)
         float step = animationStep;
         float fovy = projectionFovy;
 
-        //多线程绘制到image上，绘制完后返回image并绘制到窗口上
+        // 多线程绘制到 image 上，绘制完后返回 image 并绘制到窗口上
         QFuture<QImage> futures = QtConcurrent::run([this, width, height, rotate, step, fovy]()
         {
             QImage img(width, height, QImage::Format_ARGB32);
@@ -326,28 +327,28 @@ void Windmill3D::drawImage(int width, int height)
                 return img;
             painter.fillRect(img.rect(), Qt::black);
 
-            //painter.save();
-            //坐标原点移动到中心
+            // painter.save();
+            // 坐标原点移动到中心
             painter.translate(width / 2, height / 2);
-            //抗锯齿
+            // 抗锯齿
             painter.setRenderHint(QPainter::Antialiasing);
 
-            //计算所有的图元顶点路径
+            // 计算所有的图元顶点路径
             QList<QSharedPointer<WindMeta>> surface_metas = rootItem.calcSurfaceMetas(
                         QVector3D(0, 0, 0), rotate, step, fovy);
-            //根据z轴排序
+            // 根据 z 轴排序
             std::sort(surface_metas.begin(), surface_metas.end(),
                       [](const QSharedPointer<WindMeta> &left, const QSharedPointer<WindMeta> &right)
             {
                 return left->z < right->z;
             });
-            //根据z值从远处开始绘制图元路径
+            // 根据 z 值从远处开始绘制图元路径
             for (QSharedPointer<WindMeta> meta : qAsConst(surface_metas))
             {
                 painter.fillPath(meta->path, meta->color);
             }
 
-            //painter.restore();
+            // painter.restore();
             return img;
         });
         watcher.setFuture(futures);

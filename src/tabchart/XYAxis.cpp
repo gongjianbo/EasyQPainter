@@ -158,13 +158,13 @@ void XYAxis::draw(QPainter *painter)
     switch (this->getAxisPosition())
     {
     case AtRight:
-        //drawRight(painter);
+        // drawRight(painter);
         break;
     case AtLeft:
         drawLeft(painter);
         break;
     case AtTop:
-        //drawTop(painter);
+        // drawTop(painter);
         break;
     case AtBottom:
         drawBottom(painter);
@@ -231,22 +231,22 @@ void XYAxis::calcAxis()
     {
     case AtBottom:
     {
-        //横向x轴
+        // 横向 x 轴
         calcSpace(theRect.width() - 1);
-        //计算刻度线
+        // 计算刻度线
         const double right_pos = theRect.right();
         tickPos.clear();
         tickLabel.clear();
         const int precision = getTickPrecision();
-        //i是用刻度px算坐标位置；j是用刻度px算i对应的value
-        //条件i>pos-N是为了显示最大值那个刻度
+        // i 是用刻度 px 算坐标位置；j 是用刻度 px 算 i 对应的 value
+        // 条件 (i > pos - N) 是为了显示最大值那个刻度
         for (double i = theRect.left() + pxStart, j = pxStart; i < right_pos + 2; i += pxSpace, j += pxSpace)
         {
             tickPos.push_back(std::round(i));
             const double label_value = (minValue + (j)*unit1PxToValue);
             QString label_text = QString::number(label_value, 'f', precision);
             if (label_text == "-0")
-            { //会有-0
+            { // 会有-0
                 label_text = "0";
             }
             tickLabel.push_back(label_text);
@@ -255,22 +255,22 @@ void XYAxis::calcAxis()
         break;
     case AtLeft:
     {
-        //竖向y轴
+        // 竖向 y 轴
         calcSpace(theRect.height() - 1);
-        //计算刻度线
+        // 计算刻度线
         const double top_pos = theRect.top();
         tickPos.clear();
         tickLabel.clear();
         const int precision = getTickPrecision();
-        //i是用刻度px算坐标位置；j是用刻度px算i对应的value
-        //条件i>pos-N是为了显示最大值那个刻度
+        // i 是用刻度 px 算坐标位置；j 是用刻度 px 算 i 对应的 value
+        // 条件 (i > pos - N) 是为了显示最大值那个刻度
         for (double i = theRect.bottom() - pxStart, j = pxStart; i > top_pos - 2; i -= pxSpace, j += pxSpace)
         {
             tickPos.push_back(std::round(i));
             const double label_value = (minValue + (j)*unit1PxToValue);
             QString label_text = QString::number(label_value, 'f', precision);
             if (label_text == "-0")
-            { //会有-0
+            { // 会有-0
                 label_text = "0";
             }
             tickLabel.push_back(label_text);
@@ -285,8 +285,8 @@ void XYAxis::calcAxis()
 
 void XYAxis::calcSpace(double axisLength)
 {
-    //计算每单位值
-    //为什么算了两个互为倒数的数呢？因为浮点数精度问题
+    // 计算每单位值
+    // 为什么算了两个互为倒数的数呢？因为浮点数精度问题
     unit1PxToValue = (maxValue - minValue) / (axisLength);
     unit1ValueToPx = (axisLength) / (maxValue - minValue);
     //计算间隔和起点
@@ -294,7 +294,7 @@ void XYAxis::calcSpace(double axisLength)
     switch (theMode)
     {
     case FixedValue:
-        //该模式ValueSpace固定不变;
+        // 该模式 ValueSpace 固定不变;
         valueSpace = fixedValueSpace;
         pxSpace = calcPxSpace(unit1PxToValue, valueSpace);
         pxStart = calcPxStart(unit1PxToValue, valueSpace, minValue, maxValue);
@@ -311,7 +311,7 @@ void XYAxis::calcSpace(double axisLength)
 
 double XYAxis::calcPxSpace(double unitP2V, double valueSpace) const
 {
-    //这里与真0.0比较
+    // 这里与真 0.0 比较
     if (unitP2V <= 0.0)
     {
         qWarning() << __FUNCTION__ << "unitP2V is too min" << unitP2V;
@@ -328,65 +328,65 @@ double XYAxis::calcPxStart(double unitP2V, double valueSpace, double valueMin, d
         qWarning() << __FUNCTION__ << "unitP2V or valueSpace is too min" << unitP2V << valueSpace;
         return 0.0;
     }
-    //min有正负，而unit和space只有正
-    //如果最小值为正数or零
-    //从最小值往上找第一个能被value_space整除的数
-    //如果最小值为负数
-    //从0往下找最后一个能被value_space整除的数
-    //（如果min绝对值小于value_space则起点为0）
-    //即起点值应该是value_space的整倍数
+    // min 有正负，而 unit 和 space 只有正
+    // 如果最小值为正数或零
+    // 从最小值往上找第一个能被 value_space 整除的数
+    // 如果最小值为负数
+    // 从 0 往下找最后一个能被 value_space 整除的数
+    // （如果 min 绝对值小于 value_space 则起点为 0）
+    // 即起点值应该是 value_space 的整倍数
     const double begin_precision = std::pow(10, decimalPrecision);
     const double begin_cut = (decimalPrecision <= 0)
             ? 0
             : qRound(std::abs(valueMin) * begin_precision) % qRound(valueSpace * begin_precision) / begin_precision;
-    //因为cut是value_space模出来的，且该分支min和value_space都为正，
-    //所以起始值(value_space-cut)不会为负。
-    //起点px就为起始值*单位值表示的像素；或者为起始值/单位像素表示的值
-    //(注意：起始值是距离起点的间隔值)
+    // 因为 cut 是 value_space 模出来的，且该分支 min 和 value_space 都为正，
+    // 所以起始值 (value_space-cut) 不会为负。
+    // 起点 px 就为起始值*单位值表示的像素；或者为起始值/单位像素表示的值
+    // (注意：起始值是距离起点的间隔值)
     const double begin_val = qFuzzyIsNull(begin_cut) ? 0.0 : (valueMin >= 0.0) ? (valueSpace - begin_cut)
                                                                                : begin_cut;
     return begin_val / unitP2V;
 
-    //之前以左上角为起始计算的逻辑，会导致左下角xy的零点相交误差大，现在改为左下角开始算
-    //if(getAxisPosition()==AtTop||getAxisPosition()==AtBottom){
-    //    //横向刻度值的是从左至右，和坐标x值增长方向一样
-    //    return begin_val/unitP2V;
-    //}else if(getAxisPosition()==AtLeft||getAxisPosition()==AtRight){
-    //    //竖向如果从上往下开始计算，则刻度值和坐标y值增长方向相反
-    //    const double end_val=(valueMax-valueMin-begin_val)-valueSpace*(int)((valueMax-valueMin-begin_val)/valueSpace);
-    //    return end_val/unitP2V;
-    //}
-    //return 0;
+    // 之前以左上角为起始计算的逻辑，会导致左下角 xy 的零点相交误差大，现在改为左下角开始算
+    // if(getAxisPosition()==AtTop||getAxisPosition()==AtBottom){
+    //     // 横向刻度值的是从左至右，和坐标 x 值增长方向一样
+    //     return begin_val/unitP2V;
+    // }else if(getAxisPosition()==AtLeft||getAxisPosition()==AtRight){
+    //     // 竖向如果从上往下开始计算，则刻度值和坐标 y 值增长方向相反
+    //     const double end_val=(valueMax-valueMin-begin_val)-valueSpace*(int)((valueMax-valueMin-begin_val)/valueSpace);
+    //     return end_val/unitP2V;
+    // }
+    // return 0;
 }
 
 double XYAxis::calcValueSpace(double unitP2V, int pxRefSpace) const
 {
-    //尽量为整除
+    // 尽量为整除
     const double space_ref = unitP2V * pxRefSpace;
     double space_temp = space_ref;
     if (space_ref > 1)
         space_temp = calcValueSpaceHelper(space_ref, 1);
     else
         space_temp = calcValueSpaceHelper(space_ref * std::pow(10, decimalPrecision), 1) * std::pow(10, -decimalPrecision);
-    //避免过大过小
-    /*if(space_temp<=std::pow(10,-_decimalPrecision)){
-        return std::pow(10,-_decimalPrecision);
-    }else if(space_temp<space_ref*0.7){
-        return space_temp*2;
-    }else if(space_temp>space_ref*1.8){
-        return space_temp/2;
-    }*/
+    // 避免过大过小
+    // if(space_temp<=std::pow(10,-_decimalPrecision)){
+    //     return std::pow(10,-_decimalPrecision);
+    // }else if(space_temp<space_ref*0.7){
+    //     return space_temp*2;
+    // }else if(space_temp>space_ref*1.8){
+    //     return space_temp/2;
+    // }
     return space_temp;
 }
 
 double XYAxis::calcValueSpaceHelper(double valueRefRange, int dividend) const
 {
-    //分段找合适的间隔，分割倍数dividend每次递归乘以10
-    //考虑到当前应用场景，没有处理太大or太小的数
-    //其实这个递归也不是很好，如果数值较大比较费时间，但是统计数值位数也需要去递归
+    // 分段找合适的间隔，分割倍数 dividend 每次递归乘以 10
+    // 考虑到当前应用场景，没有处理太大或太小的数
+    // 其实这个递归也不是很好，如果数值较大比较费时间，但是统计数值位数也需要去递归
     if (valueRefRange > 8 * dividend)
     {
-        //if(dividend>10000*100)return dividend;
+        // if(dividend>10000*100)return dividend;
         return calcValueSpaceHelper(valueRefRange, dividend * 10);
     }
     else if (valueRefRange > 4.5 * dividend)
@@ -406,30 +406,30 @@ double XYAxis::calcValueSpaceHelper(double valueRefRange, int dividend) const
         return dividend;
     }
 
-    //递归思路
-    /*if(temp_value>8*x){//x=1,>8--loop
-        if(temp_value>8*x(10)){ //x=10,>80--loop
-        }if(temp_value>4*x(10)){ //x=10,50
-        }else if(temp_value>1.5*x(10)){ //x=10,20
-        }else{ //x=10,10
-        }
-    }else if(temp_value>4*x){ //x=1,5
-    }else if(temp_value>1.5*x){ //x=1,2
-    }else{ //x=1,1
-        //...
-    }*/
+    // 递归思路
+    // if(temp_value>8*x){//x=1,>8--loop
+    //     if(temp_value>8*x(10)){ //x=10,>80--loop
+    //     }if(temp_value>4*x(10)){ //x=10,50
+    //     }else if(temp_value>1.5*x(10)){ //x=10,20
+    //     }else{ //x=10,10
+    //     }
+    // }else if(temp_value>4*x){ //x=1,5
+    // }else if(temp_value>1.5*x){ //x=1,2
+    // }else{ //x=1,1
+    //     //...
+    // }
 }
 
 int XYAxis::getTickPrecision() const
 {
-    //刻度的小数位数
+    // 刻度的小数位数
     return getTickPrecisionHelper(valueSpace, 1, 0);
 }
 
 int XYAxis::getTickPrecisionHelper(double valueSpace, double compare, int precision) const
 {
-    //第二个参数为小数参照，每次递归除以10再和传入的参数一间隔值比较
-    //如果valueSpace大于compare，那么小数精度就是当前precision
+    // 第二个参数为小数参照，每次递归除以 10 再和传入的参数一间隔值比较
+    // 如果 valueSpace 大于 compare，那么小数精度就是当前 precision
     if (valueSpace >= compare)
     {
         return precision;
@@ -439,7 +439,7 @@ int XYAxis::getTickPrecisionHelper(double valueSpace, double compare, int precis
 
 double XYAxis::valueCalcStep() const
 {
-    // add sub的步进，根据需求自定义
+    // add sub 的步进，根据需求自定义
     switch (theMode)
     {
     case RefPixel:
@@ -456,19 +456,19 @@ double XYAxis::valueCalcStep() const
 
 double XYAxis::valueZoomInStep() const
 {
-    //zoomin 步进，根据需求自定义
+    // zoomin 步进，根据需求自定义
     return (maxValue - minValue) / 4;
 }
 
 double XYAxis::valueZoomOutStep() const
 {
-    //zoomout 步进，根据需求自动逸
+    // zoomout 步进，根据需求自动逸
     return (maxValue - minValue) / 2;
 }
 
 double XYAxis::calcZoomProportionWithPos(const QPoint &pos) const
 {
-    //根据点在rect的位置计算百分比，通过百分比来计算左右缩放的值
+    // 根据点在 rect 的位置计算百分比，通过百分比来计算左右缩放的值
     double zoom_proportion = 0.5;
     switch (this->getAxisPosition())
     {
@@ -502,7 +502,7 @@ double XYAxis::calcZoomProportionWithPos(const QPoint &pos) const
 
 void XYAxis::addMinValue()
 {
-    //不能小于最小范围
+    // 不能小于最小范围
     if (maxValue - minValue <= minRange)
         return;
     minValue += valueCalcStep();
@@ -515,7 +515,7 @@ void XYAxis::addMinValue()
 
 void XYAxis::subMinValue()
 {
-    //不能小于最小值的limit
+    // 不能小于最小值的 limit
     if (minValue <= minLimit)
         return;
     minValue -= valueCalcStep();
@@ -528,7 +528,7 @@ void XYAxis::subMinValue()
 
 void XYAxis::addMaxValue()
 {
-    //不能大于最大值的limit
+    // 不能大于最大值的 limit
     if (maxValue > maxLimit)
         return;
     maxValue += valueCalcStep();
@@ -541,7 +541,7 @@ void XYAxis::addMaxValue()
 
 void XYAxis::subMaxValue()
 {
-    //不能小于最小范围
+    // 不能小于最小范围
     if (maxValue - minValue <= minRange)
         return;
     maxValue -= valueCalcStep();
@@ -557,7 +557,7 @@ bool XYAxis::moveValueWidthPx(int px)
     double move_step = qAbs(px) * unit1PxToValue;
     if (move_step <= 0)
         return false;
-    // <0 就是往min端移动，>0 就是往max端移动
+    // < 0 就是往 min 端移动，> 0 就是往 max 端移动
     if (px < 0)
     {
         if (minValue <= minLimit)
@@ -618,7 +618,7 @@ void XYAxis::zoomValueOut()
     const double max_zoom = (maxValue + zoom_half > maxLimit)
             ? (maxLimit - maxValue)
             : (zoom_half);
-    //先不考虑补上不足的部分
+    // 先不考虑补上不足的部分
     minValue -= min_zoom;
     maxValue += max_zoom;
 
@@ -663,7 +663,7 @@ void XYAxis::zoomValueOutPos(const QPoint &pos)
     const double max_zoom = (maxValue + max_step > maxLimit)
             ? (maxLimit - maxValue)
             : (max_step);
-    //先不考虑补上不足的部分
+    // 先不考虑补上不足的部分
     minValue -= min_zoom;
     maxValue += max_zoom;
 

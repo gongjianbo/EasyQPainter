@@ -16,21 +16,21 @@ void DrawCurve::paintEvent(QPaintEvent *event)
 {
     event->accept();
     QPainter painter(this);
-    //先画一个白底黑框
+    // 先画一个白底黑框
     painter.fillRect(this->rect(), Qt::white);
     QPen pen(Qt::black);
     painter.setPen(pen);
-    painter.drawRect(this->rect().adjusted(0, 0, -1, -1)); //右下角会超出范围
+    painter.drawRect(this->rect().adjusted(0, 0, -1, -1)); // 右下角会超出范围
 
-    //设置
-    painter.setRenderHint(QPainter::Antialiasing, true); //抗锯齿
+    // 设置
+    painter.setRenderHint(QPainter::Antialiasing, true); // 抗锯齿
     painter.setPen(QPen(Qt::black, 1));
 
     const int line_count = 5;
     const double item_height = height() / line_count;
     const double item_width = width() / 10.0;
     QList<QPointF> point_list;
-    //之所以手动填充点，是为了展示一些典型的曲线
+    // 之所以手动填充点，是为了展示一些典型的曲线
     point_list.push_back(QPointF(item_width * 0.5, item_height * 0.95));
     point_list.push_back(QPointF(item_width * 0.75, item_height * 0.05));
     point_list.push_back(QPointF(item_width * 1.0, item_height * 0.5));
@@ -40,12 +40,12 @@ void DrawCurve::paintEvent(QPaintEvent *event)
     point_list.push_back(QPointF(item_width * 5.5, item_height * 0.95));
     point_list.push_back(QPointF(item_width * 6.5, item_height * 0.15));
     point_list.push_back(QPointF(item_width * 7.5, item_height * 0.5));
-    //这里制造一个方形，目测三次贝塞尔地效果更好
+    // 这里制造一个方形，目测三次贝塞尔地效果更好
     point_list.push_back(QPointF(item_width * 7.51, item_height * 0.8));
     point_list.push_back(QPointF(item_width * 9.49, item_height * 0.8));
     point_list.push_back(QPointF(item_width * 9.5, item_height * 0.15));
 
-    //1-直线连接
+    // 1- 直线连接
     QPainterPath path_1;
     path_1.moveTo(point_list.at(0));
     for (int i = 1; i < point_list.count(); i++)
@@ -55,61 +55,61 @@ void DrawCurve::paintEvent(QPaintEvent *event)
     painter.drawPath(path_1);
     for (const QPointF &pt : point_list)
     {
-        painter.drawEllipse(pt, 5, 5); //画圆是为了便于观察是否过采样点
+        painter.drawEllipse(pt, 5, 5); // 画圆是为了便于观察是否过采样点
     }
     painter.drawText(10, item_height / 2, "折线 lineTo");
 
-    //2-二次贝塞尔
+    // 2- 二次贝塞尔
     painter.translate(0, item_height);
     QPainterPath path_2;
     path_2.moveTo(point_list.at(0));
     for (int i = 1; i < point_list.count(); i++)
     {
-        //控制点计算，x取两个点x中间，y取两者最大y，但由于绘制时y是反过来的，so取最小的
+        // 控制点计算，x 取两个点 x 中间，y 取两者最大 y，但由于绘制时 y 是反过来的，所以取最小的
         const double ctrl_x = (point_list.at(i - 1).x() + point_list.at(i).x()) / 2.0;
         const double ctrl_y = point_list.at(i - 1).y() < point_list.at(i).y()
-                                  ? point_list.at(i - 1).y()
-                                  : point_list.at(i).y();
-        painter.drawEllipse(QPointF(ctrl_x, ctrl_y), 3, 3); //画出控制点
+                ? point_list.at(i - 1).y()
+                : point_list.at(i).y();
+        painter.drawEllipse(QPointF(ctrl_x, ctrl_y), 3, 3); // 画出控制点
         path_2.quadTo(QPointF(ctrl_x, ctrl_y), point_list.at(i));
     }
     painter.drawPath(path_2);
     for (const QPointF &pt : point_list)
     {
-        painter.drawEllipse(pt, 5, 5); //画圆是为了便于观察是否过采样点
+        painter.drawEllipse(pt, 5, 5); // 画圆是为了便于观察是否过采样点
     }
     painter.drawText(10, item_height / 2, "二次贝塞尔 quadTo");
 
-    //3-三次贝塞尔
+    // 3- 三次贝塞尔
     painter.translate(0, item_height);
     QPainterPath path_3;
     path_3.moveTo(point_list.at(0));
     for (int i = 1; i < point_list.count(); i++)
     {
-        //控制点计算，x取两个点x中间，y分别取一次
+        // 控制点计算，x 取两个点 x 中间，y 分别取一次
         const double ctrl_x = (point_list.at(i - 1).x() + point_list.at(i).x()) / 2.0;
         const double ctrl_y1 = point_list.at(i - 1).y();
         const double ctrl_y2 = point_list.at(i).y();
 
-        painter.drawEllipse(QPointF(ctrl_x, ctrl_y1), 3, 3); //画出控制点
-        painter.drawEllipse(QPointF(ctrl_x, ctrl_y2), 3, 3); //画出控制点
-        //下面这个效果差不多，分别取1x2y
-        //painter.drawEllipse(QPointF(point_list.at(i).x(),ctrl_y1),3,3); //画出控制点
-        //painter.drawEllipse(QPointF(point_list.at(i-1).x(),ctrl_y2),3,3); //画出控制点
+        painter.drawEllipse(QPointF(ctrl_x, ctrl_y1), 3, 3); // 画出控制点
+        painter.drawEllipse(QPointF(ctrl_x, ctrl_y2), 3, 3); // 画出控制点
+        // 下面这个效果差不多，分别取 1x 2y
+        // painter.drawEllipse(QPointF(point_list.at(i).x(),ctrl_y1),3,3); // 画出控制点
+        // painter.drawEllipse(QPointF(point_list.at(i-1).x(),ctrl_y2),3,3); // 画出控制点
         path_3.cubicTo(QPointF(ctrl_x, ctrl_y1), QPointF(ctrl_x, ctrl_y2), point_list.at(i));
     }
     painter.drawPath(path_3);
     for (const QPointF &pt : point_list)
     {
-        painter.drawEllipse(pt, 5, 5); //画圆是为了便于观察是否过采样点
+        painter.drawEllipse(pt, 5, 5); // 画圆是为了便于观察是否过采样点
     }
     painter.drawText(10, item_height / 2, "三次贝塞尔 cubicTo");
 
-    //4-自定义曲线
+    // 4- 自定义曲线
     painter.translate(0, item_height);
     const QVector<QPointF> point_temp = point_list.toVector();
     const QVector<QPointF> points4 = point_temp;
-    //使用时需要判断controlPoints4 size>=2
+    // 使用时需要判断 controlPoints4 size >= 2
     const QVector<QPointF> controlPoints4 = calculateControlPoints(point_temp);
     QPainterPath path_4;
     path_4.moveTo(points4.at(0));
@@ -121,24 +121,24 @@ void DrawCurve::paintEvent(QPaintEvent *event)
     painter.drawPath(path_4);
     for (const QPointF &pt : point_list)
     {
-        painter.drawEllipse(pt, 5, 5); //画圆是为了便于观察是否过采样点
+        painter.drawEllipse(pt, 5, 5); // 画圆是为了便于观察是否过采样点
     }
     painter.drawText(10, item_height / 2, "QtCharts SplineChartItem");
 
-    //5-自定义曲线
+    // 5- 自定义曲线
     painter.translate(0, item_height);
     QPainterPath path_5 = generateSmoothCurve(point_list);
     painter.drawPath(path_5);
     for (const QPointF &pt : point_list)
     {
-        painter.drawEllipse(pt, 5, 5); //画圆是为了便于观察是否过采样点
+        painter.drawEllipse(pt, 5, 5); // 画圆是为了便于观察是否过采样点
     }
     painter.drawText(10, item_height / 2, "公孙二狗");
 }
 
 QVector<QPointF> DrawCurve::calculateControlPoints(const QVector<QPointF> &points)
 {
-    //Calculates control points which are needed by QPainterPath.cubicTo function to draw the cubic Bezier cureve between two points.
+    // Calculates control points which are needed by QPainterPath.cubicTo function to draw the cubic Bezier cureve between two points.
     QVector<QPointF> controlPoints;
     controlPoints.resize(points.count() * 2 - 2);
 
@@ -146,7 +146,7 @@ QVector<QPointF> DrawCurve::calculateControlPoints(const QVector<QPointF> &point
 
     if (n == 1)
     {
-        //for n==1
+        // for n==1
         controlPoints[0].setX((2 * points[0].x() + points[1].x()) / 3);
         controlPoints[0].setY((2 * points[0].y() + points[1].y()) / 3);
         controlPoints[1].setX(2 * controlPoints[0].x() - points[0].x());
@@ -303,7 +303,7 @@ QPainterPath DrawCurve::generateSmoothCurve(QList<double> points, bool closed, d
             x = c1 * ps[i] + c2 * ps[i + 2] + c3 * t1x + c4 * t2x;
             y = c1 * ps[i + 1] + c2 * ps[i + 3] + c3 * t1y + c4 * t2y;
 
-            //store points in array
+            // store points in array
             result << x << y;
         }
     }

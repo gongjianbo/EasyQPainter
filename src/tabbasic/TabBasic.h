@@ -5,7 +5,7 @@ namespace Ui{
 class TabBasic;
 }
 
-//一些基本的接口效果演示
+// 一些基本的接口效果演示
 class TabBasic : public QWidget
 {
     Q_OBJECT

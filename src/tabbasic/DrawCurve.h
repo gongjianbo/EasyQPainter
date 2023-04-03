@@ -1,7 +1,7 @@
 #pragma once
 #include <QWidget>
 
-//绘制曲线
+// 绘制曲线
 class DrawCurve : public QWidget
 {
     Q_OBJECT
@@ -12,15 +12,15 @@ protected:
     void paintEvent(QPaintEvent *event) override;
 
 private:
-    //【1】下面函数来自QtCharts SplineChartItem
-    //计算QPainterPath.cubicTo所需的控制点
-    //Calculates control points which are needed by QPainterPath.cubicTo function to draw the cubic Bezier cureve between two points.
+    // 【1】 下面函数来自 QtCharts SplineChartItem
+    // 计算 QPainterPath.cubicTo 所需的控制点
+    // Calculates control points which are needed by QPainterPath.cubicTo function to draw the cubic Bezier cureve between two points.
     QVector<QPointF> calculateControlPoints(const QVector<QPointF> &points);
     QVector<qreal> firstControlPoints(const QVector<qreal> &vector);
 
-    //【2】下面函数来自公孙二狗博客：http://qtdebug.com/qt-smooth-curve-1/
-    //他参考自https://stackoverflow.com/questions/7054272/how-to-draw-smooth-curve-through-n-points-using-javascript-html5-canvas
-    //重载函数
+    // 【2】 下面函数来自公孙二狗博客：http://qtdebug.com/qt-smooth-curve-1/
+    // 他参考自 https://stackoverflow.com/questions/7054272/how-to-draw-smooth-curve-through-n-points-using-javascript-html5-canvas
+    // 重载函数
     QPainterPath generateSmoothCurve(QList<QPointF> points, bool closed = false, double tension = 0.5, int numberOfSegments = 16);
 
     /**

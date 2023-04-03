@@ -4,7 +4,7 @@ I named this demo "What is QPainter".（我给这个 Demo 命名为 "何为 QPai
 > QQ 交流群：647637553
 
 # Environment （开发环境）
-（2022-06-26）Win10 64bit + Qt5.15.2/Qt6.4.0 + MSVC2019 64bit
+（2023-04-03）Win10 64bit + Qt5.15.2/Qt6.5.0 + MSVC2019 64bit
 
 # Note  (备注)
 ### version compatible（版本兼容 2022-06-26）

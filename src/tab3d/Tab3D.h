@@ -5,7 +5,7 @@ namespace Ui{
 class Tab3D;
 }
 
-//简单的立体效果
+// 简单的立体效果
 class Tab3D : public QWidget
 {
     Q_OBJECT
