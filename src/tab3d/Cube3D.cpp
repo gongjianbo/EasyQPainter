@@ -230,7 +230,7 @@ void Cube3D::mouseReleaseEvent(QMouseEvent *event)
 void Cube3D::wheelEvent(QWheelEvent *event)
 {
     event->accept();
-#if (QT_VERSION <= QT_VERSION_CHECK(5, 15, 0))
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
     // const QPoint pos = event->pos();
     const int delta = event->delta();
 #else
