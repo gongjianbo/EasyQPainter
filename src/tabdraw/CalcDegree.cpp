@@ -132,9 +132,10 @@ void CalcDegree::drawItemPath(QPainter *painter)
     painter->setPen(QPen(QColor(200, 0, 0), 2, Qt::DotLine));
     const int a = 200;    // 长轴
     const int b = 100;    // 短轴
-    painter->rotate(-45); // 椭圆没有角度参数
+    const int rotation = 75; // 椭圆角度
+    painter->rotate(-rotation); // 旋转后绘制椭圆
     painter->drawEllipse(QPoint(0, 0), a, b);
-    painter->rotate(45);
+    painter->rotate(rotation);
 
     // 画物体小球
     painter->setPen(QPen(QColor(220, 0, 60), 2));
@@ -156,18 +157,18 @@ void CalcDegree::drawItemPath(QPainter *painter)
     // 旋转矩阵公式，旋转后坐标计算
     // x'=x*cos(a)-y*sin(a)
     // y'=x*sin(a)+y*cos(a)
-    const double radians2 = qDegreesToRadians(-(double)45.0); // 注意角度和y取反了
+    const double radians2 = qDegreesToRadians(-(double)rotation); // 注意这里取反了
     const double x2 = x1 * cos(radians2) - y1 * sin(radians2);
-    const double y2 = y1 * sin(radians2) + x1 * cos(radians2);
-    painter->drawLine(0, 0, x2, -y2);
+    const double y2 = x1 * sin(radians2) + y1 * cos(radians2);
+    painter->drawLine(0, 0, x2, y2);
     painter->drawEllipse(QPointF(0, 0), 8, 8);
-    painter->drawEllipse(QPointF(x2, -y2), 10, 10);
+    painter->drawEllipse(QPointF(x2, y2), 10, 10);
 
     // 画夹角
     painter->drawLine(0, 0, 0, -220);
     // 画圆弧角度要乘上 16
-    // 注意椭圆角度为逆时针 45
-    painter->drawArc(QRect(-50, -50, 100, 100), 90 * 16, -(theRotate + 45) % 360 * 16);
+    // 注意椭圆角度为逆时针
+    painter->drawArc(QRect(-50, -50, 100, 100), 90 * 16, -(theRotate + (90 - rotation)) % 360 * 16);
 
     painter->restore();
 }
