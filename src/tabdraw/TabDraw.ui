@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>3</number>
+      <number>8</number>
      </property>
      <widget class="TaiJi" name="tab_taiji">
       <attribute name="title">
@@ -59,7 +59,7 @@
        <string>Selection</string>
       </attribute>
      </widget>
-     <widget class="Animation" name="tab_animation">
+     <widget class="DrawAnimation" name="tab_animation">
       <attribute name="title">
        <string>Animation</string>
       </attribute>
@@ -100,9 +100,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>Animation</class>
+   <class>DrawAnimation</class>
    <extends>QWidget</extends>
-   <header>Animation.h</header>
+   <header>DrawAnimation.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

@@ -9,11 +9,11 @@
 // https://www.cnblogs.com/aslistener/articles/4478303.html
 // https://www.cnblogs.com/swarmbees/p/5722882.html
 // https://blog.csdn.net/u013015629/article/details/54669608
-class DrawImage : public QWidget
+class BasicImage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit DrawImage(QWidget *parent = nullptr);
+    explicit BasicImage(QWidget *parent = nullptr);
 
 protected:
     // 显示时才启动定时动画

@@ -1,4 +1,4 @@
-#include "DrawCurve.h"
+#include "BasicCurve.h"
 
 #include <QPainter>
 #include <QPainterPath>
@@ -7,12 +7,12 @@
 #include <QDateTime>
 #include <QDebug>
 
-DrawCurve::DrawCurve(QWidget *parent)
+BasicCurve::BasicCurve(QWidget *parent)
     : QWidget(parent)
 {
 }
 
-void DrawCurve::paintEvent(QPaintEvent *event)
+void BasicCurve::paintEvent(QPaintEvent *event)
 {
     event->accept();
     QPainter painter(this);
@@ -136,7 +136,7 @@ void DrawCurve::paintEvent(QPaintEvent *event)
     painter.drawText(10, item_height / 2, "公孙二狗");
 }
 
-QVector<QPointF> DrawCurve::calculateControlPoints(const QVector<QPointF> &points)
+QVector<QPointF> BasicCurve::calculateControlPoints(const QVector<QPointF> &points)
 {
     // Calculates control points which are needed by QPainterPath.cubicTo function to draw the cubic Bezier cureve between two points.
     QVector<QPointF> controlPoints;
@@ -209,7 +209,7 @@ QVector<QPointF> DrawCurve::calculateControlPoints(const QVector<QPointF> &point
     return controlPoints;
 }
 
-QVector<qreal> DrawCurve::firstControlPoints(const QVector<qreal> &vector)
+QVector<qreal> BasicCurve::firstControlPoints(const QVector<qreal> &vector)
 {
     QVector<qreal> result;
 
@@ -236,7 +236,7 @@ QVector<qreal> DrawCurve::firstControlPoints(const QVector<qreal> &vector)
     return result;
 }
 
-QPainterPath DrawCurve::generateSmoothCurve(QList<QPointF> points, bool closed, double tension, int numberOfSegments)
+QPainterPath BasicCurve::generateSmoothCurve(QList<QPointF> points, bool closed, double tension, int numberOfSegments)
 {
     QList<double> ps;
 
@@ -245,10 +245,10 @@ QPainterPath DrawCurve::generateSmoothCurve(QList<QPointF> points, bool closed, 
         ps << p.x() << p.y();
     }
 
-    return DrawCurve::generateSmoothCurve(ps, closed, tension, numberOfSegments);
+    return BasicCurve::generateSmoothCurve(ps, closed, tension, numberOfSegments);
 }
 
-QPainterPath DrawCurve::generateSmoothCurve(QList<double> points, bool closed, double tension, int numberOfSegments)
+QPainterPath BasicCurve::generateSmoothCurve(QList<double> points, bool closed, double tension, int numberOfSegments)
 {
     QList<double> ps(points); // clone array so we don't change the original points
     QList<double> result;     // generated smooth curve coordinates

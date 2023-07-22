@@ -37,14 +37,14 @@
        <string>TextPath</string>
       </attribute>
      </widget>
-     <widget class="DrawCurve" name="tab_drawcurve">
+     <widget class="BasicCurve" name="tab_curve">
       <attribute name="title">
-       <string>DrawCurve</string>
+       <string>Curve</string>
       </attribute>
      </widget>
-     <widget class="DrawImage" name="tab_drawimage">
+     <widget class="BasicImage" name="tab_image">
       <attribute name="title">
-       <string>DrawImage</string>
+       <string>Image</string>
       </attribute>
      </widget>
     </widget>
@@ -71,15 +71,15 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>DrawCurve</class>
+   <class>BasicCurve</class>
    <extends>QWidget</extends>
-   <header>DrawCurve.h</header>
+   <header>BasicCurve.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>DrawImage</class>
+   <class>BasicImage</class>
    <extends>QWidget</extends>
-   <header>DrawImage.h</header>
+   <header>BasicImage.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

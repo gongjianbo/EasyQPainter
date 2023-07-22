@@ -1,4 +1,4 @@
-#include "Animation.h"
+#include "DrawAnimation.h"
 #include <cmath>
 #include <QtMath>
 #include <QPaintEvent>
@@ -7,7 +7,7 @@
 #include <QGradient>
 #include <QDebug>
 
-Animation::Animation(QWidget *parent)
+DrawAnimation::DrawAnimation(QWidget *parent)
     : QWidget(parent)
 {
     // 1-1. 波纹
@@ -66,31 +66,31 @@ Animation::Animation(QWidget *parent)
     });
 }
 
-QColor Animation::getBlockColor() const
+QColor DrawAnimation::getBlockColor() const
 {
     return blockColor;
 }
 
-void Animation::setBlockColor(const QColor &color)
+void DrawAnimation::setBlockColor(const QColor &color)
 {
     blockColor = color;
     emit blockColorChanged();
     update();
 }
 
-float Animation::getBlockScare() const
+float DrawAnimation::getBlockScare() const
 {
     return blockScare;
 }
 
-void Animation::setBlockScare(float scare)
+void DrawAnimation::setBlockScare(float scare)
 {
     blockScare = scare;
     emit blockScareChanged();
     update();
 }
 
-void Animation::showEvent(QShowEvent *event)
+void DrawAnimation::showEvent(QShowEvent *event)
 {
     waveTimer.start(50);
     blockAnimation->start();
@@ -98,7 +98,7 @@ void Animation::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
 }
 
-void Animation::hideEvent(QHideEvent *event)
+void DrawAnimation::hideEvent(QHideEvent *event)
 {
     waveTimer.stop();
     blockAnimation->pause();
@@ -106,7 +106,7 @@ void Animation::hideEvent(QHideEvent *event)
     QWidget::hideEvent(event);
 }
 
-void Animation::paintEvent(QPaintEvent *event)
+void DrawAnimation::paintEvent(QPaintEvent *event)
 {
     event->accept();
     QPainter painter(this);
@@ -120,7 +120,7 @@ void Animation::paintEvent(QPaintEvent *event)
     drawRadiusBlock(painter, QRect(460, 20, 200, 200));
 }
 
-void Animation::drawWave(QPainter &painter, const QRectF &area)
+void DrawAnimation::drawWave(QPainter &painter, const QRectF &area)
 {
     painter.save();
     // 波纹
@@ -169,7 +169,7 @@ void Animation::drawWave(QPainter &painter, const QRectF &area)
     painter.restore();
 }
 
-void Animation::drawColorBlock(QPainter &painter, const QRectF &area)
+void DrawAnimation::drawColorBlock(QPainter &painter, const QRectF &area)
 {
     painter.save();
     // 根据当前属性颜色和缩放比例绘制色块
@@ -186,7 +186,7 @@ void Animation::drawColorBlock(QPainter &painter, const QRectF &area)
     painter.restore();
 }
 
-void Animation::drawRadiusBlock(QPainter &painter, const QRectF &area)
+void DrawAnimation::drawRadiusBlock(QPainter &painter, const QRectF &area)
 {
     painter.save();
     // 根据当前属性颜色和缩放比例绘制色块

@@ -8,13 +8,13 @@
 #include <QTimeLine>
 
 // 动画效果
-class Animation : public QWidget
+class DrawAnimation : public QWidget
 {
     Q_OBJECT
     Q_PROPERTY(QColor blockColor READ getBlockColor WRITE setBlockColor NOTIFY blockColorChanged)
     Q_PROPERTY(float blockScare READ getBlockScare WRITE setBlockScare NOTIFY blockScareChanged)
 public:
-    explicit Animation(QWidget *parent = nullptr);
+    explicit DrawAnimation(QWidget *parent = nullptr);
 
     QColor getBlockColor() const;
     void setBlockColor(const QColor &color);

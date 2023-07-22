@@ -1,9 +1,9 @@
-#include "DrawImage.h"
+#include "BasicImage.h"
 #include <QPainter>
 #include <QPainterPath>
 #include <QDebug>
 
-DrawImage::DrawImage(QWidget *parent)
+BasicImage::BasicImage(QWidget *parent)
     : QWidget(parent)
 {
     imgCache = QImage(":/hehua.png");
@@ -19,19 +19,19 @@ DrawImage::DrawImage(QWidget *parent)
     });
 }
 
-void DrawImage::showEvent(QShowEvent *event)
+void BasicImage::showEvent(QShowEvent *event)
 {
     timer.start(100);
     QWidget::showEvent(event);
 }
 
-void DrawImage::hideEvent(QHideEvent *event)
+void BasicImage::hideEvent(QHideEvent *event)
 {
     timer.stop();
     QWidget::hideEvent(event);
 }
 
-void DrawImage::paintEvent(QPaintEvent *event)
+void BasicImage::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event)
     QPainter painter(this);

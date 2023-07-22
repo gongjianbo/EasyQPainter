@@ -2,9 +2,9 @@ FORMS += \
     $$PWD/TabDraw.ui
 
 HEADERS += \
-    $$PWD/Animation.h \
     $$PWD/CalcDegree.h \
     $$PWD/CalcPos.h \
+    $$PWD/DrawAnimation.h \
     $$PWD/DrawCircle.h \
     $$PWD/LedLattice.h \
     $$PWD/PlanetSystem.h \
@@ -14,9 +14,9 @@ HEADERS += \
     $$PWD/TaiJi.h
 
 SOURCES += \
-    $$PWD/Animation.cpp \
     $$PWD/CalcDegree.cpp \
     $$PWD/CalcPos.cpp \
+    $$PWD/DrawAnimation.cpp \
     $$PWD/DrawCircle.cpp \
     $$PWD/LedLattice.cpp \
     $$PWD/PlanetSystem.cpp \

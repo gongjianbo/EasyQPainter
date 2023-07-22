@@ -2,11 +2,11 @@
 #include <QWidget>
 
 // 绘制曲线
-class DrawCurve : public QWidget
+class BasicCurve : public QWidget
 {
     Q_OBJECT
 public:
-    explicit DrawCurve(QWidget *parent = nullptr);
+    explicit BasicCurve(QWidget *parent = nullptr);
 
 protected:
     void paintEvent(QPaintEvent *event) override;
