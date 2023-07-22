@@ -34,6 +34,11 @@
        <string>SineWave</string>
       </attribute>
      </widget>
+     <widget class="DrawCircle" name="tab_circle">
+      <attribute name="title">
+       <string>Circle</string>
+      </attribute>
+     </widget>
      <widget class="LedLattice" name="tab_ledlattice">
       <attribute name="title">
        <string>LedLattice</string>
@@ -110,6 +115,12 @@
    <class>LedLattice</class>
    <extends>QWidget</extends>
    <header>LedLattice.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>DrawCircle</class>
+   <extends>QWidget</extends>
+   <header>DrawCircle.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
