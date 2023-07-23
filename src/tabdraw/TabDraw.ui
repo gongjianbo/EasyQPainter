@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>8</number>
+      <number>4</number>
      </property>
      <widget class="TaiJi" name="tab_taiji">
       <attribute name="title">
@@ -37,6 +37,11 @@
      <widget class="DrawCircle" name="tab_circle">
       <attribute name="title">
        <string>Circle</string>
+      </attribute>
+     </widget>
+     <widget class="DrawBezier" name="tab_bezier">
+      <attribute name="title">
+       <string>Bezier</string>
       </attribute>
      </widget>
      <widget class="LedLattice" name="tab_ledlattice">
@@ -121,6 +126,12 @@
    <class>DrawCircle</class>
    <extends>QWidget</extends>
    <header>DrawCircle.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>DrawBezier</class>
+   <extends>QWidget</extends>
+   <header>DrawBezier.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

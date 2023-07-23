@@ -5,6 +5,7 @@ HEADERS += \
     $$PWD/CalcDegree.h \
     $$PWD/CalcPos.h \
     $$PWD/DrawAnimation.h \
+    $$PWD/DrawBezier.h \
     $$PWD/DrawCircle.h \
     $$PWD/LedLattice.h \
     $$PWD/PlanetSystem.h \
@@ -17,6 +18,7 @@ SOURCES += \
     $$PWD/CalcDegree.cpp \
     $$PWD/CalcPos.cpp \
     $$PWD/DrawAnimation.cpp \
+    $$PWD/DrawBezier.cpp \
     $$PWD/DrawCircle.cpp \
     $$PWD/LedLattice.cpp \
     $$PWD/PlanetSystem.cpp \
