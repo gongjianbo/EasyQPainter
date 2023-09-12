@@ -20,7 +20,7 @@
       <enum>Qt::NoFocus</enum>
      </property>
      <property name="currentIndex">
-      <number>4</number>
+      <number>0</number>
      </property>
      <widget class="PenStyle" name="tab_penstyle">
       <attribute name="title">
@@ -45,6 +45,11 @@
      <widget class="BasicImage" name="tab_image">
       <attribute name="title">
        <string>Image</string>
+      </attribute>
+     </widget>
+     <widget class="BasicComposition" name="tab_composition">
+      <attribute name="title">
+       <string>Composition</string>
       </attribute>
      </widget>
     </widget>
@@ -80,6 +85,12 @@
    <class>BasicImage</class>
    <extends>QWidget</extends>
    <header>BasicImage.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BasicComposition</class>
+   <extends>QWidget</extends>
+   <header>BasicComposition.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

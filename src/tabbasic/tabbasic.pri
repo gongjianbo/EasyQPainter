@@ -2,6 +2,7 @@ FORMS += \
     $$PWD/TabBasic.ui
 
 HEADERS += \
+    $$PWD/BasicComposition.h \
     $$PWD/BasicCurve.h \
     $$PWD/BasicImage.h \
     $$PWD/PenColor.h \
@@ -10,6 +11,7 @@ HEADERS += \
     $$PWD/TextPath.h
 
 SOURCES += \
+    $$PWD/BasicComposition.cpp \
     $$PWD/BasicCurve.cpp \
     $$PWD/BasicImage.cpp \
     $$PWD/PenColor.cpp \
