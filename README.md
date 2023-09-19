@@ -4,8 +4,6 @@ Various operation practices of Qt QPainter.（Qt QPainter 的各种操作实践�
 
 I named this demo "What is QPainter".（我给这个 Demo 命名为 "何为 QPainter"）
 
-> QQ 交流群：647637553
-
 # Environment （开发环境）
 
 （2023-09-12）Win10 64bit + Qt5.15.2/Qt6.5.2 + MSVC2019/MSVC2022 64bit
