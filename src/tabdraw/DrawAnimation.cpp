@@ -40,9 +40,12 @@ DrawAnimation::DrawAnimation(QWidget *parent)
     // 动画组播放完了就倒着继续播放
     connect(blockAnimation, &QParallelAnimationGroup::finished, this, [this]
     {
-        if(blockAnimation->direction() == QAbstractAnimation::Forward){
+        if (blockAnimation->direction() == QAbstractAnimation::Forward)
+        {
             blockAnimation->setDirection(QAbstractAnimation::Backward);
-        }else{
+        }
+        else
+        {
             blockAnimation->setDirection(QAbstractAnimation::Forward);
         }
         blockAnimation->start();
@@ -57,9 +60,12 @@ DrawAnimation::DrawAnimation(QWidget *parent)
     });
     connect(roundTimeline, &QTimeLine::finished, this, [this]
     {
-        if(roundTimeline->direction() == QTimeLine::Forward){
+        if (roundTimeline->direction() == QTimeLine::Forward)
+        {
             roundTimeline->setDirection(QTimeLine::Backward);
-        }else{
+        }
+        else
+        {
             roundTimeline->setDirection(QTimeLine::Forward);
         }
         roundTimeline->start();
@@ -101,8 +107,16 @@ void DrawAnimation::showEvent(QShowEvent *event)
 void DrawAnimation::hideEvent(QHideEvent *event)
 {
     waveTimer.stop();
-    blockAnimation->pause();
-    roundTimeline->setPaused(true);
+    // Qt6 提示 QAbstractAnimation::pause: Cannot pause a stopped animation
+    if (blockAnimation->state() == QAbstractAnimation::Running)
+    {
+        blockAnimation->pause();
+    }
+    // Qt6 提示 QTimeLine::setPaused: Not running
+    if (roundTimeline->state() == QTimeLine::Running)
+    {
+        roundTimeline->setPaused(true);
+    }
     QWidget::hideEvent(event);
 }
 
