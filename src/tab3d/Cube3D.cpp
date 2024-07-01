@@ -1,5 +1,5 @@
 #include "Cube3D.h"
-
+#include "GlobalDef.h"
 #include <QPainter>
 #include <QPainterPath>
 #include <QtMath>
@@ -230,14 +230,8 @@ void Cube3D::mouseReleaseEvent(QMouseEvent *event)
 void Cube3D::wheelEvent(QWheelEvent *event)
 {
     event->accept();
-#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
-    // const QPoint pos = event->pos();
-    const int delta = event->delta();
-#else
-    // const QPoint pos = event->position().toPoint();
-    const int delta = event->angleDelta().y();
-#endif
-    qDebug()<<delta;
+    // const QPoint pos = GetMousePos(event);
+    const int delta = GetMouseDelta(event);
     // fovy 越小，模型看起来越大
     if (delta < 0)
     {

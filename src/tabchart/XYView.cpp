@@ -1,4 +1,5 @@
 #include "XYView.h"
+#include "GlobalDef.h"
 #include <cmath>
 #include <QtMath>
 #include <QGuiApplication>
@@ -171,13 +172,8 @@ void XYView::leaveEvent(QEvent *event)
 void XYView::wheelEvent(QWheelEvent *event)
 {
     event->accept();
-#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
-    const QPoint pos = event->pos();
-    const int delta = event->delta();
-#else
-    const QPoint pos = event->position().toPoint();
-    const int delta = event->angleDelta().y();
-#endif
+    const QPoint pos = GetMousePos(event);
+    const int delta = GetMouseDelta(event);
     const Qt::KeyboardModifiers key_mod = QGuiApplication::keyboardModifiers();
     const bool delta_up = (delta > 0);
     // 按住ctrl滚动是Y轴缩放，否则是X轴缩放

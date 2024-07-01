@@ -1,8 +1,7 @@
 #include "Windmill3D.h"
-
+#include "GlobalDef.h"
 #include <algorithm>
 #include <cmath>
-
 #include <QtMath>
 #include <QPaintEvent>
 #include <QResizeEvent>
@@ -92,8 +91,7 @@ Windmill3D::Windmill3D(QWidget *parent)
 {
     initWindmill();
     // 异步处理结束，获取结果并刷新窗口
-    connect(&watcher, &QFutureWatcher<QImage>::finished, [this]()
-    {
+    connect(&watcher, &QFutureWatcher<QImage>::finished, [this]() {
         image = watcher.result();
         update();
     });
@@ -103,8 +101,7 @@ Windmill3D::Windmill3D(QWidget *parent)
     fpsTime.start();
 
     // 定时旋转风车
-    connect(&timer, &QTimer::timeout, this, [this]()
-    {
+    connect(&timer, &QTimer::timeout, this, [this]() {
         animationStep += 2.0f;
         drawImage(width(), height());
     });
@@ -186,13 +183,8 @@ void Windmill3D::mouseReleaseEvent(QMouseEvent *event)
 void Windmill3D::wheelEvent(QWheelEvent *event)
 {
     event->accept();
-#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
-    // const QPoint pos = event->pos();
-    const int delta = event->delta();
-#else
-    // const QPoint pos = event->position().toPoint();
-    const int delta = event->angleDelta().y();
-#endif
+    // const QPoint pos = GetMousePos(event);
+    const int delta = GetMouseDelta(event);
     // fovy 越小，模型看起来越大
     if (delta < 0)
     {
@@ -318,8 +310,7 @@ void Windmill3D::drawImage(int width, int height)
         float fovy = projectionFovy;
 
         // 多线程绘制到 image 上，绘制完后返回 image 并绘制到窗口上
-        QFuture<QImage> futures = QtConcurrent::run([this, width, height, rotate, step, fovy]()
-        {
+        QFuture<QImage> futures = QtConcurrent::run([this, width, height, rotate, step, fovy]() {
             QImage img(width, height, QImage::Format_ARGB32);
             img.fill(Qt::transparent);
             QPainter painter(&img);
@@ -338,8 +329,7 @@ void Windmill3D::drawImage(int width, int height)
                         QVector3D(0, 0, 0), rotate, step, fovy);
             // 根据 z 轴排序
             std::sort(surface_metas.begin(), surface_metas.end(),
-                      [](const QSharedPointer<WindMeta> &left, const QSharedPointer<WindMeta> &right)
-            {
+                      [](const QSharedPointer<WindMeta> &left, const QSharedPointer<WindMeta> &right) {
                 return left->z < right->z;
             });
             // 根据 z 值从远处开始绘制图元路径

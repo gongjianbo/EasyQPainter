@@ -10,8 +10,7 @@ PenColor::PenColor(QWidget *parent)
     : QWidget(parent)
 {
     // 定时移动
-    connect(&timer, &QTimer::timeout, this, [this]()
-    {
+    connect(&timer, &QTimer::timeout, this, [this]() {
         // 使 offset 一直在 [-1, 1) 区间内
         angleOffset += angleStep;
         if (angleOffset > 1.0 - angleStep / 2)

@@ -11,8 +11,7 @@ DrawAnimation::DrawAnimation(QWidget *parent)
     : QWidget(parent)
 {
     // 1-1. 波纹
-    connect(&waveTimer, &QTimer::timeout, this, [this]
-    {
+    connect(&waveTimer, &QTimer::timeout, this, [this] {
         waveOffset += 4;
         waveOffset %= waveLimit;
         update();
@@ -38,8 +37,7 @@ DrawAnimation::DrawAnimation(QWidget *parent)
     block_scare->setDuration(2000);
     blockAnimation->addAnimation(block_scare);
     // 动画组播放完了就倒着继续播放
-    connect(blockAnimation, &QParallelAnimationGroup::finished, this, [this]
-    {
+    connect(blockAnimation, &QParallelAnimationGroup::finished, this, [this] {
         if (blockAnimation->direction() == QAbstractAnimation::Forward)
         {
             blockAnimation->setDirection(QAbstractAnimation::Backward);
@@ -53,13 +51,11 @@ DrawAnimation::DrawAnimation(QWidget *parent)
     // 3-1. 圆角
     roundTimeline = new QTimeLine(5000, this);
     roundTimeline->setFrameRange(0, 100);
-    connect(roundTimeline, &QTimeLine::frameChanged, this, [this](int frame)
-    {
+    connect(roundTimeline, &QTimeLine::frameChanged, this, [this](int frame) {
         roundRaiuds = frame;
         update();
     });
-    connect(roundTimeline, &QTimeLine::finished, this, [this]
-    {
+    connect(roundTimeline, &QTimeLine::finished, this, [this] {
         if (roundTimeline->direction() == QTimeLine::Forward)
         {
             roundTimeline->setDirection(QTimeLine::Backward);

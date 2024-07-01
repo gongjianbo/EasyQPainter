@@ -1,4 +1,5 @@
 #include "PieView.h"
+#include "GlobalDef.h"
 #include <algorithm>
 #include <cmath>
 #include <QtMath>
@@ -36,7 +37,7 @@ void PieView::appendSlice(const PieSlice &slice)
     sliceValueCount += slice.value;
     // 重新排序-降序
     std::sort(sliceList.begin(), sliceList.end(),
-              [](const PieSlice &left, const PieSlice &right)->bool{
+              [](const PieSlice &left, const PieSlice &right)->bool {
         return left.value > right.value;
     });
     double start_angle = 0; // 起始角度 temp，用于累加
@@ -114,9 +115,9 @@ void PieView::paintEvent(QPaintEvent *event)
         // 根据扇形中心点绘制文本
         const QString text_percent = QString::number(item.percentage * 100, 'f', 2) + "%";
         const double text_angle = item.startAngle + item.angleSpan / 2; // span 中心
-        const int text_height = painter.fontMetrics().height() + 2; // 加行间隔2
-        const int text_namewidth = painter.fontMetrics().boundingRect(item.name).width(); // 名称 str 宽度
-        const int text_percentwidth = painter.fontMetrics().boundingRect(text_percent).width(); // 值 str 宽度
+        const int text_height = GetTextHeight(painter.fontMetrics()) + 2; // 加行间隔2
+        const int text_namewidth = GetTextWidth(painter.fontMetrics(), item.name); // 名称 str 宽度
+        const int text_percentwidth = GetTextWidth(painter.fontMetrics(), text_percent); // 值 str 宽度
         const double text_x = slice_radius * 0.6 * std::cos(text_angle / 180 * M_PI); // 文本中心点
         const double text_y = -slice_radius * 0.6 * std::sin(text_angle / 180 * M_PI); // 文本中心点
 
@@ -132,12 +133,12 @@ void PieView::paintEvent(QPaintEvent *event)
         const int rect_margin = 5; // 矩形边距
         const PieSlice &item = sliceList.at(hoveredIndex);
         const QString str_name = QString("name:%1").arg(item.name);
-        const int name_width = painter.fontMetrics().boundingRect(str_name).width() + rect_margin * 2;
+        const int name_width = GetTextWidth(painter.fontMetrics(), str_name) + rect_margin * 2;
         const QString str_value = QString("value:%1(%2%)")
                 .arg(QString::number(item.value, 'f', 0))
                 .arg(QString::number(item.percentage * 100, 'f', 2));
-        const int text_height = painter.fontMetrics().height();
-        const int value_width = painter.fontMetrics().boundingRect(str_value).width() + rect_margin * 2;
+        const int text_height = GetTextHeight(painter.fontMetrics());
+        const int value_width = GetTextWidth(painter.fontMetrics(), str_value) + rect_margin * 2;
         const int rect_height = text_height * 2 + rect_margin * 2 + 2; // 两行 + 间隔2
         const int rect_width = name_width > value_width ? name_width : value_width;
         // 左上角坐标，避免超出范围所以要判断并 set

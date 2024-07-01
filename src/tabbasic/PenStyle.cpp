@@ -13,8 +13,7 @@ PenStyle::PenStyle(QWidget *parent)
     }
 
     // 定时移动虚线偏移，制作蚂蚁线效果
-    connect(&timer, &QTimer::timeout, this, [this]()
-    {
+    connect(&timer, &QTimer::timeout, this, [this]() {
         // 虚线移动
         ++dashOffset;
         // 模以 dash 总长度，防止越界等

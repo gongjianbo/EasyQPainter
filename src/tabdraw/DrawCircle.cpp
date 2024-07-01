@@ -8,8 +8,7 @@ DrawCircle::DrawCircle(QWidget *parent)
     : QWidget(parent)
 {
     // 定时旋转
-    connect(&timer, &QTimer::timeout, this, [this]()
-    {
+    connect(&timer, &QTimer::timeout, this, [this]() {
         theRotate += 1;
         theRotate %= 360;
         update();

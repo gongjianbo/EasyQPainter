@@ -12,8 +12,7 @@ BasicImage::BasicImage(QWidget *parent)
     maskCache.convertTo(QImage::Format_ARGB32);
 
     // 定时器用来做动态效果
-    connect(&timer, &QTimer::timeout, [this]
-    {
+    connect(&timer, &QTimer::timeout, [this] {
         timeOffset++;
         update();
     });

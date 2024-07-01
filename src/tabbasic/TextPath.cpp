@@ -1,19 +1,18 @@
 #include "TextPath.h"
-
+#include "GlobalDef.h"
 #include <QPaintEvent>
 #include <QResizeEvent>
 #include <QtMath>
 #include <QPainter>
 #include <QPainterPath>
 #include <QLinearGradient>
-//#include <QDebug>
+#include <QDebug>
 
 TextPath::TextPath(QWidget *parent)
     : QWidget(parent)
 {
     // 定时移动
-    connect(&timer, &QTimer::timeout, this, [=]()
-    {
+    connect(&timer, &QTimer::timeout, this, [=]() {
         // 左侧文字区域宽高变化
         if (areaAdd)
         {
@@ -81,8 +80,8 @@ void TextPath::paintEvent(QPaintEvent *event)
     painter.setPen(qt_pen);
     const QString qt_str = "Qt";
     // 文本的 pos 是在左下角
-    const int qt_str_width = painter.fontMetrics().boundingRect(qt_str).width();
-    const int qt_str_height = painter.fontMetrics().height();
+    const int qt_str_width = GetTextWidth(painter.fontMetrics(), qt_str);
+    const int qt_str_height = GetTextHeight(painter.fontMetrics());
     // ascent 从基线到字符延伸到的最高位置的距离
     // descent 从基线到最低点字符延伸到的距离
     const int qt_str_descent = painter.fontMetrics().descent();
@@ -107,7 +106,7 @@ void TextPath::paintEvent(QPaintEvent *event)
     const QString str_1 = "一切都是没有结局的开始";
     const QString str_2 = "一切都是稍纵即逝的追寻";
     const QFont str_font("Microsoft YaHei", 28);
-    const int str_height = QFontMetrics(str_font).height();
+    const int str_height = GetTextHeight(QFontMetrics(str_font));
     QPainterPath str_path;
     // 暂时用的固定值坐标
     str_path.addText(20, str_height, str_font, str_1);
@@ -136,7 +135,7 @@ void TextPath::paintEvent(QPaintEvent *event)
     ft.setStretch(100);
     QFontMetrics fm(ft);
     const QString text = "Hello!龚建波1992";
-    double scale = left_area.width() / double(fm.boundingRect(text).width() + 0.1) * 100;
+    double scale = left_area.width() / double(GetTextWidth(fm, text) + 0.1) * 100;
     // 最小拉伸因子为 1，最大拉伸因子为 4000
     ft.setStretch(scale);
     QFontMetrics fm2(ft);
@@ -146,8 +145,7 @@ void TextPath::paintEvent(QPaintEvent *event)
         // 有些字号更大了，但是拉伸后反而变窄了
         // 所以保持上次的字体大小和宽度，异常则使用上次的字体
         // 使之增加时不能小于上次，减小时不能大于上次
-        if ((areaAdd && fm2.boundingRect(text).width() < prevWidth) ||
-                (!areaAdd && fm2.boundingRect(text).width() > prevWidth))
+        if ((areaAdd && GetTextWidth(fm2, text) < prevWidth) || (!areaAdd && GetTextWidth(fm2, text) > prevWidth))
         {
             ft.setPixelSize(prevSize);
             ft.setStretch(prevStretch);
@@ -156,10 +154,10 @@ void TextPath::paintEvent(QPaintEvent *event)
     // qDebug()<<scale<<fm2.width(text)<<ft.stretch()<<fm.width(text);
     painter.setFont(ft);
     // drawText y 是基线位置，ascent 是基线到文字 top 的位置
-    painter.drawText(left_area.left() + std::ceil((left_area.width() - painter.fontMetrics().boundingRect(text).width()) / 2),
+    painter.drawText(left_area.left() + std::ceil((left_area.width() - GetTextWidth(painter.fontMetrics(), text)) / 2),
                      left_area.top() + painter.fontMetrics().ascent(),
                      text);
-    prevWidth = painter.fontMetrics().boundingRect(text).width();
+    prevWidth = GetTextWidth(painter.fontMetrics(), text);
     prevSize = ft.pixelSize();
     prevStretch = ft.stretch();
 
@@ -170,8 +168,8 @@ void TextPath::paintEvent(QPaintEvent *event)
     QString scroll_text1;
     for (auto riter = scroll_text0.rbegin(); riter != scroll_text0.rend(); riter++)
         scroll_text1.push_back(*riter);
-    const int scroll_width1 = painter.fontMetrics().boundingRect(scroll_text1).width();
-    const int scroll_height1 = painter.fontMetrics().height();
+    const int scroll_width1 = GetTextWidth(painter.fontMetrics(), scroll_text1);
+    const int scroll_height1 = GetTextHeight(painter.fontMetrics());
     const int scroll_y1 = height() - scroll_height1 - 10; // Qt 文本起点在左下角
     // 文本宽度改变，重新滚动(包括设置了文本，修改了字体大小等)
     if (textWidth_1 != scroll_width1 && scroll_width1 > 0)
@@ -194,7 +192,7 @@ void TextPath::paintEvent(QPaintEvent *event)
 
     // 5. 底部滚动的文字2
     const QString scroll_text2 = "我觉得你看我时很远，你看云时很近。";
-    const int scroll_width2 = painter.fontMetrics().boundingRect(scroll_text2).width();
+    const int scroll_width2 = GetTextWidth(painter.fontMetrics(), scroll_text2);
     // const int scroll_height2 = painter.fontMetrics().capHeight();
     const int scroll_y2 = height() - 10; // Qt 文本起点在左下角
     // 文本宽度改变，重新滚动(包括设置了文本，修改了字体大小等)

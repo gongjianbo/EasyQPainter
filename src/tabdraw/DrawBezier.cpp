@@ -9,8 +9,7 @@ DrawBezier::DrawBezier(QWidget *parent)
     : QWidget(parent)
 {
     // 定时更新
-    connect(&timer, &QTimer::timeout, this, [this]()
-    {
+    connect(&timer, &QTimer::timeout, this, [this]() {
         theProgress += 1;
         theProgress %= 100;
         update();

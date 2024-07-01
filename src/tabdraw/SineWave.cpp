@@ -8,8 +8,7 @@
 SineWave::SineWave(QWidget *parent)
     : QWidget(parent)
 {
-    connect(&timer, &QTimer::timeout, this, [this]()
-    {
+    connect(&timer, &QTimer::timeout, this, [this]() {
         timeVal += 1;
         update();
     });

@@ -1,4 +1,5 @@
 HEADERS += \
+    $$PWD/GlobalDef.h \
     $$PWD/MainWindow.h
 
 SOURCES += \

@@ -29,8 +29,7 @@ unsigned short led_data[] = {
 LedLattice::LedLattice(QWidget *parent)
     : QWidget(parent)
 {
-    connect(&timer, &QTimer::timeout, this, [this]
-    {
+    connect(&timer, &QTimer::timeout, this, [this] {
         currentCol++;
         if(currentCol > colCount){
             currentCol = 0;

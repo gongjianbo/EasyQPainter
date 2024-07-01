@@ -9,8 +9,7 @@
 TaiJi::TaiJi(QWidget *parent)
     : QWidget(parent)
 {
-    connect(&timer, &QTimer::timeout, this, [this]
-    {
+    connect(&timer, &QTimer::timeout, this, [this] {
         offset += 1;
         offset %= 360;
         update();

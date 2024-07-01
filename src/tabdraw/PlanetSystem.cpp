@@ -9,8 +9,7 @@ PlanetSystem::PlanetSystem(QWidget *parent)
 {
     initSystem();
 
-    connect(&timer, &QTimer::timeout, this, [this]
-    {
+    connect(&timer, &QTimer::timeout, this, [this] {
         updatePlanet(rootPlanet);
         update();
     });

@@ -1,5 +1,5 @@
 #include "CalcDegree.h"
-
+#include "GlobalDef.h"
 #include <QTimer>
 #include <QPainterPath>
 #include <QtMath>
@@ -14,8 +14,7 @@ CalcDegree::CalcDegree(QWidget *parent)
     setMouseTracking(true);
 
     // 定时旋转
-    connect(&timer, &QTimer::timeout, this, [this]()
-    {
+    connect(&timer, &QTimer::timeout, this, [this]() {
         theRotate += 2;
         theRotate %= 360;
         update();
@@ -82,7 +81,7 @@ void CalcDegree::drawCircle(QPainter *painter)
     const int radius = 220; // 最小半径
     painter->drawEllipse(QPoint(0, 0), radius, radius);
     const int step = 6; // 旋转步进
-    const int text_height = painter->fontMetrics().height();
+    const int text_height = GetTextHeight(painter->fontMetrics());
     // 可以看到旋转时文字会有抖动
     for (int i = 0; i < 360; i += step)
     {
@@ -105,7 +104,7 @@ void CalcDegree::drawCircle(QPainter *painter)
             const double x3 = -sin(radians) * (radius + 30);
             const double y3 = cos(radians) * (radius + 30);
             const QString text = QString::number(i);
-            const int text_width = painter->fontMetrics().boundingRect(text).width();
+            const int text_width = GetTextWidth(painter->fontMetrics(), text);
             // 文字的起点在左下角
             // 上减下加，左减右加，这样相当于往 x2 y3 左下角移动的，使文本中心点在计算的位置
             painter->drawText(-x3 - text_width / 2,

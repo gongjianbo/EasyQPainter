@@ -1,4 +1,5 @@
 #include "XYAxis.h"
+#include "GlobalDef.h"
 #include <cmath>
 #include <QtMath>
 #include <QDebug>
@@ -185,8 +186,8 @@ void XYAxis::drawLeft(QPainter *painter)
         const int y_pos = tickPos.at(i);
         painter->drawLine(QPoint(right_pos, y_pos),
                           QPoint(right_pos - 5, y_pos));
-        painter->drawText(right_pos - 5 - painter->fontMetrics().boundingRect(tickLabel.at(i)).width(),
-                          y_pos + painter->fontMetrics().height() / 2,
+        painter->drawText(right_pos - 5 - GetTextWidth(painter->fontMetrics(), tickLabel.at(i)),
+                          y_pos + GetTextHeight(painter->fontMetrics()) / 2,
                           tickLabel.at(i));
     }
 
@@ -204,8 +205,8 @@ void XYAxis::drawBottom(QPainter *painter)
         const int x_pos = tickPos.at(i);
         painter->drawLine(QPoint(x_pos, top_pos),
                           QPoint(x_pos, top_pos + 5));
-        painter->drawText(x_pos - painter->fontMetrics().boundingRect(tickLabel.at(i)).width() / 2,
-                          top_pos + 5 + painter->fontMetrics().height(),
+        painter->drawText(x_pos - GetTextWidth(painter->fontMetrics(), tickLabel.at(i)) / 2,
+                          top_pos + 5 + GetTextHeight(painter->fontMetrics()),
                           tickLabel.at(i));
     }
     painter->restore();
