@@ -132,11 +132,12 @@ void TextPath::paintEvent(QPaintEvent *event)
     QFont ft;
     ft.setFamily("SimSun");
     ft.setPixelSize(left_area.height());
-    ft.setStretch(100);
     QFontMetrics fm(ft);
     const QString text = "Hello!龚建波1992";
     double scale = left_area.width() / double(GetTextWidth(fm, text) + 0.1) * 100;
+    // stretch 100就是百分之百
     // 最小拉伸因子为 1，最大拉伸因子为 4000
+    // BUG：当因子小于100，但是dpi有缩放，没法正常的绘制缩窄的文字
     ft.setStretch(scale);
     QFontMetrics fm2(ft);
     if (prevWidth > 0)
